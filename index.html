@@ -1,0 +1,1984 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta content="web_dashboard" name="shell-type">
+  <title>BHOOMI DRISHTI | Ground Control Station v2.4-RC3</title>
+  
+  <!-- Google Fonts & Material Symbols -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  
+  <!-- Leaflet CSS for GIS Mapping -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css?v=2.7.0" />
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "secondary-fixed": "#6ee7b7",
+            "inverse-surface": "#f8fafc",
+            "on-tertiary": "#0f172a",
+            "tertiary-fixed": "#fef08a",
+            "surface-container": "#111624",
+            "surface-tint": "#38bdf8",
+            "primary-fixed-dim": "#38bdf8",
+            "tertiary": "#fbbf24",
+            "background": "#08090d",
+            "on-tertiary-container": "#451a03",
+            "surface-container-high": "#161d2f",
+            "on-secondary-container": "#022c22",
+            "on-primary-container": "#0369a1",
+            "surface-bright": "#222c42",
+            "on-secondary": "#022c22",
+            "on-surface-variant": "#94a3b8",
+            "surface-dim": "#08090d",
+            "surface-container-low": "#0b0e17",
+            "on-tertiary-fixed-variant": "#78350f",
+            "outline": "#64748b",
+            "surface-container-lowest": "#06070a",
+            "surface-container-highest": "#1c2438",
+            "secondary-fixed-dim": "#34d399",
+            "on-surface": "#f8fafc",
+            "on-tertiary-fixed": "#0f172a",
+            "outline-variant": "#283347",
+            "primary-container": "#0284c7",
+            "on-primary-fixed": "#0f172a",
+            "on-primary": "#040814",
+            "error": "#f87171",
+            "secondary-container": "#065f46",
+            "primary-fixed": "#bae6fd",
+            "on-error-container": "#fecaca",
+            "primary": "#38bdf8",
+            "tertiary-container": "#d97706",
+            "on-error": "#450a0a",
+            "on-secondary-fixed": "#022c22",
+            "error-container": "#450a0a",
+            "inverse-primary": "#0284c7",
+            "on-primary-fixed-variant": "#075985",
+            "surface-variant": "#1c2438",
+            "surface": "#08090d",
+            "tertiary-fixed-dim": "#fde047",
+            "on-secondary-fixed-variant": "#065f46",
+            "inverse-on-surface": "#161d2f",
+            "secondary": "#34d399",
+            "on-background": "#f8fafc"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.375rem",
+            "lg": "0.625rem",
+            "xl": "0.875rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-lg": "1rem",
+            "space-sm": "0.375rem",
+            "space-xs": "0.25rem",
+            "gutter": "0.75rem",
+            "space-md": "0.75rem",
+            "margin": "0.75rem",
+            "space-xl": "1.5rem",
+            "gutter-desktop": "1rem",
+            "margin-desktop": "1.25rem"
+          },
+          "fontFamily": {
+            "label-caps": ["JetBrains Mono"],
+            "data-lg": ["JetBrains Mono"],
+            "data-md": ["JetBrains Mono"],
+            "headline-md": ["Inter"],
+            "data-sm": ["JetBrains Mono"],
+            "body-lg": ["Inter"],
+            "body-sm": ["Inter"],
+            "headline-sm": ["Inter"],
+            "headline-xl": ["Inter"],
+            "body-md": ["Inter"],
+            "headline-lg": ["Inter"]
+          },
+          "fontSize": {
+            "label-caps": ["10px", { "lineHeight": "12px", "letterSpacing": "0.08em", "fontWeight": "600" }],
+            "data-lg": ["16px", { "lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "data-md": ["13px", { "lineHeight": "16px", "fontWeight": "500" }],
+            "headline-md": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "data-sm": ["11px", { "lineHeight": "14px", "fontWeight": "500" }],
+            "body-lg": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+            "headline-sm": ["15px", { "lineHeight": "20px", "fontWeight": "600" }],
+            "headline-xl": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "body-md": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+            "headline-lg": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" }]
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- External Libraries (Three.js, OrbitControls, Chart.js, Leaflet) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body class="bg-surface-container-lowest font-body-md text-on-surface antialiased min-h-screen selection:bg-primary-container selection:text-on-primary-container">
+
+  <!-- TOP HEADER -->
+  <header class="fixed top-0 left-0 right-0 h-16 z-50 bg-[#07090e]/90 backdrop-blur-xl shadow-[0_1px_16px_rgba(0,0,0,0.55)] border-b border-white/[0.08]">
+    <div class="w-full h-16 px-gutter-desktop flex items-center justify-between gap-space-md">
+      <!-- Brand & Time -->
+      <div class="flex items-center gap-space-md shrink-0">
+        <div class="flex items-center gap-space-sm cursor-pointer" onclick="window.navigateTo('overview')">
+          <div class="w-9 h-9 rounded-lg bg-surface-container-high flex items-center justify-center border border-primary/30 shadow-[0_0_12px_rgba(56,189,248,0.2)]">
+            <span class="material-symbols-outlined text-primary text-xl">explore</span>
+          </div>
+          <div>
+            <div class="flex items-center gap-space-xs">
+              <span class="font-headline-sm text-headline-sm font-bold tracking-tight text-on-surface">BHOOMI DRISHTI</span>
+              <span class="font-label-caps text-label-caps px-1.5 py-0.5 rounded-full bg-primary/10 border border-primary/25 text-primary font-bold">GCS v2.4-RC3</span>
+            </div>
+            <p class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">See the Land. Map the Truth.</p>
+          </div>
+        </div>
+        <div class="hidden xl:flex items-center gap-space-sm px- space-sm py-1 rounded-lg bg-surface-container-low border border-white/[0.06]">
+          <div class="flex items-center gap-space-xs font-data-sm text-data-sm text-on-surface-variant px-2 py-0.5">
+            <span class="material-symbols-outlined text-sm text-primary">schedule</span>
+            <span class="font-data-sm text-data-sm text-on-surface" id="utc-clock">UTC --:--:--</span>
+            <span class="text-outline-variant">|</span>
+            <span class="font-data-sm text-data-sm text-primary font-bold" id="ist-clock">IST --:--:--</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Telemetry Status Pills & Port Switcher -->
+      <div class="hidden lg:flex items-center gap-space-sm flex-wrap">
+        <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-surface-container-high border border-primary/30 shadow-[0_0_12px_rgba(56,189,248,0.15)]">
+          <span class="material-symbols-outlined text-xs text-primary">settings_ethernet</span>
+          <select id="hdr-port-selector" class="bg-surface-container-high font-data-sm text-xs text-primary font-bold outline-none cursor-pointer pr-1">
+            <option value="AUTO">⚡ Auto-Detect Link</option>
+            <option value="COM5">📻 COM5 - Telemetry (57600)</option>
+            <option value="COM8">🔌 COM8 - USB (115200)</option>
+          </select>
+        </div>
+        <div id="hardware-connection-badge" class="flex items-center gap-space-xs px-2.5 py-1 rounded-lg bg-secondary/10 border border-secondary/25">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span>
+          </span>
+          <span class="font-label-caps text-label-caps text-secondary font-semibold">PIXHAWK LIVE</span>
+        </div>
+        <div class="flex items-center gap-space-xs px-2.5 py-1 rounded-lg bg-surface-container-low border border-white/[0.05]">
+          <span class="material-symbols-outlined text-xs text-primary">memory</span>
+          <span class="font-data-sm text-data-sm text-on-surface">PIXHAWK 4 / ARDUPILOT 4.5.1</span>
+        </div>
+        <div class="flex items-center gap-space-xs px-2.5 py-1 rounded-lg bg-surface-container-high border border-primary/25">
+          <span class="material-symbols-outlined text-xs text-primary">flight_takeoff</span>
+          <span id="hdr-flight-mode-badge" class="font-label-caps text-label-caps text-primary font-bold">STANDBY</span>
+        </div>
+      </div>
+
+      <!-- Simulation Switch & Officer Profile -->
+      <div class="flex items-center gap-space-md shrink-0">
+        <button onclick="window.bhoomiAudio.beep()" title="Test Audio Tone" class="p-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high border border-white/[0.06] text-primary flex items-center justify-center">
+          <span class="material-symbols-outlined text-sm">volume_up</span>
+        </button>
+        <div class="hidden md:flex flex-col text-right">
+          <span class="font-headline-sm text-headline-sm font-semibold text-on-surface leading-none">Capt. R. Sharma</span>
+          <span class="font-label-caps text-label-caps text-on-surface-variant uppercase mt-0.5">Surveyor Officer • Reg #BD-9042</span>
+        </div>
+        <div class="relative flex items-center justify-center p-0.5 rounded-full bg-surface-container-high border border-white/[0.1]">
+          <img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1W-t_oph0RVDC6r8WMhIk6Cj4DnQ2Mbz3tJybpRAjDWa-XDqydM2nNpVi15PYXCHXyKmFN8Ox4strmxDr80logzEOhhcrSkmbu5wp8fI6PusEy2rp5ELdlYAdx2sr8-rcpYrjxsRVn5uOqRZoB9flK7JkdpjwZ03lmqPaqSfRCKaXxDTclrPvLHhPBIAZFropu1-kRqtVXgMFMsA0SY29aCtv3-TsMnFFiEuN1CQrSqsvaN-NUBrVlFlyM">
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- SIDEBAR NAVIGATION -->
+  <aside class="fixed left-0 top-16 bottom-0 w-72 z-40 bg-[#080b13]/90 backdrop-blur-xl flex flex-col justify-between shadow-[1px_0_20px_rgba(0,0,0,0.55)] border-r border-white/[0.08]">
+    <div class="flex-1 flex flex-col min-h-0 pt-space-md">
+      <div class="px-space-md pb-space-sm flex items-center justify-between">
+        <div class="font-label-caps text-label-caps text-outline uppercase tracking-widest">Mission Console</div>
+        <span class="font-label-caps text-[9px] px-1.5 py-0.5 rounded-full bg-secondary/15 border border-secondary/25 text-secondary font-bold">ONLINE</span>
+      </div>
+      <nav class="flex-1 px-space-sm space-y-1 overflow-y-auto" id="sidebar-nav">
+        <!-- 01 Overview -->
+        <a class="nav-link group flex items-center justify-between px-space-md py-2.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="overview" href="#overview">
+          <div class="flex items-center gap-space-md">
+            <span class="material-symbols-outlined text-lg text-primary">grid_view</span>
+            <span class="font-body-md text-body-md">Overview</span>
+          </div>
+          <span class="font-label-caps text-label-caps text-outline group-hover:text-primary">01</span>
+        </a>
+        <!-- 02 Telemetry -->
+        <a class="nav-link group flex items-center justify-between px-space-md py-2.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="drone-telemetry" href="#drone-telemetry">
+          <div class="flex items-center gap-space-md">
+            <span class="material-symbols-outlined text-lg text-primary">sensors</span>
+            <span class="font-body-md text-body-md">Drone Telemetry &amp; Sensors</span>
+          </div>
+          <span class="font-label-caps text-label-caps text-secondary font-bold">NOMINAL</span>
+        </a>
+        <!-- 03 FC Health -->
+        <a class="nav-link group flex items-center justify-between px-space-md py-2.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="flight-controller-health" href="#flight-controller-health">
+          <div class="flex items-center gap-space-md">
+            <span class="material-symbols-outlined text-lg text-primary">developer_board</span>
+            <span class="font-body-md text-body-md">Flight Controller Health</span>
+          </div>
+          <span class="font-label-caps text-label-caps text-outline group-hover:text-primary">03</span>
+        </a>
+        <!-- 04 Live Orientation -->
+        <a class="nav-link group flex items-center justify-between px-space-md py-2.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="live-orientation" href="#live-orientation">
+          <div class="flex items-center gap-space-md">
+            <span class="material-symbols-outlined text-lg text-primary">navigation</span>
+            <span class="font-body-md text-body-md">Live Orientation</span>
+          </div>
+          <span class="font-label-caps text-label-caps text-primary">3D AHRS</span>
+        </a>
+        <!-- 05 Land Mapping Workspace -->
+        <a class="nav-link group flex items-center justify-between px-space-md py-2.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="land-mapping-workspace" href="#land-mapping-workspace">
+          <div class="flex items-center gap-space-md">
+            <span class="material-symbols-outlined text-lg text-primary">layers</span>
+            <span class="font-body-md text-body-md">Land Mapping Workspace</span>
+          </div>
+          <span class="font-label-caps text-label-caps text-primary group-hover:text-primary font-bold">OSM / GIS</span>
+        </a>
+        <!-- 06 Survey History -->
+        <a class="nav-link group flex items-center justify-between px-space-md py-2.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="survey-history-logs" href="#survey-history-logs">
+          <div class="flex items-center gap-space-md">
+            <span class="material-symbols-outlined text-lg text-primary">dataset</span>
+            <span class="font-body-md text-body-md">Survey History &amp; Logs</span>
+          </div>
+          <span class="font-label-caps text-label-caps text-outline group-hover:text-primary">06</span>
+        </a>
+        <!-- 07 Alerts -->
+        <a class="nav-link group flex items-center justify-between px-space-md py-2.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="alerts-system-events" href="#alerts-system-events">
+          <div class="flex items-center gap-space-md">
+            <span class="material-symbols-outlined text-lg text-primary">notification_important</span>
+            <span class="font-body-md text-body-md">Alerts &amp; System Events</span>
+          </div>
+          <span class="px-1.5 py-0.5 rounded font-label-caps text-label-caps bg-error-container text-on-error-container font-bold">2 WARN</span>
+        </a>
+        <!-- 08 Device Settings & Radio -->
+        <a class="nav-link group flex items-center justify-between px-space-md py-2.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="device-settings" href="#device-settings">
+          <div class="flex items-center gap-space-md">
+            <span class="material-symbols-outlined text-lg text-primary">tune</span>
+            <span class="font-body-md text-body-md">Device Settings &amp; Radio</span>
+          </div>
+          <span class="font-label-caps text-label-caps text-outline group-hover:text-primary">08</span>
+        </a>
+      </nav>
+    </div>
+
+    <!-- Payload Camera Status widget in sidebar -->
+    <div class="p-space-md bg-surface-container-lowest m-space-sm rounded space-y-space-xs border border-surface-container-high/50">
+      <div class="flex items-center justify-between font-label-caps text-label-caps text-outline">
+        <span class="uppercase">Payload / Camera</span>
+        <span class="text-secondary font-bold">ACTIVE</span>
+      </div>
+      <div class="flex items-center justify-between font-data-sm text-data-sm">
+        <span class="text-on-surface-variant">Sony α7R IV (61MP)</span>
+        <span class="text-primary font-bold">TRIGGER OK</span>
+      </div>
+      <div class="w-full bg-surface-container h-1 rounded overflow-hidden mt-1">
+        <div class="bg-primary h-full w-3/4 rounded"></div>
+      </div>
+      <div class="flex items-center justify-between font-label-caps text-label-caps text-outline-variant pt-1">
+        <span>SD SPACE: 184 GB</span>
+        <span>GSD: 1.2 cm/px</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN WORKSPACE -->
+  <div class="pl-72">
+    <main class="relative pt-16 min-h-screen bg-surface-container-lowest">
+      
+      <!-- Notification Toast -->
+      <div class="fixed bottom-6 right-6 z-50 flex items-center gap-space-sm px-space-md py-space-sm rounded bg-surface-container-high shadow-2xl text-primary font-data-md text-data-md transition-all duration-300 opacity-0 pointer-events-none translate-y-3 border border-primary/30" id="toast">
+        <span class="material-symbols-outlined text-primary text-sm">check_circle</span>
+        <span id="toast-msg">Parameters updated</span>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- VIEW 08: DEVICE SETTINGS & RADIO (USER ORIGINAL) -->
+      <!-- ========================================== -->
+      <section id="view-device-settings" class="view-section flex flex-col w-full">
+        <!-- Operational Header Strip -->
+        <div class="w-full bg-surface-container-low px-gutter-desktop py-space-md flex flex-wrap items-center justify-between gap-space-md border-b border-surface-container-high/40">
+          <div class="flex items-center gap-space-md">
+            <div class="flex flex-col">
+              <div class="flex items-center gap-space-sm">
+                <span class="font-label-caps text-label-caps text-outline uppercase tracking-wider">HARDWARE CONSOLE</span>
+                <span class="font-label-caps text-label-caps px-space-xs py-0.5 rounded bg-primary-container/20 text-primary font-bold">CFG-MOD: ACTIVE</span>
+              </div>
+              <h1 class="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tight mt-0.5">Device Settings &amp; Radio Bus</h1>
+            </div>
+          </div>
+          <!-- Quick Comm Status Indicators & Master Sync -->
+          <div class="flex items-center gap-space-sm flex-wrap">
+            <div class="flex items-center gap-space-xs px-space-md py-1.5 rounded bg-surface-container">
+              <span class="font-label-caps text-label-caps text-outline">LINK STATUS:</span>
+              <span class="flex h-2 w-2 relative">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span>
+              </span>
+              <span class="font-data-sm text-data-sm text-secondary font-semibold">SYNCHRONIZED (100%)</span>
+            </div>
+            <div class="flex items-center gap-space-xs px-space-md py-1.5 rounded bg-surface-container">
+              <span class="font-label-caps text-label-caps text-outline">EEPROM PARAMS:</span>
+              <span class="font-data-sm text-data-sm text-primary">1,142 / 1,142 LOADED</span>
+            </div>
+            <button class="px-space-md py-1.5 rounded bg-surface-container-high text-on-surface font-label-caps text-label-caps hover:bg-surface-bright transition-colors flex items-center gap-space-xs cursor-pointer active:scale-95" id="btn-reboot">
+              <span class="material-symbols-outlined text-xs text-primary">restart_alt</span>
+              REBOOT AUTOPILOT
+            </button>
+            <button class="px-space-md py-1.5 rounded bg-primary text-on-primary font-label-caps text-label-caps font-bold hover:bg-primary-fixed-dim transition-colors flex items-center gap-space-xs shadow-[0_0_8px_rgba(76,215,246,0.3)] cursor-pointer active:scale-95" id="btn-save">
+              <span class="material-symbols-outlined text-xs">save</span>
+              WRITE TO FLASH
+            </button>
+          </div>
+        </div>
+
+        <!-- Main 4-Column Grid Architecture -->
+        <div class="p-gutter-desktop grid grid-cols-1 lg:grid-cols-12 gap-gutter-desktop">
+          <!-- LEFT COLUMN: Comm Link & Radio Transceiver (5 cols) -->
+          <div class="lg:col-span-5 flex flex-col gap-gutter-desktop">
+            <!-- Section 1: Connection & Comms Configuration -->
+            <div class="rounded-lg bg-surface-container-low p-space-lg flex flex-col gap-space-md border border-surface-container-high/30">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-space-sm">
+                  <span class="material-symbols-outlined text-primary text-lg">cell_tower</span>
+                  <span class="font-headline-sm text-headline-sm text-on-surface">Telemetry &amp; Radio Link Bus</span>
+                </div>
+                <span class="font-label-caps text-label-caps text-secondary font-bold">RFD900X ONLINE</span>
+              </div>
+              <!-- Connection Type Selector Tabs -->
+              <div>
+                <label class="font-label-caps text-label-caps text-outline block mb-space-xs">INTERFACE BUS TYPE</label>
+                <div class="grid grid-cols-2 gap-space-xs">
+                  <button class="conn-tab px-space-sm py-2 rounded bg-primary text-on-primary font-label-caps text-label-caps font-bold text-center transition-all flex items-center justify-center gap-1 cursor-pointer">
+                    <span class="material-symbols-outlined text-xs">radio</span>
+                    TELEMETRY RADIO
+                  </button>
+                  <button class="conn-tab px-space-sm py-2 rounded bg-surface-container text-on-surface-variant hover:text-on-surface font-label-caps text-label-caps text-center transition-all flex items-center justify-center gap-1 cursor-pointer">
+                    <span class="material-symbols-outlined text-xs">usb</span>
+                    USB SERIAL / COM
+                  </button>
+                  <button class="conn-tab px-space-sm py-2 rounded bg-surface-container text-on-surface-variant hover:text-on-surface font-label-caps text-label-caps text-center transition-all flex items-center justify-center gap-1 cursor-pointer">
+                    <span class="material-symbols-outlined text-xs">lan</span>
+                    TCP / UDP NETWORK
+                  </button>
+                  <button class="conn-tab px-space-sm py-2 rounded bg-surface-container text-on-surface-variant hover:text-on-surface font-label-caps text-label-caps text-center transition-all flex items-center justify-center gap-1 cursor-pointer">
+                    <span class="material-symbols-outlined text-xs">rss_feed</span>
+                    4G / 5G CELLULAR
+                  </button>
+                </div>
+              </div>
+              <!-- Port and Hardware Details -->
+              <div class="grid grid-cols-2 gap-space-md">
+                <div class="bg-surface-container-lowest p-space-md rounded flex flex-col justify-between">
+                  <span class="font-label-caps text-label-caps text-outline">DEVICE TTY PORT</span>
+                  <div class="flex items-center justify-between mt-1">
+                    <span class="font-data-md text-data-md text-primary font-bold">/dev/ttyUSB0</span>
+                    <span class="material-symbols-outlined text-xs text-secondary">cable</span>
+                  </div>
+                  <span class="font-label-caps text-label-caps text-on-surface-variant mt-1">Silicon Labs CP210x</span>
+                </div>
+                <div class="bg-surface-container-lowest p-space-md rounded flex flex-col justify-between">
+                  <span class="font-label-caps text-label-caps text-outline">HARDWARE TRANSCEIVER</span>
+                  <div class="flex items-center justify-between mt-1">
+                    <span class="font-data-md text-data-md text-on-surface">RFD900x Ultra</span>
+                    <span class="font-label-caps text-label-caps text-secondary font-bold">915MHz</span>
+                  </div>
+                  <span class="font-label-caps text-label-caps text-outline-variant mt-1">Dual Ant / Diversity OK</span>
+                </div>
+              </div>
+              <!-- Radio Tuning Configuration Sliders / Settings -->
+              <div class="space-y-space-md bg-surface-container-lowest p-space-md rounded">
+                <div class="flex items-center justify-between">
+                  <span class="font-label-caps text-label-caps text-outline">TRANSMISSION BAUDRATE</span>
+                  <select class="bg-surface-container font-data-sm text-data-sm text-primary rounded px-space-sm py-1 outline-none">
+                    <option selected="">57600 baud (Standard Telemetry)</option>
+                    <option>115200 baud (High Data Rate)</option>
+                    <option>921600 baud (Onboard Link)</option>
+                  </select>
+                </div>
+                <!-- Network ID and TX Power -->
+                <div class="grid grid-cols-2 gap-space-md">
+                  <div>
+                    <div class="flex items-center justify-between mb-1">
+                      <span class="font-label-caps text-label-caps text-outline">NET ID (FHSS MASK)</span>
+                      <span class="font-data-sm text-data-sm text-primary font-bold" id="net-id-val">25</span>
+                    </div>
+                    <input class="w-full bg-surface-container font-data-md text-data-md text-on-surface px-space-sm py-1 rounded outline-none border border-transparent focus:border-primary" id="net-id-input" max="99" min="1" type="number" value="25">
+                  </div>
+                  <div>
+                    <div class="flex items-center justify-between mb-1">
+                      <span class="font-label-caps text-label-caps text-outline">TX POWER OUTPUT</span>
+                      <span class="font-data-sm text-data-sm text-secondary font-bold" id="tx-power-val">20 dBm (100mW)</span>
+                    </div>
+                    <input class="w-full accent-primary h-1 bg-surface-container rounded-lg cursor-pointer" id="tx-power-input" max="30" min="10" type="range" value="20">
+                  </div>
+                </div>
+                <!-- Hardware Flow Control & Protocol Specs -->
+                <div class="pt-space-xs flex items-center justify-between">
+                  <div class="flex items-center gap-space-sm">
+                    <div class="w-4 h-4 rounded bg-primary flex items-center justify-center">
+                      <span class="material-symbols-outlined text-xs text-on-primary">check</span>
+                    </div>
+                    <span class="font-body-sm text-body-sm text-on-surface">RTS/CTS Hardware Flow Control</span>
+                  </div>
+                  <span class="font-label-caps text-label-caps text-secondary">ACTIVE</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-space-sm">
+                    <div class="w-4 h-4 rounded bg-primary flex items-center justify-center">
+                      <span class="material-symbols-outlined text-xs text-on-primary">lock</span>
+                    </div>
+                    <span class="font-body-sm text-body-sm text-on-surface">MAVLink 2.0 Auth &amp; Encryption</span>
+                  </div>
+                  <span class="font-label-caps text-label-caps text-primary font-bold">SHA-256 SIGNED</span>
+                </div>
+              </div>
+              <!-- RF Signal Spectral Quality Gauge (SVG Sparkline & RSSI) -->
+              <div class="bg-surface-container-lowest p-space-md rounded">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="font-label-caps text-label-caps text-outline">RF LINK ATTENUATION &amp; DIVERSITY NOISE</span>
+                  <span class="font-data-sm text-data-sm text-secondary font-bold">RSSI: 94% (-68 dBm)</span>
+                </div>
+                <svg class="w-full h-12 text-primary" fill="none" preserveAspectRatio="none" viewBox="0 0 300 40">
+                  <path d="M0 28 Q 20 25, 40 29 T 80 20 T 120 22 T 160 14 T 200 18 T 240 10 T 280 12 L 300 11" fill="none" stroke="currentColor" stroke-width="2"></path>
+                  <path d="M0 28 Q 20 25, 40 29 T 80 20 T 120 22 T 160 14 T 200 18 T 240 10 T 280 12 L 300 11 L 300 40 L 0 40 Z" fill="currentColor" fill-opacity="0.08"></path>
+                </svg>
+                <div class="flex items-center justify-between mt-2 font-label-caps text-label-caps text-outline-variant">
+                  <span>TX BUFFER: 0% DROPS</span>
+                  <span>NOISE FLOOR: -102 dBm</span>
+                  <span>REMOTE RSSI: 91%</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Section 4: Cloud Sync & Ground Station Logs -->
+            <div class="rounded-lg bg-surface-container-low p-space-lg flex flex-col gap-space-md border border-surface-container-high/30">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-space-sm">
+                  <span class="material-symbols-outlined text-tertiary text-lg">cloud_sync</span>
+                  <span class="font-headline-sm text-headline-sm text-on-surface">Cloud Sync &amp; Survey Logs</span>
+                </div>
+                <span class="font-label-caps text-label-caps text-secondary font-bold">BHARAT GEOCLOUD OK</span>
+              </div>
+              <div class="grid grid-cols-2 gap-space-md">
+                <div class="bg-surface-container-lowest p-space-md rounded">
+                  <div class="flex items-center justify-between">
+                    <span class="font-label-caps text-label-caps text-outline">GCS NVMe DRIVE</span>
+                    <span class="font-label-caps text-label-caps text-secondary font-bold">128 GB</span>
+                  </div>
+                  <div class="w-full bg-surface-container h-1.5 rounded-full overflow-hidden my-2">
+                    <div class="bg-primary h-full w-[42%] rounded-full"></div>
+                  </div>
+                  <div class="flex items-center justify-between font-label-caps text-label-caps text-outline">
+                    <span>USED: 53.7 GB (42%)</span>
+                    <span>FREE: 74.3 GB</span>
+                  </div>
+                </div>
+                <div class="bg-surface-container-lowest p-space-md rounded flex flex-col justify-between">
+                  <span class="font-label-caps text-label-caps text-outline">GEODETIC SURVEY PIPE</span>
+                  <div class="flex items-center justify-between mt-1">
+                    <span class="font-data-md text-data-md text-primary font-bold">RINEX / GNSS</span>
+                    <span class="material-symbols-outlined text-secondary text-sm">cloud_done</span>
+                  </div>
+                  <span class="font-label-caps text-label-caps text-outline-variant">Raw Observation Auto-Sync</span>
+                </div>
+              </div>
+              <!-- Sync Checklist -->
+              <div class="space-y-space-xs font-body-sm text-body-sm">
+                <div class="flex items-center justify-between p-space-sm rounded bg-surface-container-lowest">
+                  <div class="flex items-center gap-space-sm">
+                    <span class="material-symbols-outlined text-secondary text-sm">sync</span>
+                    <span class="text-on-surface">Auto-upload Mission Flight Telemetry (.BIN / .TLOG)</span>
+                  </div>
+                  <span class="font-label-caps text-label-caps text-secondary">ACTIVE</span>
+                </div>
+                <div class="flex items-center justify-between p-space-sm rounded bg-surface-container-lowest">
+                  <div class="flex items-center gap-space-sm">
+                    <span class="material-symbols-outlined text-secondary text-sm">photo_library</span>
+                    <span class="text-on-surface">Sony EXIF Geotag Metadata Extraction</span>
+                  </div>
+                  <span class="font-label-caps text-label-caps text-secondary">READY</span>
+                </div>
+                <div class="flex items-center justify-between p-space-sm rounded bg-surface-container-lowest">
+                  <div class="flex items-center gap-space-sm">
+                    <span class="material-symbols-outlined text-primary text-sm">system_update_alt</span>
+                    <span class="text-on-surface">ArduPilot 4.5.1 Firmware Check</span>
+                  </div>
+                  <span class="font-label-caps text-label-caps text-primary">UP TO DATE</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT COLUMN: Drone Frame, Failsafes & Calibration Hub (7 cols) -->
+          <div class="lg:col-span-7 flex flex-col gap-gutter-desktop">
+            <!-- Section 2: Drone & Autopilot Parameters -->
+            <div class="rounded-lg bg-surface-container-low p-space-lg flex flex-col gap-space-md border border-surface-container-high/30">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-space-sm">
+                  <span class="material-symbols-outlined text-primary text-lg">tune</span>
+                  <span class="font-headline-sm text-headline-sm text-on-surface">Vehicle Parameters &amp; Failsafes</span>
+                </div>
+                <div class="flex items-center gap-space-xs">
+                  <span class="font-label-caps text-label-caps px-space-xs py-0.5 rounded bg-surface-container text-on-surface">QUADCOPTER X-FRAME</span>
+                  <span class="font-label-caps text-label-caps px-space-xs py-0.5 rounded bg-surface-container text-primary font-bold">X4 ENTERPRISE</span>
+                </div>
+              </div>
+              <!-- Frame Vector Diagram with Hexagonal HUD boundary -->
+              <div class="p-space-md rounded bg-surface-container-lowest flex flex-col items-center justify-center relative overflow-hidden">
+                <div class="w-full flex items-center justify-between mb-2">
+                  <span class="font-label-caps text-label-caps text-outline">FRAME MOTOR GEOMETRY (X4-CW/CCW)</span>
+                  <span class="font-data-sm text-data-sm text-secondary font-bold">AIRFRAME: READY TO ARM</span>
+                </div>
+                <!-- Hexagonal Cadastral HUD Graphic -->
+                <div class="relative w-64 h-64 flex items-center justify-center my-2">
+                  <svg class="w-full h-full" fill="none" viewBox="0 0 200 200">
+                    <polygon class="text-primary/70" points="100,10 178,55 178,145 100,190 22,145 22,55" stroke="currentColor" stroke-dasharray="4 3" stroke-width="1.5"></polygon>
+                    <polygon class="text-secondary/40" points="100,24 166,62 166,138 100,176 34,138 34,62" stroke="currentColor" stroke-width="1"></polygon>
+                    <line class="text-outline-variant" stroke="currentColor" stroke-dasharray="2 4" stroke-width="0.75" x1="100" x2="100" y1="0" y2="200"></line>
+                    <line class="text-outline-variant" stroke="currentColor" stroke-dasharray="2 4" stroke-width="0.75" x1="0" x2="200" y1="100" y2="100"></line>
+                    <line class="text-primary" stroke="currentColor" stroke-linecap="round" stroke-width="4" x1="50" x2="150" y1="50" y2="150"></line>
+                    <line class="text-primary" stroke="currentColor" stroke-linecap="round" stroke-width="4" x1="150" x2="50" y1="50" y2="150"></line>
+                    <polygon class="text-secondary" fill="currentColor" points="100,32 94,44 106,44"></polygon>
+                    <!-- Motors -->
+                    <circle class="text-secondary cursor-pointer hover:opacity-80" cx="150" cy="50" r="14" stroke="currentColor" stroke-dasharray="3 2" stroke-width="1.5"></circle>
+                    <circle class="text-secondary" cx="150" cy="50" fill="currentColor" r="8"></circle>
+                    <text class="font-label-caps text-[9px] fill-secondary font-bold" x="146" y="32">M1 (CCW)</text>
+                    <circle class="text-primary cursor-pointer hover:opacity-80" cx="50" cy="150" r="14" stroke="currentColor" stroke-dasharray="3 2" stroke-width="1.5"></circle>
+                    <circle class="text-primary" cx="50" cy="150" fill="currentColor" r="8"></circle>
+                    <text class="font-label-caps text-[9px] fill-primary font-bold" x="32" y="174">M2 (CCW)</text>
+                    <circle class="text-secondary cursor-pointer hover:opacity-80" cx="50" cy="50" r="14" stroke="currentColor" stroke-dasharray="3 2" stroke-width="1.5"></circle>
+                    <circle class="text-secondary" cx="50" cy="50" fill="currentColor" r="8"></circle>
+                    <text class="font-label-caps text-[9px] fill-secondary font-bold" x="32" y="32">M3 (CW)</text>
+                    <circle class="text-primary cursor-pointer hover:opacity-80" cx="150" cy="150" r="14" stroke="currentColor" stroke-dasharray="3 2" stroke-width="1.5"></circle>
+                    <circle class="text-primary" cx="150" cy="150" fill="currentColor" r="8"></circle>
+                    <text class="font-label-caps text-[9px] fill-primary font-bold" x="146" y="174">M4 (CW)</text>
+                    <circle class="text-primary" cx="100" cy="100" fill="#0A0E17" r="22" stroke="currentColor" stroke-width="2"></circle>
+                    <circle class="text-secondary" cx="100" cy="100" fill="currentColor" r="12"></circle>
+                    <circle cx="100" cy="100" fill="#0A0E17" r="4"></circle>
+                  </svg>
+                </div>
+                <div class="flex items-center gap-space-lg font-label-caps text-label-caps text-outline">
+                  <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-secondary"></span> FRONT ROTORS (PROP PITCH 15.5")</span>
+                  <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-primary"></span> REAR ROTORS (T-MOTOR MN501S)</span>
+                </div>
+              </div>
+              <!-- Geofence & DGCA Regulatory Compliance -->
+              <div>
+                <div class="flex items-center justify-between mb-space-xs">
+                  <span class="font-label-caps text-label-caps text-outline">DGCA GEOFENCE BOUNDARIES (INDIA DIGITAL SKY COMPLIANT)</span>
+                  <span class="font-label-caps text-label-caps text-primary font-bold">GREEN ZONE FLIGHT REGIME</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-space-md">
+                  <div class="bg-surface-container-lowest p-space-md rounded">
+                    <span class="font-label-caps text-label-caps text-outline block">MAX ALTITUDE (AGL)</span>
+                    <div class="flex items-baseline gap-1 mt-1">
+                      <span class="font-headline-md text-headline-md font-bold text-on-surface">120</span>
+                      <span class="font-label-caps text-label-caps text-outline">METERS</span>
+                    </div>
+                    <span class="font-label-caps text-label-caps text-secondary">DGCA HARD CEILING</span>
+                  </div>
+                  <div class="bg-surface-container-lowest p-space-md rounded">
+                    <span class="font-label-caps text-label-caps text-outline block">MAX HORIZONTAL RADIUS</span>
+                    <div class="flex items-baseline gap-1 mt-1">
+                      <span class="font-headline-md text-headline-md font-bold text-on-surface">1,500</span>
+                      <span class="font-label-caps text-label-caps text-outline">METERS</span>
+                    </div>
+                    <span class="font-label-caps text-label-caps text-primary">CADASTRE BUFFER OK</span>
+                  </div>
+                  <div class="bg-surface-container-lowest p-space-md rounded">
+                    <span class="font-label-caps text-label-caps text-outline block">BREACH ACTION</span>
+                    <div class="flex items-baseline gap-1 mt-1">
+                      <span class="font-headline-md text-headline-md font-bold text-tertiary">RTL</span>
+                      <span class="font-label-caps text-label-caps text-outline">@ 60m</span>
+                    </div>
+                    <span class="font-label-caps text-label-caps text-secondary">AUTO RETURN TO HOME</span>
+                  </div>
+                </div>
+              </div>
+              <!-- Failsafe Rules Table -->
+              <div class="space-y-space-xs">
+                <span class="font-label-caps text-label-caps text-outline block">CRITICAL FAILSAFE DIRECTIVES</span>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-space-sm">
+                  <div class="bg-surface-container-lowest p-space-md rounded flex items-center justify-between">
+                    <div>
+                      <div class="font-body-md text-body-md font-semibold text-on-surface">Low Battery RTL</div>
+                      <div class="font-data-sm text-data-sm text-on-surface-variant">Trigger at &lt; 21.6V (6S LiPo 20%)</div>
+                    </div>
+                    <span class="font-label-caps text-label-caps px-space-sm py-1 rounded bg-secondary-container/20 text-secondary font-bold">RTL MODE</span>
+                  </div>
+                  <div class="bg-surface-container-lowest p-space-md rounded flex items-center justify-between">
+                    <div>
+                      <div class="font-body-md text-body-md font-semibold text-on-surface">Critical Battery Cutoff</div>
+                      <div class="font-data-sm text-data-sm text-on-surface-variant">Trigger at &lt; 20.4V (Emergency Land)</div>
+                    </div>
+                    <span class="font-label-caps text-label-caps px-space-sm py-1 rounded bg-error-container text-on-error-container font-bold">LAND NOW</span>
+                  </div>
+                  <div class="bg-surface-container-lowest p-space-md rounded flex items-center justify-between">
+                    <div>
+                      <div class="font-body-md text-body-md font-semibold text-on-surface">RC Signal Loss (&gt;3.0s)</div>
+                      <div class="font-data-sm text-data-sm text-on-surface-variant">Telemetry receiver failsafe timeout</div>
+                    </div>
+                    <span class="font-label-caps text-label-caps px-space-sm py-1 rounded bg-secondary-container/20 text-secondary font-bold">RTL RETURN</span>
+                  </div>
+                  <div class="bg-surface-container-lowest p-space-md rounded flex items-center justify-between">
+                    <div>
+                      <div class="font-body-md text-body-md font-semibold text-on-surface">GCS Link Disconnect</div>
+                      <div class="font-data-sm text-data-sm text-on-surface-variant">Continue survey waypoint auto-path</div>
+                    </div>
+                    <span class="font-label-caps text-label-caps px-space-sm py-1 rounded bg-primary-container/20 text-primary font-bold">CONTINUE</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Section 3: Sensor Calibration & Pre-flight Diagnostics -->
+            <div class="rounded-lg bg-surface-container-low p-space-lg flex flex-col gap-space-md border border-surface-container-high/30">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-space-sm">
+                  <span class="material-symbols-outlined text-primary text-lg">view_in_ar</span>
+                  <span class="font-headline-sm text-headline-sm text-on-surface">Pre-Flight Sensor Calibration</span>
+                </div>
+                <span class="font-label-caps text-label-caps text-outline">IMU SENSORS: DUAL ICM-42688P</span>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+                <!-- 6-Axis Accelerometer -->
+                <div class="bg-surface-container-lowest p-space-md rounded flex flex-col justify-between">
+                  <div class="flex items-center justify-between">
+                    <span class="font-body-md text-body-md font-semibold text-on-surface">6-Axis Accelerometer</span>
+                    <span class="font-label-caps text-label-caps text-secondary font-bold">CALIBRATED</span>
+                  </div>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant my-2">Last calibration completed 2 days ago. Residual noise 0.04 m/s².</p>
+                  <button class="cal-btn w-full py-1.5 rounded bg-surface-container text-primary font-label-caps text-label-caps hover:bg-surface-container-high transition-colors flex items-center justify-center gap-1 cursor-pointer">
+                    <span class="material-symbols-outlined text-xs">tune</span>
+                    RE-CALIBRATE 6-AXIS
+                  </button>
+                </div>
+                <!-- Compass Calibration -->
+                <div class="bg-surface-container-lowest p-space-md rounded flex flex-col justify-between">
+                  <div class="flex items-center justify-between">
+                    <span class="font-body-md text-body-md font-semibold text-on-surface">Dual Magnetometer</span>
+                    <span class="font-label-caps text-label-caps text-secondary font-bold">OFFSETS OK</span>
+                  </div>
+                  <div class="my-2 flex items-center justify-between font-data-sm text-data-sm">
+                    <span class="text-outline">OFFSETS:</span>
+                    <span class="text-on-surface font-semibold">X: -42</span>
+                    <span class="text-on-surface font-semibold">Y: +18</span>
+                    <span class="text-on-surface font-semibold">Z: +110</span>
+                  </div>
+                  <button class="cal-btn w-full py-1.5 rounded bg-surface-container text-primary font-label-caps text-label-caps hover:bg-surface-container-high transition-colors flex items-center justify-center gap-1 cursor-pointer">
+                    <span class="material-symbols-outlined text-xs">rotate_right</span>
+                    START COMPASS DANCE
+                  </button>
+                </div>
+                <!-- Level Horizon Calibration -->
+                <div class="bg-surface-container-lowest p-space-md rounded flex flex-col justify-between">
+                  <div class="flex items-center justify-between">
+                    <span class="font-body-md text-body-md font-semibold text-on-surface">Horizon Level Zero</span>
+                    <span class="font-label-caps text-label-caps text-primary font-bold">ROLL: 0.1° | PITCH: -0.2°</span>
+                  </div>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant my-2">Ensure drone is on perfectly leveled ground before setting zero.</p>
+                  <button class="cal-btn w-full py-1.5 rounded bg-surface-container text-primary font-label-caps text-label-caps hover:bg-surface-container-high transition-colors flex items-center justify-center gap-1 cursor-pointer">
+                    <span class="material-symbols-outlined text-xs">horizontal_rule</span>
+                    SET LEVEL HORIZON
+                  </button>
+                </div>
+                <!-- ESC & Motor Bench Test with Warning Guard -->
+                <div class="bg-surface-container-lowest p-space-md rounded flex flex-col justify-between">
+                  <div class="flex items-center justify-between">
+                    <span class="font-body-md text-body-md font-semibold text-on-surface">ESC / Motor Bench Test</span>
+                    <span class="font-label-caps text-label-caps px-1 rounded bg-error-container text-on-error-container font-bold">PROPS OFF REQUIRED</span>
+                  </div>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant my-2">Sequentially spins M1 → M2 → M3 → M4 at 10% throttle for spin direction verification.</p>
+                  <button class="w-full py-1.5 rounded bg-error/20 text-error hover:bg-error/30 font-label-caps text-label-caps font-bold transition-colors flex items-center justify-center gap-1 cursor-pointer" id="btn-esc-test">
+                    <span class="material-symbols-outlined text-xs">warning</span>
+                    RUN ESC MOTOR TEST (5s)
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Parameters Quick Editor -->
+            <div class="rounded-lg bg-surface-container-low p-space-lg flex flex-col gap-space-md border border-surface-container-high/30">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-space-sm">
+                  <span class="material-symbols-outlined text-primary text-lg">list_alt</span>
+                  <span class="font-headline-sm text-headline-sm text-on-surface">ArduPilot EEPROM Parameters Table</span>
+                </div>
+                <input type="text" id="param-search-input" placeholder="Search parameter name or group..." class="bg-surface-container font-body-sm text-xs text-on-surface px-space-sm py-1 rounded outline-none border border-surface-container-high focus:border-primary w-56">
+              </div>
+              <div class="overflow-x-auto max-h-60 bg-surface-container-lowest rounded p-2">
+                <table class="w-full text-left font-data-sm">
+                  <thead>
+                    <tr class="text-outline font-label-caps text-[10px] border-b border-surface-container">
+                      <th class="p-2">PARAM NAME</th>
+                      <th class="p-2">VALUE</th>
+                      <th class="p-2">DESCRIPTION</th>
+                      <th class="p-2">GROUP</th>
+                    </tr>
+                  </thead>
+                  <tbody id="params-table-body">
+                    <!-- Populated by settings.js -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- VIEW 01: OVERVIEW & PILOT COCKPIT -->
+      <!-- ========================================== -->
+      <section id="view-overview" class="view-section hidden flex flex-col w-full">
+        <!-- Sub-header -->
+        <div class="w-full bg-surface-container-low px-gutter-desktop py-space-md flex flex-wrap items-center justify-between gap-space-md border-b border-surface-container-high/40">
+          <div>
+            <div class="flex items-center gap-space-sm">
+              <span class="font-label-caps text-label-caps text-outline uppercase tracking-wider">MISSION COCKPIT</span>
+              <span id="hud-arm-badge" class="font-label-caps text-label-caps px-space-xs py-0.5 rounded bg-error-container/30 text-error font-bold">DISARMED</span>
+            </div>
+            <h1 class="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tight mt-0.5">Cadastral Flight Mission HUD</h1>
+          </div>
+          <!-- Quick Master Controls -->
+          <div class="flex items-center gap-space-sm flex-wrap">
+            <button onclick="window.toggleArming()" id="btn-action-arm" class="px-space-md py-1.5 rounded bg-error-container text-on-error-container font-label-caps text-label-caps font-bold hover:opacity-90 flex items-center gap-1 cursor-pointer">
+              <span class="material-symbols-outlined text-xs">lock</span> DISARMED (ARM)
+            </button>
+            <button onclick="window.triggerTakeoff()" class="px-space-md py-1.5 rounded bg-surface-container-high text-primary font-label-caps text-label-caps font-bold hover:bg-surface-bright flex items-center gap-1 cursor-pointer">
+              <span class="material-symbols-outlined text-xs">flight_takeoff</span> AUTO TAKEOFF (80m)
+            </button>
+            <button onclick="window.triggerRTL()" class="px-space-md py-1.5 rounded bg-tertiary-container text-on-tertiary-container font-label-caps text-label-caps font-bold hover:opacity-90 flex items-center gap-1 cursor-pointer">
+              <span class="material-symbols-outlined text-xs">home</span> RTL RETURN
+            </button>
+            <button onclick="window.triggerEmergencyLand()" class="px-space-md py-1.5 rounded bg-error text-on-error font-label-caps text-label-caps font-bold hover:opacity-90 flex items-center gap-1 cursor-pointer">
+              <span class="material-symbols-outlined text-xs">land_warning</span> EMERGENCY LAND
+            </button>
+          </div>
+        </div>
+
+        <div class="p-gutter-desktop grid grid-cols-1 lg:grid-cols-12 gap-gutter-desktop">
+          <!-- Live FPV Camera Feed with HUD overlays (7 cols) -->
+          <div class="lg:col-span-7 flex flex-col gap-gutter-desktop">
+            <div class="rounded-lg bg-surface-container-low p-space-md flex flex-col gap-2 border border-surface-container-high/30 relative">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="flex h-2 w-2 relative">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-error opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-error"></span>
+                  </span>
+                  <span class="font-label-caps text-label-caps text-on-surface font-bold uppercase">LIVE PAYLOAD GIMBAL FEED (4K 60FPS)</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button id="btn-fpv-feed" onclick="window.toggleRealFPVFeed()" class="px-2 py-1 rounded bg-surface-container hover:bg-surface-container-high text-primary font-label-caps text-[10px] font-bold flex items-center gap-1 cursor-pointer">
+                    <span class="material-symbols-outlined text-xs">videocam</span> CONNECT FPV 5.8GHz USB
+                  </button>
+                  <button onclick="window.capturePayloadPhoto()" class="px-2 py-1 rounded bg-primary text-on-primary font-label-caps text-[10px] font-bold hover:bg-primary-fixed-dim flex items-center gap-1 cursor-pointer">
+                    <span class="material-symbols-outlined text-xs">photo_camera</span> SHUTTER (<span id="ov-photo-counter">142</span>)
+                  </button>
+                </div>
+              </div>
+              
+              <!-- Video Screen Container -->
+              <div class="relative w-full h-[400px] rounded bg-black overflow-hidden flex items-center justify-center border border-primary/20">
+                <!-- Real UVC Video Stream (when connected) -->
+                <video id="fpv-live-video" autoplay playsinline muted class="w-full h-full object-cover hidden"></video>
+                <!-- Aerial Photogrammetry Preview Imagery -->
+                <img id="fpv-static-img" src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1200&q=80" alt="Aerial Drone Cadastral Feed" class="w-full h-full object-cover opacity-85">
+                
+                <!-- White Shutter Flash overlay -->
+                <div id="fpv-shutter-flash" class="absolute inset-0 bg-white opacity-0 transition-opacity duration-150 pointer-events-none"></div>
+
+                <!-- HUD Overlays -->
+                <div class="absolute inset-0 p-4 flex flex-col justify-between pointer-events-none text-white font-data-sm drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]">
+                  <!-- Top telemetry strip -->
+                  <div class="flex items-center justify-between">
+                    <span class="bg-black/60 px-2 py-0.5 rounded text-secondary font-mono">RTK FIX 3D: 26 SATS</span>
+                    <span class="bg-black/60 px-2 py-0.5 rounded text-primary font-mono">HDOP: 0.65</span>
+                    <span class="bg-black/60 px-2 py-0.5 rounded text-secondary font-mono">BATTERY: 88% (24.6V)</span>
+                  </div>
+
+                  <!-- Crosshairs / Target Reticle -->
+                  <div class="self-center flex flex-col items-center justify-center">
+                    <svg class="w-24 h-24 text-primary/80" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <circle cx="50" cy="50" r="30" stroke-dasharray="3 3"/>
+                      <line x1="50" y1="10" x2="50" y2="35"/>
+                      <line x1="50" y1="65" x2="50" y2="90"/>
+                      <line x1="10" y1="50" x2="35" y2="50"/>
+                      <line x1="65" y1="50" x2="90" y2="50"/>
+                      <circle cx="50" cy="50" r="3" fill="#4cd7f6"/>
+                    </svg>
+                    <span class="font-label-caps text-[10px] text-primary/90 mt-1">NADIR CADASTRE TARGET</span>
+                  </div>
+
+                  <!-- Bottom telemetry tape -->
+                  <div class="flex items-center justify-between">
+                    <div class="bg-black/60 px-2 py-1 rounded">
+                      <div class="text-[10px] text-outline uppercase font-label-caps">SPEED</div>
+                      <div class="text-sm font-bold text-primary">8.2 m/s</div>
+                    </div>
+                    <div class="bg-black/60 px-2 py-1 rounded text-center">
+                      <div class="text-[10px] text-outline uppercase font-label-caps">WAYPOINT</div>
+                      <div class="text-sm font-bold text-secondary">WP 8 / 24</div>
+                    </div>
+                    <div class="bg-black/60 px-2 py-1 rounded text-right">
+                      <div class="text-[10px] text-outline uppercase font-label-caps">ALTITUDE AGL</div>
+                      <div class="text-sm font-bold text-primary">78.4 m</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Cadastral Mission Progress Metrics -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-space-sm">
+              <div class="p-space-md rounded bg-surface-container-low border border-surface-container-high/30">
+                <span class="font-label-caps text-label-caps text-outline block">SURVEY AREA</span>
+                <span class="font-headline-md text-headline-md font-bold text-primary mt-1 block">14.8 / 28.5</span>
+                <span class="font-label-caps text-label-caps text-secondary font-bold">HECTARES (52%)</span>
+              </div>
+              <div class="p-space-md rounded bg-surface-container-low border border-surface-container-high/30">
+                <span class="font-label-caps text-label-caps text-outline block">EST. FLIGHT REMAINING</span>
+                <span class="font-headline-md text-headline-md font-bold text-on-surface mt-1 block">09m 42s</span>
+                <span class="font-label-caps text-label-caps text-outline">LEG 8 OF 16</span>
+              </div>
+              <div class="p-space-md rounded bg-surface-container-low border border-surface-container-high/30">
+                <span class="font-label-caps text-label-caps text-outline block">CAMERA PHOTOS</span>
+                <span class="font-headline-md text-headline-md font-bold text-secondary mt-1 block">142 IMAGES</span>
+                <span class="font-label-caps text-label-caps text-outline">GSD 1.18 CM/PX</span>
+              </div>
+              <div class="p-space-md rounded bg-surface-container-low border border-surface-container-high/30">
+                <span class="font-label-caps text-label-caps text-outline block">BATT ENDURANCE</span>
+                <span class="font-headline-md text-headline-md font-bold text-tertiary mt-1 block">18m 20s</span>
+                <span class="font-label-caps text-label-caps text-secondary font-bold">RTL RESERVE OK</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mission Map Mini-Widget & Flight Diagnostics (5 cols) -->
+          <div class="lg:col-span-5 flex flex-col gap-gutter-desktop">
+            <div class="rounded-lg bg-surface-container-low p-space-md flex flex-col gap-2 border border-surface-container-high/30">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-space-sm">
+                  <span class="material-symbols-outlined text-primary text-sm">map</span>
+                  <span class="font-headline-sm text-sm font-bold text-on-surface">Cadastral Flight Path Tracking</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <div class="flex items-center rounded bg-surface-container-high/60 p-0.5 border border-surface-container-high">
+                    <button id="ov-map-osm-btn" onclick="window.switchOverviewBaseMap('osm')" class="px-2 py-0.5 rounded text-[10px] font-label-caps bg-primary text-on-primary font-bold shadow cursor-pointer">OSM</button>
+                    <button id="ov-map-sat-btn" onclick="window.switchOverviewBaseMap('sat')" class="px-2 py-0.5 rounded text-[10px] font-label-caps text-on-surface-variant hover:text-on-surface cursor-pointer">SAT</button>
+                  </div>
+                  <button onclick="window.navigateTo('land-mapping-workspace')" class="text-primary hover:underline font-label-caps text-[10px] flex items-center gap-1">
+                    FULL CADASTRE <span class="material-symbols-outlined text-xs">arrow_forward</span>
+                  </button>
+                </div>
+              </div>
+              <!-- Mini map element -->
+              <div id="overview-mini-map" class="w-full h-64 rounded bg-surface-container-lowest overflow-hidden border border-surface-container-high/40"></div>
+              <div class="flex items-center justify-between font-label-caps text-[10px] text-outline pt-1">
+                <span>TARGET: KHASRA 102/B (RAMPUR)</span>
+                <span class="text-secondary font-bold">GPS LOCK: RTK FIXED</span>
+              </div>
+            </div>
+
+            <!-- Quick Telemetry Indicators -->
+            <div class="rounded-lg bg-surface-container-low p-space-lg flex flex-col gap-space-md border border-surface-container-high/30">
+              <span class="font-label-caps text-label-caps text-outline uppercase">Active Avionic Subsystems</span>
+              <div class="space-y-space-xs font-body-sm text-xs">
+                <div class="flex items-center justify-between p-2 rounded bg-surface-container-lowest">
+                  <span class="text-on-surface">Dual IMU Gyro/Acc (ICM-42688P)</span>
+                  <span class="font-label-caps text-secondary font-bold">HEALTHY</span>
+                </div>
+                <div class="flex items-center justify-between p-2 rounded bg-surface-container-lowest">
+                  <span class="text-on-surface">EKF3 Navigation Filter State</span>
+                  <span class="font-label-caps text-secondary font-bold">ALL 3 LANES OK</span>
+                </div>
+                <div class="flex items-center justify-between p-2 rounded bg-surface-container-lowest">
+                  <span class="text-on-surface">Sony Hotshoe Geotag Feedback</span>
+                  <span class="font-label-caps text-primary font-bold">SYNC PULSE OK</span>
+                </div>
+                <div class="flex items-center justify-between p-2 rounded bg-surface-container-lowest">
+                  <span class="text-on-surface">DGCA Geofence Monitoring</span>
+                  <span class="font-label-caps text-secondary font-bold">INSIDE GREEN ZONE</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- VIEW 02: DRONE TELEMETRY & SENSORS -->
+      <!-- ========================================== -->
+      <section id="view-drone-telemetry" class="view-section hidden flex flex-col w-full">
+        <div class="w-full bg-surface-container-low px-gutter-desktop py-space-md flex flex-wrap items-center justify-between gap-space-md border-b border-surface-container-high/40">
+          <div>
+            <span class="font-label-caps text-label-caps text-outline uppercase tracking-wider">INSTRUMENTATION CONSOLE</span>
+            <h1 class="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tight mt-0.5">Drone Telemetry &amp; Sensor Bus</h1>
+          </div>
+          <div class="flex items-center gap-space-sm font-data-sm text-xs">
+            <span class="px-2 py-1 rounded bg-surface-container text-secondary font-semibold" id="telem-rtk-sats">26 SATS (RTK FIXED)</span>
+            <span class="px-2 py-1 rounded bg-surface-container text-primary font-semibold">BARO: 1013.2 hPa</span>
+          </div>
+        </div>
+
+        <div class="p-gutter-desktop grid grid-cols-1 lg:grid-cols-12 gap-gutter-desktop">
+          <!-- Charts Left Column (8 cols) -->
+          <div class="lg:col-span-8 flex flex-col gap-gutter-desktop">
+            <!-- Altitude & Speed Graph -->
+            <div class="rounded-lg bg-surface-container-low p-space-lg flex flex-col gap-space-sm border border-surface-container-high/30">
+              <div class="flex items-center justify-between">
+                <span class="font-headline-sm text-sm font-bold text-on-surface">Altitude (AGL) &amp; Groundspeed Profile</span>
+                <span class="font-label-caps text-xs text-primary font-mono">AGL: <b id="telem-agl-val">78.4 m</b> | GS: <b id="telem-gs-val">8.2 m/s</b></span>
+              </div>
+              <div class="h-56 w-full">
+                <canvas id="chart-alt-speed"></canvas>
+              </div>
+            </div>
+
+            <!-- Battery & Current Draw Graph -->
+            <div class="rounded-lg bg-surface-container-low p-space-lg flex flex-col gap-space-sm border border-surface-container-high/30">
+              <div class="flex items-center justify-between">
+                <span class="font-headline-sm text-sm font-bold text-on-surface">Battery Voltage &amp; Instantaneous Current Draw</span>
+                <span class="font-label-caps text-xs text-tertiary font-mono">6S LiPo 24.6V @ 18.4A</span>
+              </div>
+              <div class="h-56 w-full">
+                <canvas id="chart-battery"></canvas>
+              </div>
+            </div>
+
+            <!-- Vibration FFT Graph -->
+            <div class="rounded-lg bg-surface-container-low p-space-lg flex flex-col gap-space-sm border border-surface-container-high/30">
+              <div class="flex items-center justify-between">
+                <span class="font-headline-sm text-sm font-bold text-on-surface">3-Axis Vibration Analysis (m/s²)</span>
+                <span class="font-label-caps text-xs text-secondary font-bold">VIB BELOW 15 m/s² THRESHOLD</span>
+              </div>
+              <div class="h-44 w-full">
+                <canvas id="chart-vibration"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Gauges Right Column (4 cols) -->
+          <div class="lg:col-span-4 flex flex-col gap-gutter-desktop">
+            <!-- Digital Gauges Cards -->
+            <div class="rounded-lg bg-surface-container-low p-space-lg flex flex-col gap-space-md border border-surface-container-high/30">
+              <span class="font-label-caps text-label-caps text-outline uppercase">Live Avionics Metrics</span>
+              
+              <div class="grid grid-cols-2 gap-space-sm">
+                <div class="p-space-md rounded bg-surface-container-lowest">
+                  <span class="font-label-caps text-label-caps text-outline">AIRSPEED</span>
+                  <div class="text-xl font-bold font-mono text-primary mt-1" id="telem-as-val">8.5 m/s</div>
+                  <span class="font-label-caps text-[9px] text-outline">PITOT DYNAMIC</span>
+                </div>
+                <div class="p-space-md rounded bg-surface-container-lowest">
+                  <span class="font-label-caps text-label-caps text-outline">CLIMB RATE</span>
+                  <div class="text-xl font-bold font-mono text-secondary mt-1" id="telem-climb-val">+0.1 m/s</div>
+                  <span class="font-label-caps text-[9px] text-outline">VSI VARIOMETER</span>
+                </div>
+                <div class="p-space-md rounded bg-surface-container-lowest">
+                  <span class="font-label-caps text-label-caps text-outline">THROTTLE</span>
+                  <div class="text-xl font-bold font-mono text-on-surface mt-1">48%</div>
+                  <span class="font-label-caps text-[9px] text-outline">CRUISE POWER</span>
+                </div>
+                <div class="p-space-md rounded bg-surface-container-lowest">
+                  <span class="font-label-caps text-label-caps text-outline">MOTOR ESC AVG</span>
+                  <div class="text-xl font-bold font-mono text-secondary mt-1">42.8°C</div>
+                  <span class="font-label-caps text-[9px] text-outline">4,280 RPM</span>
+                </div>
+              </div>
+
+              <!-- ESC Detailed Per-Motor Grid -->
+              <span class="font-label-caps text-label-caps text-outline uppercase mt-2">Per-Rotor ESC Bus</span>
+              <div class="space-y-1 font-mono text-xs">
+                <div class="flex items-center justify-between p-2 rounded bg-surface-container-lowest">
+                  <span class="text-secondary font-bold">M1 (Front-Right CCW)</span>
+                  <span class="text-primary">4,290 RPM | 4.6A | 41°C</span>
+                </div>
+                <div class="flex items-center justify-between p-2 rounded bg-surface-container-lowest">
+                  <span class="text-primary font-bold">M2 (Back-Left CCW)</span>
+                  <span class="text-primary">4,275 RPM | 4.7A | 43°C</span>
+                </div>
+                <div class="flex items-center justify-between p-2 rounded bg-surface-container-lowest">
+                  <span class="text-secondary font-bold">M3 (Front-Left CW)</span>
+                  <span class="text-primary">4,280 RPM | 4.5A | 42°C</span>
+                </div>
+                <div class="flex items-center justify-between p-2 rounded bg-surface-container-lowest">
+                  <span class="text-primary font-bold">M4 (Back-Right CW)</span>
+                  <span class="text-primary">4,300 RPM | 4.6A | 44°C</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- VIEW 03: FLIGHT CONTROLLER HEALTH -->
+      <!-- ========================================== -->
+      <section id="view-flight-controller-health" class="view-section hidden flex flex-col w-full">
+        <div class="w-full bg-surface-container-low px-gutter-desktop py-space-md flex flex-wrap items-center justify-between gap-space-md border-b border-surface-container-high/40">
+          <div>
+            <span class="font-label-caps text-label-caps text-outline uppercase tracking-wider">HARDWARE DIAGNOSTICS</span>
+            <h1 class="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tight mt-0.5">Pixhawk 6X &amp; ArduPilot Diagnostics</h1>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="window.runPreArmChecks()" class="px-space-md py-1.5 rounded bg-surface-container-high text-primary font-label-caps text-xs font-bold hover:bg-surface-bright flex items-center gap-1 cursor-pointer">
+              <span class="material-symbols-outlined text-xs">fact_check</span> RUN PRE-ARM CHECKS
+            </button>
+            <button onclick="window.triggerFCReboot()" class="px-space-md py-1.5 rounded bg-surface-container-high text-on-surface font-label-caps text-xs hover:bg-surface-bright flex items-center gap-1 cursor-pointer">
+              <span class="material-symbols-outlined text-xs text-error">restart_alt</span> REBOOT PIXHAWK
+            </button>
+          </div>
+        </div>
+
+        <div class="p-gutter-desktop grid grid-cols-1 lg:grid-cols-12 gap-gutter-desktop">
+          <!-- Left: EKF3 Lanes and MCU Metrics (6 cols) -->
+          <div class="lg:col-span-6 flex flex-col gap-gutter-desktop">
+            <div class="rounded-lg bg-surface-container-low p-space-lg flex flex-col gap-space-md border border-surface-container-high/30">
+              <span class="font-headline-sm text-sm font-bold text-on-surface">EKF3 Kalman Filter Lane Health</span>
+              <div class="space-y-space-xs font-data-sm text-xs">
+                <div class="p-2 rounded bg-surface-container-lowest flex items-center justify-between">
+                  <span class="text-on-surface">Velocity Variance</span>
+                  <span id="ekf-vel-val" class="text-secondary font-bold font-mono">0.04 (NOMINAL)</span>
+                </div>
+                <div class="p-2 rounded bg-surface-container-lowest flex items-center justify-between">
+                  <span class="text-on-surface">Horizontal Position Variance</span>
+                  <span id="ekf-pos-h-val" class="text-secondary font-bold font-mono">0.08 (NOMINAL)</span>
+                </div>
+                <div class="p-2 rounded bg-surface-container-lowest flex items-center justify-between">
+                  <span class="text-on-surface">Vertical Height Variance</span>
+                  <span id="ekf-pos-v-val" class="text-secondary font-bold font-mono">0.05 (NOMINAL)</span>
+                </div>
+                <div class="p-2 rounded bg-surface-container-lowest flex items-center justify-between">
+                  <span class="text-on-surface">Compass / Mag Variance</span>
+                  <span id="ekf-mag-val" class="text-secondary font-bold font-mono">0.12 (NOMINAL)</span>
+                </div>
+                <div class="p-2 rounded bg-surface-container-lowest flex items-center justify-between">
+                  <span class="text-on-surface">Terrain Altitude Variance</span>
+                  <span id="ekf-terrain-val" class="text-secondary font-bold font-mono">0.02 (NOMINAL)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- MCU Specs & Sensor Bus Health -->
+            <div class="rounded-lg bg-surface-container-low p-space-lg flex flex-col gap-space-md border border-surface-container-high/30">
+              <span class="font-headline-sm text-sm font-bold text-on-surface">STM32 Compute Core &amp; Onboard Sensor Bus</span>
+              <div class="grid grid-cols-3 gap-2 text-center font-data-sm">
+                <div class="bg-surface-container-lowest p-2 rounded">
+                  <div class="text-[10px] text-outline">CPU LOAD</div>
+                  <div id="fc-cpu-load" class="text-lg font-bold text-primary mt-1">35.7%</div>
+                  <div class="text-[9px] text-secondary">480MHz OK</div>
+                </div>
+                <div class="bg-surface-container-lowest p-2 rounded">
+                  <div class="text-[10px] text-outline">RAM FREE</div>
+                  <div class="text-lg font-bold text-secondary mt-1">842 KB</div>
+                  <div class="text-[9px] text-outline">1024 KB TOTAL</div>
+                </div>
+                <div class="bg-surface-container-lowest p-2 rounded">
+                  <div class="text-[10px] text-outline">FLASH INTEGRITY</div>
+                  <div class="text-lg font-bold text-primary mt-1">100%</div>
+                  <div class="text-[9px] text-secondary">CRC MATCH</div>
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-2 text-xs font-mono pt-1">
+                <div class="p-2 rounded bg-surface-container-lowest flex items-center justify-between">
+                  <span class="text-outline">CAN1 / DroneCAN:</span>
+                  <span class="text-secondary font-bold">ONLINE</span>
+                </div>
+                <div class="p-2 rounded bg-surface-container-lowest flex items-center justify-between">
+                  <span class="text-outline">I2C Internal Mag:</span>
+                  <span class="text-secondary font-bold">SYNC OK</span>
+                </div>
+                <div class="p-2 rounded bg-surface-container-lowest flex items-center justify-between">
+                  <span class="text-outline">SPI IMU Dual Bus:</span>
+                  <span class="text-secondary font-bold">4000 Hz OK</span>
+                </div>
+                <div class="p-2 rounded bg-surface-container-lowest flex items-center justify-between">
+                  <span class="text-outline">Safety Switch:</span>
+                  <span class="text-primary font-bold">ACTIVE</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: 16-Channel RC Transmitter PWM Bar Monitor (6 cols) -->
+          <div class="lg:col-span-6 flex flex-col gap-gutter-desktop">
+            <div class="rounded-lg bg-surface-container-low p-space-lg flex flex-col gap-space-md border border-surface-container-high/30">
+              <div class="flex items-center justify-between">
+                <span class="font-headline-sm text-sm font-bold text-on-surface">16-Channel Radio Transmitter Monitor (PWM)</span>
+                <span class="font-label-caps text-[10px] text-secondary font-bold">SBUS LINK OK (14ms)</span>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-2" id="rc-channels-container">
+                <!-- Dynamically populated by fcHealth.js -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- VIEW 04: LIVE ORIENTATION (3D AHRS) -->
+      <!-- ========================================== -->
+      <section id="view-live-orientation" class="view-section hidden flex flex-col w-full">
+        <div class="w-full bg-surface-container-low px-gutter-desktop py-space-md flex flex-wrap items-center justify-between gap-space-md border-b border-surface-container-high/40">
+          <div>
+            <span class="font-label-caps text-label-caps text-outline uppercase tracking-wider">ATTITUDE &amp; HEADING REFERENCE SYSTEM (AHRS)</span>
+            <h1 class="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tight mt-0.5">Real-Time 3D Quadcopter Orientation</h1>
+          </div>
+          <!-- 3-DOF Numbers -->
+          <div class="flex items-center gap-space-sm font-data-sm text-sm">
+            <div class="px-space-md py-1 rounded bg-surface-container text-on-surface">
+              <span class="text-outline text-xs">PITCH: </span><b id="ahrs-pitch-val" class="text-primary">+2.1°</b>
+            </div>
+            <div class="px-space-md py-1 rounded bg-surface-container text-on-surface">
+              <span class="text-outline text-xs">ROLL: </span><b id="ahrs-roll-val" class="text-secondary">-1.4°</b>
+            </div>
+            <div class="px-space-md py-1 rounded bg-surface-container text-on-surface">
+              <span class="text-outline text-xs">YAW / HDG: </span><b id="ahrs-yaw-val" class="text-tertiary">142°</b>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-gutter-desktop grid grid-cols-1 lg:grid-cols-12 gap-gutter-desktop">
+          <!-- 3D Three.js Quadcopter Viewport (8 cols) -->
+          <div class="lg:col-span-8 flex flex-col gap-gutter-desktop">
+            <div class="rounded-lg bg-surface-container-low p-space-md flex flex-col gap-2 border border-surface-container-high/30">
+              <div class="flex items-center justify-between flex-wrap gap-2">
+                <div class="flex items-center gap-2">
+                  <span class="font-headline-sm text-sm font-bold text-on-surface">Intellectual 3D Airframe Dynamics (AHRS)</span>
+                  <span class="font-label-caps text-[10px] px-1.5 py-0.5 rounded bg-primary/20 text-primary font-bold">ORBIT 360°</span>
+                </div>
+                <!-- Camera Preset Views -->
+                <div class="flex items-center gap-1 flex-wrap">
+                  <button onclick="window.setAhrsCameraView('north')" class="px-2.5 py-0.5 rounded bg-primary text-on-primary font-label-caps text-xs font-bold cursor-pointer hover:brightness-110 flex items-center gap-1 shadow-sm" title="Reset camera to North-Up perspective (North straight ahead, East to the right)">
+                    <span class="material-symbols-outlined text-[13px]">explore</span> NORTH-UP
+                  </button>
+                  <button onclick="window.setAhrsCameraView('top')" class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant hover:text-on-surface font-label-caps text-xs cursor-pointer" title="Direct overhead bird's-eye view">TOP</button>
+                  <button onclick="window.setAhrsCameraView('chase')" class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant hover:text-on-surface font-label-caps text-xs cursor-pointer" title="Follow perspective from behind drone">CHASE</button>
+                  <button onclick="window.setAhrsCameraView('front')" class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant hover:text-on-surface font-label-caps text-xs cursor-pointer" title="Front nose inspection view">FRONT</button>
+                  <button onclick="window.setAhrsCameraView('iso')" class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant hover:text-on-surface font-label-caps text-xs cursor-pointer" title="Isometric 3D perspective">ISO</button>
+                  <button onclick="window.cycleAhrsLighting()" id="btn-toggle-lighting" class="px-2.5 py-0.5 rounded bg-secondary/20 text-secondary hover:bg-secondary/30 font-label-caps text-xs font-bold cursor-pointer flex items-center gap-1 border border-secondary/40 shadow-sm" title="Boost or toggle 3D Studio Lighting brightness">
+                    <span class="material-symbols-outlined text-[13px]">lightbulb</span> 💡 BOOST LIGHT
+                  </button>
+                </div>
+              </div>
+
+              <!-- Visual Calibration Quick Bar -->
+              <div class="flex items-center justify-between flex-wrap gap-2 py-1.5 px-2.5 rounded bg-surface-container-lowest border border-surface-container-high/50">
+                <div class="flex items-center gap-1.5 flex-wrap text-xs">
+                  <span class="font-label-caps text-outline text-[10px] font-bold">AXIS:</span>
+                  <button id="btn-inv-pitch" onclick="window.toggleAhrsInvert('pitch')" class="px-2 py-0.5 rounded bg-primary text-on-primary font-label-caps text-[11px] font-bold cursor-pointer hover:brightness-110" title="Invert Pitch Axis (Nose Up / Down)">INV PITCH</button>
+                  <button id="btn-inv-roll" onclick="window.toggleAhrsInvert('roll')" class="px-2 py-0.5 rounded bg-primary text-on-primary font-label-caps text-[11px] font-bold cursor-pointer hover:brightness-110" title="Invert Roll Axis (Left / Right Bank)">INV ROLL</button>
+                  <button id="btn-inv-yaw" onclick="window.toggleAhrsInvert('yaw')" class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-caps text-[11px] cursor-pointer hover:bg-surface-container-high" title="Invert Yaw Axis (Heading Rotation Direction)">INV YAW</button>
+                  <button id="btn-swap-axes-quick" onclick="window.toggleAhrsSwapAxes()" class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-caps text-[11px] cursor-pointer hover:bg-surface-container-high" title="Swap Pitch and Roll axes if cross-controlled">SWAP P⇄R</button>
+                </div>
+                <div class="flex items-center gap-1.5 text-xs flex-wrap">
+                  <button onclick="window.alignAhrsHeading('zero')" class="px-2 py-0.5 rounded bg-surface-container text-tertiary hover:bg-tertiary/20 font-label-caps text-[11px] font-bold cursor-pointer flex items-center gap-1 border border-tertiary/40" title="Align drone nose straight forward to screen (zeroes indoor heading offset)">
+                    <span class="material-symbols-outlined text-[13px]">my_location</span> ALIGN NOSE
+                  </button>
+                  <button onclick="window.alignAhrsHeading('reset')" class="px-2 py-0.5 rounded bg-surface-container text-outline hover:text-on-surface font-label-caps text-[11px] cursor-pointer" title="Reset to true 1:1 Pixhawk magnetic compass heading">
+                    TRUE FC HDG
+                  </button>
+                  <button onclick="window.startAhrsWizard()" id="btn-start-wizard" class="px-2.5 py-0.5 rounded bg-primary text-on-primary font-label-caps text-[11px] font-bold cursor-pointer flex items-center gap-1 shadow-sm hover:brightness-110" title="Start Mission Planner style 6-position guided alignment wizard">
+                    <span class="material-symbols-outlined text-[13px]">assistant</span> 6-AXIS WIZARD
+                  </button>
+                  <button onclick="window.calibrateAhrsZero()" class="px-2.5 py-0.5 rounded bg-secondary text-on-secondary font-label-caps text-[11px] font-bold cursor-pointer flex items-center gap-1 shadow-sm hover:brightness-110" title="Zero visual orientation at current rest attitude (Safe GCS display only - Pixhawk parameters untouched)">
+                    <span class="material-symbols-outlined text-[13px]">balance</span> ZERO LEVEL
+                  </button>
+                  <button onclick="window.toggleAhrsCalibPanel()" id="btn-toggle-calib-panel" class="px-2.5 py-0.5 rounded bg-secondary/20 text-secondary font-label-caps text-[11px] font-bold cursor-pointer flex items-center gap-1 border border-secondary/40 hover:bg-secondary/30" title="Open fine calibration and mounting alignment suite">
+                    <span class="material-symbols-outlined text-[13px]">tune</span> CALIBRATE SUITE
+                  </button>
+                  <button onclick="window.resetAhrsCalibration()" class="px-2 py-0.5 rounded bg-surface-container-high text-outline hover:text-on-surface font-label-caps text-[11px] cursor-pointer" title="Reset all visual offsets to defaults">
+                    RESET
+                  </button>
+                </div>
+              </div>
+
+              <!-- 3D Drone Viewport (Enhanced illuminated studio container) -->
+              <div id="threejs-drone-viewport" class="w-full h-[460px] rounded overflow-hidden border border-primary/20 relative shadow-inner" style="background: radial-gradient(circle at 50% 45%, #1e293b 0%, #0f172a 60%, #070a12 100%);">
+                <!-- Live Heading Indicator HUD -->
+                <div class="absolute top-2 left-2 z-10 px-2.5 py-1 rounded bg-surface-container-lowest/85 backdrop-blur-sm text-xs font-label-caps border border-primary/30 flex items-center gap-1.5 shadow">
+                  <span class="material-symbols-outlined text-primary text-sm transition-transform duration-100" id="ahrs-hud-heading-icon" style="transform: rotate(0deg)">navigation</span>
+                  <span class="text-outline text-[10px]">HEADING:</span>
+                  <b id="ahrs-hud-heading-val" class="text-primary font-data-sm text-xs">0° N</b>
+                </div>
+
+                <!-- 3D Canvas dynamically rendered here -->
+                <div class="absolute bottom-2 left-2 z-10 px-2 py-1 rounded bg-surface-container-lowest/80 backdrop-blur-sm text-[10px] font-label-caps text-outline pointer-events-none border border-surface-container-high/40">
+                  🖱️ Drag: Orbit 360° | Right-Click: Pan | Scroll: Zoom
+                </div>
+                <div class="absolute top-2 right-2 z-10 px-2 py-1 rounded bg-surface-container-lowest/80 backdrop-blur-sm text-[10px] font-label-caps text-primary border border-primary/30 flex items-center gap-1">
+                  <span class="inline-block w-1.5 h-1.5 rounded-full bg-primary animate-ping"></span>
+                  LIVE AHRS FEED
+                </div>
+              </div>
+
+              <!-- Comprehensive Visual Display Calibration Deck (100% Safe GCS-Side Only) -->
+              <div id="ahrs-calib-panel" class="rounded-lg bg-surface-container-lowest p- space-md border border-secondary/30 flex flex-col gap-3 shadow-md mt-1 p-3">
+                
+                <!-- Safety Notice Banner -->
+                <div class="flex items-center justify-between flex-wrap gap-2 px-3 py-2 rounded bg-secondary/10 border border-secondary/20">
+                  <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-secondary text-base">verified_user</span>
+                    <span class="text-xs font-bold text-secondary">
+                      SAFE VISUAL DISPLAY CALIBRATION ONLY
+                    </span>
+                    <span class="text-[11px] text-on-surface-variant">
+                      • Pixhawk flight controller hardware calibration &amp; ArduPilot parameters are 100% untouched.
+                    </span>
+                  </div>
+                  <div class="flex items-center gap-1.5">
+                    <span id="ahrs-calib-status-badge" class="px-2 py-0.5 rounded text-[10px] font-label-caps font-bold bg-primary/20 text-primary border border-primary/30">
+                      FACTORY DEFAULT (1:1)
+                    </span>
+                    <span class="text-[10px] text-outline">💾 Auto-saved in browser</span>
+                  </div>
+                </div>
+
+                <!-- Mission Planner Style Wizard Launch Banner -->
+                <div class="flex items-center justify-between flex-wrap gap-2 p-2.5 rounded bg-surface-container-low border border-primary/30 shadow-inner">
+                  <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-full bg-primary/20 border border-primary/40 flex items-center justify-center text-primary">
+                      <span class="material-symbols-outlined text-lg">auto_fix_high</span>
+                    </div>
+                    <div>
+                      <div class="text-xs font-bold text-on-surface">Mission Planner Style Multi-Position Calibration Wizard</div>
+                      <div class="text-[11px] text-on-surface-variant">Guided 6-position alignment: Level, Nose Up, Nose Down, Left Side, Right Side, and Back. Automatically detects inversions and axis swaps!</div>
+                    </div>
+                  </div>
+                  <button onclick="window.startAhrsWizard()" class="px-3.5 py-1.5 rounded bg-primary hover:brightness-110 text-on-primary font-label-caps text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-md">
+                    <span class="material-symbols-outlined text-sm">play_arrow</span> LAUNCH 6-AXIS WIZARD
+                  </button>
+                </div>
+
+                <!-- 4 Tuning Modules Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2.5">
+                  
+                  <!-- 1. Zero-Level Rest & Micro-Trim Steppers -->
+                  <div class="rounded bg-surface-container-low p-2.5 border border-surface-container-high/40 flex flex-col justify-between gap-2">
+                    <div>
+                      <div class="flex items-center justify-between mb-1">
+                        <span class="font-label-caps text-[11px] font-bold text-on-surface">1. Zero Level &amp; Trim</span>
+                        <span id="ahrs-zero-offset-val" class="font-data-sm text-[10px] text-primary">P: 0.0° | R: 0.0°</span>
+                      </div>
+                      <p class="text-[10px] text-outline leading-tight mb-2">
+                        Click when drone is resting to make visual model perfectly flat (0°, 0°).
+                      </p>
+                      <button onclick="window.calibrateAhrsZero()" class="w-full py-1.5 rounded bg-secondary hover:brightness-110 text-on-secondary font-label-caps text-[11px] font-bold flex items-center justify-center gap-1 cursor-pointer shadow-sm">
+                        <span class="material-symbols-outlined text-xs">my_location</span> SET CURRENT REST AS ZERO
+                      </button>
+                    </div>
+
+                    <!-- Micro Trims -->
+                    <div class="flex flex-col gap-1.5 pt-1.5 border-t border-surface-container-high/30">
+                      <!-- Pitch Trim -->
+                      <div class="flex items-center justify-between text-xs">
+                        <span class="text-[10px] font-label-caps text-outline">Pitch Trim:</span>
+                        <div class="flex items-center gap-1">
+                          <button onclick="window.adjustAhrsTrim('pitch', -0.5)" class="px-1.5 py-0.5 rounded bg-surface-container hover:bg-surface-container-high text-[10px] cursor-pointer">-0.5°</button>
+                          <button onclick="window.adjustAhrsTrim('pitch', -0.1)" class="px-1.5 py-0.5 rounded bg-surface-container hover:bg-surface-container-high text-[10px] cursor-pointer">-0.1°</button>
+                          <span id="ahrs-pitch-trim-val" class="font-data-sm text-[11px] font-bold text-primary w-11 text-center">+0.0°</span>
+                          <button onclick="window.adjustAhrsTrim('pitch', +0.1)" class="px-1.5 py-0.5 rounded bg-surface-container hover:bg-surface-container-high text-[10px] cursor-pointer">+0.1°</button>
+                          <button onclick="window.adjustAhrsTrim('pitch', +0.5)" class="px-1.5 py-0.5 rounded bg-surface-container hover:bg-surface-container-high text-[10px] cursor-pointer">+0.5°</button>
+                        </div>
+                      </div>
+                      <!-- Roll Trim -->
+                      <div class="flex items-center justify-between text-xs">
+                        <span class="text-[10px] font-label-caps text-outline">Roll Trim:</span>
+                        <div class="flex items-center gap-1">
+                          <button onclick="window.adjustAhrsTrim('roll', -0.5)" class="px-1.5 py-0.5 rounded bg-surface-container hover:bg-surface-container-high text-[10px] cursor-pointer">-0.5°</button>
+                          <button onclick="window.adjustAhrsTrim('roll', -0.1)" class="px-1.5 py-0.5 rounded bg-surface-container hover:bg-surface-container-high text-[10px] cursor-pointer">-0.1°</button>
+                          <span id="ahrs-roll-trim-val" class="font-data-sm text-[11px] font-bold text-secondary w-11 text-center">+0.0°</span>
+                          <button onclick="window.adjustAhrsTrim('roll', +0.1)" class="px-1.5 py-0.5 rounded bg-surface-container hover:bg-surface-container-high text-[10px] cursor-pointer">+0.1°</button>
+                          <button onclick="window.adjustAhrsTrim('roll', +0.5)" class="px-1.5 py-0.5 rounded bg-surface-container hover:bg-surface-container-high text-[10px] cursor-pointer">+0.5°</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- 2. Board Mounting Rotation & Axis Remapping -->
+                  <div class="rounded bg-surface-container-low p-2.5 border border-surface-container-high/40 flex flex-col justify-between gap-2">
+                    <div>
+                      <div class="flex items-center justify-between mb-1">
+                        <span class="font-label-caps text-[11px] font-bold text-on-surface">2. Mounting &amp; Swap</span>
+                        <span id="ahrs-board-rot-badge" class="font-data-sm text-[10px] text-tertiary">0° (STD)</span>
+                      </div>
+                      <p class="text-[10px] text-outline leading-tight mb-2">
+                        Rotate or swap axes if drone tilts forward when rolling or pitch is rotated.
+                      </p>
+                      <!-- Rotation Buttons -->
+                      <div class="grid grid-cols-4 gap-1 mb-2">
+                        <button id="btn-rot-0" onclick="window.setAhrsBoardRotation(0)" class="py-1 rounded text-center text-[10px] font-label-caps font-bold bg-primary text-on-primary cursor-pointer">0°</button>
+                        <button id="btn-rot-90" onclick="window.setAhrsBoardRotation(90)" class="py-1 rounded text-center text-[10px] font-label-caps bg-surface-container text-on-surface-variant hover:text-on-surface cursor-pointer">90° CW</button>
+                        <button id="btn-rot-180" onclick="window.setAhrsBoardRotation(180)" class="py-1 rounded text-center text-[10px] font-label-caps bg-surface-container text-on-surface-variant hover:text-on-surface cursor-pointer">180°</button>
+                        <button id="btn-rot-270" onclick="window.setAhrsBoardRotation(270)" class="py-1 rounded text-center text-[10px] font-label-caps bg-surface-container text-on-surface-variant hover:text-on-surface cursor-pointer">270°</button>
+                      </div>
+                    </div>
+
+                    <!-- Swap Pitch & Roll -->
+                    <button id="btn-swap-axes" onclick="window.toggleAhrsSwapAxes()" class="w-full py-1.5 rounded bg-surface-container hover:bg-surface-container-high text-on-surface font-label-caps text-[11px] font-bold flex items-center justify-center gap-1 cursor-pointer border border-surface-container-high/50">
+                      <span class="material-symbols-outlined text-xs">sync_alt</span> SWAP PITCH ⇄ ROLL
+                    </button>
+                  </div>
+
+                  <!-- 3. Motion Direction (Invert) -->
+                  <div class="rounded bg-surface-container-low p-2.5 border border-surface-container-high/40 flex flex-col justify-between gap-2">
+                    <div>
+                      <div class="flex items-center justify-between mb-1">
+                        <span class="font-label-caps text-[11px] font-bold text-on-surface">3. Axis Direction</span>
+                        <span class="text-[10px] text-outline">Sign flip</span>
+                      </div>
+                      <p class="text-[10px] text-outline leading-tight mb-2">
+                        Flip axes if visual movement is opposite to real drone movement.
+                      </p>
+                      <div class="flex flex-col gap-1.5">
+                        <button id="btn-inv-pitch-card" onclick="window.toggleAhrsInvert('pitch')" class="w-full py-1 rounded bg-primary text-on-primary font-label-caps text-[10px] font-bold flex items-center justify-between px-2 cursor-pointer">
+                          <span>PITCH (Nose Up/Down)</span>
+                          <span id="badge-inv-pitch">INVERTED</span>
+                        </button>
+                        <button id="btn-inv-roll-card" onclick="window.toggleAhrsInvert('roll')" class="w-full py-1 rounded bg-primary text-on-primary font-label-caps text-[10px] font-bold flex items-center justify-between px-2 cursor-pointer">
+                          <span>ROLL (Left/Right Bank)</span>
+                          <span id="badge-inv-roll">INVERTED</span>
+                        </button>
+                        <button id="btn-inv-yaw-card" onclick="window.toggleAhrsInvert('yaw')" class="w-full py-1 rounded bg-surface-container text-on-surface-variant font-label-caps text-[10px] font-bold flex items-center justify-between px-2 cursor-pointer">
+                          <span>YAW (Heading Spin)</span>
+                          <span id="badge-inv-yaw">NORMAL</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- 4. Heading & Factory Reset -->
+                  <div class="rounded bg-surface-container-low p-2.5 border border-surface-container-high/40 flex flex-col justify-between gap-2">
+                    <div>
+                      <div class="flex items-center justify-between mb-1">
+                        <span class="font-label-caps text-[11px] font-bold text-on-surface">4. Heading &amp; Reset</span>
+                        <span id="ahrs-yaw-offset-val" class="font-data-sm text-[10px] text-tertiary">Offset: 0.0°</span>
+                      </div>
+                      <p class="text-[10px] text-outline leading-tight mb-2">
+                        Align visual drone nose straight forward or reset all visual offsets.
+                      </p>
+                      <div class="flex flex-col gap-1.5">
+                        <button onclick="window.alignAhrsHeading('zero')" class="w-full py-1 rounded bg-surface-container hover:bg-surface-container-high text-on-surface font-label-caps text-[10px] font-bold flex items-center justify-center gap-1 cursor-pointer">
+                          <span class="material-symbols-outlined text-xs">navigation</span> ALIGN NOSE TO SCREEN (0°)
+                        </button>
+                        <button onclick="window.alignAhrsHeading('reset')" class="w-full py-1 rounded bg-surface-container hover:bg-surface-container-high text-outline font-label-caps text-[10px] cursor-pointer">
+                          RESET HEADING OFFSET
+                        </button>
+                        <button onclick="window.resetAhrsCalibration()" class="w-full py-1 rounded bg-error/15 text-error hover:bg-error/25 font-label-caps text-[10px] font-bold flex items-center justify-center gap-1 cursor-pointer mt-1">
+                          <span class="material-symbols-outlined text-xs">restart_alt</span> RESET ALL TO DEFAULTS
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+                <!-- Live Attitude Comparison Diagnostics -->
+                <div class="p-2 rounded bg-surface-container-low border border-surface-container-high/40 flex items-center justify-between flex-wrap gap-2 text-[11px]">
+                  <div class="flex items-center gap-2">
+                    <span class="font-label-caps text-[10px] text-outline font-bold">FC RAW MAVLINK:</span>
+                    <span id="ahrs-diag-raw" class="font-data-sm text-outline">P: +0.0° | R: +0.0° | Y: 0°</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="font-label-caps text-[10px] text-outline font-bold">TOTAL DISPLAY OFFSETS:</span>
+                    <span id="ahrs-diag-offset" class="font-data-sm text-secondary">P: 0.0° | R: 0.0° | Y: 0.0°</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="font-label-caps text-[10px] text-outline font-bold">EFFECTIVE 3D MODEL:</span>
+                    <span id="ahrs-diag-eff" class="font-data-sm text-primary font-bold">P: +0.0° | R: +0.0° | Y: 0°</span>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+
+          <!-- 2D Artificial Horizon & Compass (4 cols) -->
+          <div class="lg:col-span-4 flex flex-col gap-gutter-desktop">
+            <!-- Artificial Horizon Instrument -->
+            <div class="rounded-lg bg-surface-container-low p-space-lg flex flex-col items-center justify-center gap-2 border border-surface-container-high/30">
+              <span class="font-label-caps text-label-caps text-outline uppercase">Primary Flight Attitude (PFD)</span>
+              
+              <div class="relative w-48 h-48 rounded-full overflow-hidden border-2 border-primary/40 bg-surface-container-lowest flex items-center justify-center shadow-lg my-2">
+                <svg class="w-full h-full" viewBox="0 0 200 200">
+                  <g id="ahrs-horizon-svg-group">
+                    <!-- Sky (Cyan/Blue) -->
+                    <rect x="-100" y="-100" width="400" height="200" fill="#00424f"/>
+                    <!-- Ground (Dark Brown/Slate) -->
+                    <rect x="-100" y="100" width="400" height="200" fill="#181b25"/>
+                    <!-- Horizon Line -->
+                    <line x1="-100" y1="100" x2="300" y2="100" stroke="#4cd7f6" stroke-width="2.5"/>
+                    <!-- Pitch Ladder Lines -->
+                    <line x1="80" y1="75" x2="120" y2="75" stroke="#4cd7f6" stroke-width="1.5"/>
+                    <line x1="80" y1="125" x2="120" y2="125" stroke="#4cd7f6" stroke-width="1.5"/>
+                  </g>
+                  <!-- Fixed Center Crosshair -->
+                  <circle cx="100" cy="100" r="4" fill="#4edea3"/>
+                  <line x1="60" y1="100" x2="85" y2="100" stroke="#4edea3" stroke-width="3"/>
+                  <line x1="115" y1="100" x2="140" y2="100" stroke="#4edea3" stroke-width="3"/>
+                </svg>
+              </div>
+
+              <!-- Compass Rose -->
+              <span class="font-label-caps text-label-caps text-outline uppercase mt-3">Heading Compass Rose</span>
+              <div class="relative w-32 h-32 rounded-full border border-surface-container-high bg-surface-container-lowest flex items-center justify-center">
+                <svg class="w-full h-full" viewBox="0 0 120 120">
+                  <!-- Compass marks -->
+                  <text x="56" y="18" fill="#4cd7f6" class="font-label-caps text-[9px] font-bold">N</text>
+                  <text x="104" y="64" fill="#dfe2ef" class="font-label-caps text-[9px]">E</text>
+                  <text x="57" y="112" fill="#dfe2ef" class="font-label-caps text-[9px]">S</text>
+                  <text x="8" y="64" fill="#dfe2ef" class="font-label-caps text-[9px]">W</text>
+                  <!-- Rotating needle -->
+                  <g id="compass-rose-needle" transform="rotate(-142, 60, 60)">
+                    <polygon points="60,24 54,60 66,60" fill="#ffb4ab"/>
+                    <polygon points="60,96 54,60 66,60" fill="#dfe2ef"/>
+                  </g>
+                  <circle cx="60" cy="60" r="3" fill="#4cd7f6"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- VIEW 05: LAND MAPPING WORKSPACE (CADASTRE) -->
+      <!-- ========================================== -->
+      <section id="view-land-mapping-workspace" class="view-section hidden flex flex-col w-full">
+        <div class="w-full bg-surface-container-low px-gutter-desktop py-space-md flex flex-wrap items-center justify-between gap-space-md border-b border-surface-container-high/40">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-label-caps text-label-caps text-outline uppercase tracking-wider">SVAMITVA SCHEME GIS CADASTRE</span>
+              <span class="font-label-caps text-[10px] px-1.5 py-0.5 rounded bg-primary-container/20 text-primary font-bold">VILLAGE: RAMPUR KHAS (VARANASI)</span>
+            </div>
+            <h1 class="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tight mt-0.5">Cadastral Land Mapping &amp; Survey Grid Planner</h1>
+          </div>
+          <!-- Layer Switch, Location Jump & Export buttons -->
+          <div class="flex items-center gap-2 flex-wrap">
+            <!-- Location Quick Select -->
+            <div class="flex items-center gap-1 px-2 py-1 rounded bg-surface-container-high border border-surface-container-highest">
+              <span class="material-symbols-outlined text-xs text-primary">location_on</span>
+              <select id="map-location-jump-select" onchange="window.jumpToSurveyLocation(this.value)" class="bg-surface-container-high font-label-caps text-xs text-on-surface outline-none cursor-pointer">
+                <option value="varanasi">📍 Rampur Khas (Varanasi)</option>
+                <option value="greater_noida">📍 Gr. Noida Drone Site</option>
+                <option value="ayodhya">📍 Ayodhya Survey Zone</option>
+                <option value="lucknow">📍 Lucknow IT City</option>
+                <option value="delhi">📍 Delhi Survey Enclave</option>
+              </select>
+            </div>
+
+            <button id="btn-basemap-osm" onclick="window.switchBaseMap('osm')" class="px-space-md py-1 rounded bg-primary text-on-primary font-label-caps text-xs font-bold shadow-[0_0_8px_rgba(6,182,212,0.4)] cursor-pointer flex items-center gap-1 transition-all">
+              <span class="material-symbols-outlined text-xs">public</span> OPENSTREETMAP
+            </button>
+            <button id="btn-basemap-osm-hot" onclick="window.switchBaseMap('osm-hot')" class="px-space-md py-1 rounded bg-surface-container text-on-surface-variant font-label-caps text-xs hover:text-on-surface cursor-pointer flex items-center gap-1 transition-all">
+              <span class="material-symbols-outlined text-xs">map</span> OSM HUMANITARIAN
+            </button>
+            <button id="btn-basemap-sat" onclick="window.switchBaseMap('sat')" class="px-space-md py-1 rounded bg-surface-container text-on-surface-variant font-label-caps text-xs hover:text-on-surface cursor-pointer flex items-center gap-1 transition-all">
+              <span class="material-symbols-outlined text-xs">satellite_alt</span> SATELLITE ORTHO
+            </button>
+            <button id="btn-basemap-dark" onclick="window.switchBaseMap('dark')" class="px-space-md py-1 rounded bg-surface-container text-on-surface-variant font-label-caps text-xs hover:text-on-surface cursor-pointer flex items-center gap-1 transition-all">
+              <span class="material-symbols-outlined text-xs">dark_mode</span> CADASTRE VECTOR
+            </button>
+            <button onclick="window.exportCadastreGeoJSON()" class="px-space-md py-1 rounded bg-surface-container-high text-primary font-label-caps text-xs font-bold hover:bg-surface-bright flex items-center gap-1 cursor-pointer">
+              <span class="material-symbols-outlined text-xs">file_download</span> EXPORT GEOJSON
+            </button>
+          </div>
+        </div>
+
+        <div class="p-gutter-desktop grid grid-cols-1 lg:grid-cols-12 gap-gutter-desktop">
+          <!-- Main Leaflet Map (8 cols) -->
+          <div class="lg:col-span-8 flex flex-col gap-gutter-desktop">
+            <div class="rounded-lg bg-surface-container-low p-space-md flex flex-col gap-2 border border-surface-container-high/30">
+              <div class="flex items-center justify-between flex-wrap gap-2">
+                <div class="flex items-center gap-2">
+                  <span class="font-headline-sm text-sm font-bold text-on-surface">Interactive GIS OpenStreetMap (Live Drone GPS Tracking)</span>
+                </div>
+                <div class="flex items-center gap-2 flex-wrap">
+                  <!-- Live Drone GPS Readout Chip -->
+                  <div class="flex items-center gap-1.5 px-2 py-0.5 rounded bg-surface-container-high border border-secondary/40 shadow">
+                    <span class="relative flex h-2 w-2">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span>
+                    </span>
+                    <span class="font-mono text-[11px] font-bold text-secondary" id="map-live-gps-readout">GPS: 28.470211° N, 77.494297° E</span>
+                    <span class="font-label-caps text-[9px] text-primary font-bold px-1 py-0.5 rounded bg-primary/10" id="map-live-gps-fix">LIVE GPS</span>
+                  </div>
+
+                  <button id="btn-auto-follow-drone" onclick="window.toggleAutoFollowDrone()" class="px-2 py-0.5 rounded bg-secondary text-on-secondary text-[11px] font-label-caps font-bold flex items-center gap-1 cursor-pointer shadow" title="Keep map centered on moving drone">
+                    <span class="material-symbols-outlined text-xs">my_location</span> AUTO-FOLLOW: ON
+                  </button>
+                  <button onclick="window.centerMapOnDrone()" class="px-2 py-0.5 rounded bg-surface-container-high text-[11px] font-label-caps text-primary hover:bg-surface-container-highest flex items-center gap-1 cursor-pointer" title="Recenter map on drone">
+                    <span class="material-symbols-outlined text-xs">navigation</span> RECENTER DRONE
+                  </button>
+                  <button onclick="window.centerMapOnParcels()" class="px-2 py-0.5 rounded bg-surface-container-high text-[11px] font-label-caps text-secondary hover:bg-surface-container-highest flex items-center gap-1 cursor-pointer" title="Fit cadastral survey parcels in view">
+                    <span class="material-symbols-outlined text-xs">fit_screen</span> FIT PARCELS
+                  </button>
+                </div>
+              </div>
+              <!-- Leaflet Map Container -->
+              <div id="cadastre-leaflet-map" class="w-full h-[520px] rounded bg-surface-container-lowest overflow-hidden border border-surface-container-high/40 relative">
+                <!-- Cursor Coordinate HUD overlay -->
+                <div class="absolute bottom-2 right-2 z-[400] bg-surface-container-lowest/85 backdrop-blur-md px-2 py-1 rounded text-[11px] font-mono text-primary border border-primary/30 pointer-events-none shadow" id="map-cursor-coords">
+                  LAT: 28.615500° | LON: 77.210500° | ZOOM: 16
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Photogrammetry Parameters & Transect Generator (4 cols) -->
+          <div class="lg:col-span-4 flex flex-col gap-gutter-desktop">
+            <div class="rounded-lg bg-surface-container-low p-space-lg flex flex-col gap-space-md border border-surface-container-high/30">
+              <span class="font-headline-sm text-sm font-bold text-on-surface">Survey Photogrammetry Parameters</span>
+
+              <!-- Altitude Slider -->
+              <div>
+                <div class="flex items-center justify-between mb-1">
+                  <span class="font-label-caps text-xs text-outline">FLIGHT ALTITUDE (AGL)</span>
+                  <span class="font-data-md text-xs text-primary font-bold">80 METERS</span>
+                </div>
+                <input type="range" min="30" max="120" value="80" id="survey-altitude-input" onchange="window.selectParcelForFlightPlan('102/B')" class="w-full accent-primary h-1 bg-surface-container rounded-lg cursor-pointer">
+              </div>
+
+              <!-- Overlap Controls -->
+              <div class="grid grid-cols-2 gap-2">
+                <div class="bg-surface-container-lowest p-2 rounded">
+                  <span class="font-label-caps text-[10px] text-outline">FRONT OVERLAP</span>
+                  <div class="text-sm font-bold text-secondary mt-1">80%</div>
+                </div>
+                <div class="bg-surface-container-lowest p-2 rounded">
+                  <span class="font-label-caps text-[10px] text-outline">SIDE OVERLAP</span>
+                  <div class="text-sm font-bold text-secondary mt-1">75%</div>
+                </div>
+              </div>
+
+              <!-- Calculated Metrics -->
+              <span class="font-label-caps text-xs text-outline uppercase mt-1">Computed Survey Metrics</span>
+              <div class="grid grid-cols-2 gap-2 font-data-sm text-xs">
+                <div class="bg-surface-container-lowest p-2 rounded">
+                  <span class="text-outline text-[10px]">GROUND RES (GSD)</span>
+                  <div class="text-primary font-bold text-sm mt-0.5" id="calc-gsd-display">1.18 cm/px</div>
+                </div>
+                <div class="bg-surface-container-lowest p-2 rounded">
+                  <span class="text-outline text-[10px]">TOTAL FLIGHT DIST</span>
+                  <div class="text-on-surface font-bold text-sm mt-0.5" id="calc-dist-display">4.2 km</div>
+                </div>
+                <div class="bg-surface-container-lowest p-2 rounded">
+                  <span class="text-outline text-[10px]">EST. PHOTOS</span>
+                  <div class="text-secondary font-bold text-sm mt-0.5" id="calc-photos-display">196 img</div>
+                </div>
+                <div class="bg-surface-container-lowest p-2 rounded">
+                  <span class="text-outline text-[10px]">FLIGHT TIME</span>
+                  <div class="text-tertiary font-bold text-sm mt-0.5" id="calc-time-display">11 min</div>
+                </div>
+              </div>
+
+              <!-- Action button: Simulate Run -->
+              <button onclick="window.toggleMissionSimulation()" id="btn-sim-survey" class="w-full mt-2 py-2.5 rounded bg-primary text-on-primary font-label-caps text-xs font-bold hover:bg-primary-fixed-dim transition-all flex items-center justify-center gap-1 cursor-pointer">
+                <span class="material-symbols-outlined text-xs">play_arrow</span>
+                START CADASTRE RUN
+              </button>
+
+              <!-- Parcel Selection Quick List -->
+              <span class="font-label-caps text-xs text-outline uppercase mt-2">SVAMITVA Khasra Land Records</span>
+              <div class="space-y-1 font-body-sm text-xs">
+                <div onclick="window.selectParcelForFlightPlan('101/A')" class="p-2 rounded bg-surface-container-lowest hover:bg-surface-container cursor-pointer flex items-center justify-between">
+                  <span class="text-on-surface font-semibold">Khasra 101/A (Rameshwar Singh)</span>
+                  <span class="text-secondary font-label-caps text-[10px]">4.8 Ha</span>
+                </div>
+                <div onclick="window.selectParcelForFlightPlan('102/B')" class="p-2 rounded bg-surface-container-lowest hover:bg-surface-container cursor-pointer flex items-center justify-between border border-primary/40">
+                  <span class="text-primary font-semibold">Khasra 102/B (Kamla Devi)</span>
+                  <span class="text-primary font-label-caps text-[10px]">6.2 Ha</span>
+                </div>
+                <div onclick="window.selectParcelForFlightPlan('103/C')" class="p-2 rounded bg-surface-container-lowest hover:bg-surface-container cursor-pointer flex items-center justify-between">
+                  <span class="text-on-surface font-semibold">Khasra 103/C (Harish Chandra)</span>
+                  <span class="text-tertiary font-label-caps text-[10px]">8.5 Ha</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- VIEW 06: SURVEY HISTORY & LOGS -->
+      <!-- ========================================== -->
+      <section id="view-survey-history-logs" class="view-section hidden flex flex-col w-full">
+        <div class="w-full bg-surface-container-low px-gutter-desktop py-space-md flex flex-wrap items-center justify-between gap-space-md border-b border-surface-container-high/40">
+          <div>
+            <span class="font-label-caps text-label-caps text-outline uppercase tracking-wider">RECORDS &amp; ARCHIVES</span>
+            <h1 class="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tight mt-0.5">Cadastral Survey History &amp; DataFlash Logs</h1>
+          </div>
+        </div>
+
+        <div class="p-gutter-desktop">
+          <div class="rounded-lg bg-surface-container-low p-space-lg flex flex-col gap-space-md border border-surface-container-high/30">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left font-data-sm text-xs">
+                <thead>
+                  <tr class="text-outline font-label-caps text-[10px] border-b border-surface-container">
+                    <th class="p-3">MISSION ID</th>
+                    <th class="p-3">DATE</th>
+                    <th class="p-3">VILLAGE / DISTRICT</th>
+                    <th class="p-3">KHASRA COUNT</th>
+                    <th class="p-3">SURVEY AREA</th>
+                    <th class="p-3">PHOTOS</th>
+                    <th class="p-3">GSD</th>
+                    <th class="p-3">STATUS</th>
+                    <th class="p-3">ACTIONS</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-surface-container/60">
+                  <tr class="hover:bg-surface-container/40">
+                    <td class="p-3 font-mono text-primary font-bold">SVAMITVA-2026-0912</td>
+                    <td class="p-3 text-on-surface">10 Oct 2026</td>
+                    <td class="p-3 text-on-surface-variant font-semibold">Rampur Khas, Varanasi</td>
+                    <td class="p-3 text-on-surface">38 Parcels</td>
+                    <td class="p-3 text-secondary font-bold">42.6 Ha</td>
+                    <td class="p-3 text-on-surface">384 Images</td>
+                    <td class="p-3 text-primary">1.18 cm/px</td>
+                    <td class="p-3"><span class="px-2 py-0.5 rounded bg-secondary-container/20 text-secondary font-label-caps text-[10px] font-bold">PROCESSED</span></td>
+                    <td class="p-3 flex items-center gap-2">
+                      <button onclick="window.previewOrthomosaic('SVAMITVA-2026-0912')" class="px-2 py-1 rounded bg-surface-container hover:bg-surface-container-high text-primary font-label-caps text-[10px] cursor-pointer">ORTHO</button>
+                      <button onclick="window.downloadMissionLog('SVAMITVA-2026-0912')" class="px-2 py-1 rounded bg-primary text-on-primary font-label-caps text-[10px] font-bold cursor-pointer">.BIN LOG</button>
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-surface-container/40">
+                    <td class="p-3 font-mono text-primary font-bold">SVAMITVA-2026-0894</td>
+                    <td class="p-3 text-on-surface">08 Oct 2026</td>
+                    <td class="p-3 text-on-surface-variant font-semibold">Bhadaini Tola, Varanasi</td>
+                    <td class="p-3 text-on-surface">24 Parcels</td>
+                    <td class="p-3 text-secondary font-bold">28.1 Ha</td>
+                    <td class="p-3 text-on-surface">262 Images</td>
+                    <td class="p-3 text-primary">1.22 cm/px</td>
+                    <td class="p-3"><span class="px-2 py-0.5 rounded bg-secondary-container/20 text-secondary font-label-caps text-[10px] font-bold">PROCESSED</span></td>
+                    <td class="p-3 flex items-center gap-2">
+                      <button onclick="window.previewOrthomosaic('SVAMITVA-2026-0894')" class="px-2 py-1 rounded bg-surface-container hover:bg-surface-container-high text-primary font-label-caps text-[10px] cursor-pointer">ORTHO</button>
+                      <button onclick="window.downloadMissionLog('SVAMITVA-2026-0894')" class="px-2 py-1 rounded bg-primary text-on-primary font-label-caps text-[10px] font-bold cursor-pointer">.BIN LOG</button>
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-surface-container/40">
+                    <td class="p-3 font-mono text-primary font-bold">SVAMITVA-2026-0841</td>
+                    <td class="p-3 text-on-surface">05 Oct 2026</td>
+                    <td class="p-3 text-on-surface-variant font-semibold">Shivpur Cadastre, Mirzapur</td>
+                    <td class="p-3 text-on-surface">52 Parcels</td>
+                    <td class="p-3 text-secondary font-bold">68.4 Ha</td>
+                    <td class="p-3 text-on-surface">512 Images</td>
+                    <td class="p-3 text-primary">1.15 cm/px</td>
+                    <td class="p-3"><span class="px-2 py-0.5 rounded bg-primary-container/20 text-primary font-label-caps text-[10px] font-bold">GEOPORTAL SYNCED</span></td>
+                    <td class="p-3 flex items-center gap-2">
+                      <button onclick="window.previewOrthomosaic('SVAMITVA-2026-0841')" class="px-2 py-1 rounded bg-surface-container hover:bg-surface-container-high text-primary font-label-caps text-[10px] cursor-pointer">ORTHO</button>
+                      <button onclick="window.downloadMissionLog('SVAMITVA-2026-0841')" class="px-2 py-1 rounded bg-primary text-on-primary font-label-caps text-[10px] font-bold cursor-pointer">.BIN LOG</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- VIEW 07: ALERTS & SYSTEM EVENTS -->
+      <!-- ========================================== -->
+      <section id="view-alerts-system-events" class="view-section hidden flex flex-col w-full">
+        <div class="w-full bg-surface-container-low px-gutter-desktop py-space-md flex flex-wrap items-center justify-between gap-space-md border-b border-surface-container-high/40">
+          <div>
+            <span class="font-label-caps text-label-caps text-outline uppercase tracking-wider">MAVLINK STATUSTEXT LOG</span>
+            <h1 class="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tight mt-0.5">Alerts &amp; Real-time Event Feed</h1>
+          </div>
+          <!-- Filters -->
+          <div class="flex items-center gap-2">
+            <button onclick="window.filterAlerts('ALL')" class="px-2.5 py-1 rounded bg-primary text-on-primary font-label-caps text-xs font-bold cursor-pointer">ALL</button>
+            <button onclick="window.filterAlerts('WARN')" class="px-2.5 py-1 rounded bg-surface-container text-error hover:text-white font-label-caps text-xs cursor-pointer">WARNINGS</button>
+            <button onclick="window.filterAlerts('INFO')" class="px-2.5 py-1 rounded bg-surface-container text-primary hover:text-white font-label-caps text-xs cursor-pointer">INFO</button>
+            <button onclick="window.clearAlerts()" class="px-2.5 py-1 rounded bg-surface-container-high text-outline hover:text-on-surface font-label-caps text-xs cursor-pointer">CLEAR</button>
+          </div>
+        </div>
+
+        <div class="p-gutter-desktop">
+          <div class="rounded-lg bg-surface-container-low p-space-lg flex flex-col gap-space-md border border-surface-container-high/30">
+            <div id="alerts-feed-container" class="space-y-space-sm">
+              <!-- Dynamically populated by alerts.js -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Realtime Telemetry Monitor Footer Bar (Always visible) -->
+      <footer class="w-full bg-surface-container-low px-gutter-desktop py-space-sm flex flex-wrap items-center justify-between text-outline font-data-sm text-data-sm border-t border-surface-container-high/40 mt-auto">
+        <div class="flex items-center gap-space-md">
+          <span class="flex items-center gap-1 text-on-surface-variant"><span class="material-symbols-outlined text-xs text-primary">sensors</span> IMU TEMP: <span id="imu-temp">38.4°C</span></span>
+          <span class="flex items-center gap-1 text-on-surface-variant"><span class="material-symbols-outlined text-xs text-secondary">gps_fixed</span> RTK FIX: 24 SATS (3D/DGPS)</span>
+          <span class="flex items-center gap-1 text-on-surface-variant"><span class="material-symbols-outlined text-xs text-tertiary">battery_charging_full</span> BUS: <span id="bus-volt">24.8V (94%)</span></span>
+        </div>
+        <div class="flex items-center gap-space-sm">
+          <span class="font-label-caps text-label-caps text-outline-variant">GCS COM PROTOCOL:</span>
+          <span class="font-data-sm text-data-sm text-primary">MAVLINK v2.0-SEC</span>
+          <span class="text-outline-variant">|</span>
+          <span class="font-label-caps text-label-caps text-secondary">GROUND STATION PORT 14550 READY</span>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <!-- Orthomosaic Preview Modal -->
+  <div id="ortho-preview-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-surface-container-low border border-primary/40 rounded-xl max-w-4xl w-full p-6 shadow-2xl flex flex-col gap-4">
+      <div class="flex items-center justify-between">
+        <h3 id="ortho-modal-title" class="font-headline-md text-on-surface font-bold">Orthomosaic High-Res Preview</h3>
+        <button onclick="window.closeOrthoModal()" class="p-1 rounded hover:bg-surface-container text-outline hover:text-on-surface">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <div class="w-full h-96 rounded bg-black overflow-hidden relative border border-surface-container-high">
+        <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1200&q=80" alt="Orthomosaic Map" class="w-full h-full object-cover">
+        <div class="absolute bottom-2 left-2 bg-black/70 px-3 py-1 rounded text-primary font-mono text-xs">
+          RESOLUTION: 1.18 cm/px | BHARAT SURVEY GEOTAGGED
+        </div>
+      </div>
+      <div class="flex justify-end gap-2">
+        <button onclick="window.closeOrthoModal()" class="px-4 py-1.5 rounded bg-surface-container text-on-surface font-label-caps text-xs">CLOSE</button>
+        <button onclick="window.downloadMissionLog('ACTIVE'); window.closeOrthoModal();" class="px-4 py-1.5 rounded bg-primary text-on-primary font-label-caps text-xs font-bold">DOWNLOAD GEO-TIFF</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Scripts -->
+  <script src="js/app.js?v=2.6.7"></script>
+  <script src="js/views/overview.js?v=2.6.7"></script>
+  <script src="js/views/telemetry.js?v=2.6.7"></script>
+  <script src="js/views/fcHealth.js?v=2.6.7"></script>
+  <script src="js/views/orientation.js?v=2.6.7"></script>
+  <script src="js/views/mapping.js?v=2.6.7"></script>
+  <script src="js/views/surveyHistory.js?v=2.6.7"></script>
+  <script src="js/views/alerts.js?v=2.6.7"></script>
+  <script src="js/views/settings.js?v=2.6.7"></script>
+
+  <!-- Real-time Clocks & Init -->
+  <script>
+    function updateClocks() {
+      const now = new Date();
+      const utc = now.toUTCString().split(' ')[4];
+      const istOptions = { timeZone: 'Asia/Kolkata', hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' };
+      const ist = new Intl.DateTimeFormat('en-GB', istOptions).format(now);
+      
+      const utcEl = document.getElementById('utc-clock');
+      const istEl = document.getElementById('ist-clock');
+      if (utcEl) utcEl.textContent = `UTC ${utc}`;
+      if (istEl) istEl.textContent = `IST ${ist}`;
+    }
+    setInterval(updateClocks, 1000);
+    updateClocks();
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initialize view subsystems
+      if (window.initFCHealth) window.initFCHealth();
+      if (window.initSettingsView) window.initSettingsView();
+      if (window.filterAlerts) window.filterAlerts('ALL');
+
+      // Setup user's Settings interaction hooks
+      document.querySelectorAll('.conn-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.conn-tab').forEach(t => {
+            t.classList.remove('bg-primary', 'text-on-primary', 'font-bold');
+            t.classList.add('bg-surface-container', 'text-on-surface-variant');
+          });
+          tab.classList.remove('bg-surface-container', 'text-on-surface-variant');
+          tab.classList.add('bg-primary', 'text-on-primary', 'font-bold');
+          window.showNotification('Switched connection link interface: ' + tab.textContent.trim());
+        });
+      });
+
+      const saveBtn = document.getElementById('btn-save');
+      if (saveBtn) {
+        saveBtn.addEventListener('click', () => {
+          window.showNotification('Parameters committed to Pixhawk 6X EEPROM');
+        });
+      }
+
+      const rebootBtn = document.getElementById('btn-reboot');
+      if (rebootBtn) {
+        rebootBtn.addEventListener('click', () => {
+          window.showNotification('Reboot signal transmitted (MAV_CMD_PREFLIGHT_REBOOT_SHUTDOWN)');
+        });
+      }
+
+      document.querySelectorAll('.cal-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const text = e.currentTarget.textContent.trim();
+          window.showNotification('Executing calibration sequence: ' + text);
+        });
+      });
+
+      const escBtn = document.getElementById('btn-esc-test');
+      if (escBtn) {
+        escBtn.addEventListener('click', () => {
+          window.showNotification('ESC Test initiated: Props MUST be detached!', true);
+        });
+      }
+
+      const txPower = document.getElementById('tx-power-input');
+      const txPowerVal = document.getElementById('tx-power-val');
+      if (txPower && txPowerVal) {
+        txPower.addEventListener('input', (e) => {
+          const dbm = e.target.value;
+          const mw = Math.round(Math.pow(10, dbm / 10));
+          txPowerVal.textContent = `${dbm} dBm (${mw}mW)`;
+        });
+        txPower.addEventListener('change', () => {
+          window.showNotification(`Radio TX power output updated to ${txPower.value} dBm`);
+        });
+      }
+
+      const netId = document.getElementById('net-id-input');
+      const netIdVal = document.getElementById('net-id-val');
+      if (netId && netIdVal) {
+        netId.addEventListener('input', (e) => {
+          netIdVal.textContent = e.target.value;
+        });
+      }
+    });
+  </script>
+
+  <!-- ======================================================== -->
+  <!-- MISSION PLANNER STYLE 6-POSITION DIGITAL TWIN WIZARD MODAL -->
+  <!-- ======================================================== -->
+  <div id="mp-calib-wizard-modal" class="fixed inset-0 z-50 bg-background/80 backdrop-blur-md flex items-center justify-center p-4 hidden">
+    <div class="max-w-2xl w-full bg-surface-container-low rounded-xl border border-primary/40 shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      
+      <!-- Wizard Header -->
+      <div class="p-4 bg-surface-container px-6 border-b border-surface-container-high flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg bg-primary/20 border border-primary/40 flex items-center justify-center text-primary">
+            <span class="material-symbols-outlined text-xl">auto_fix_high</span>
+          </div>
+          <div>
+            <h2 class="font-headline-sm text-base font-bold text-on-surface">Digital Twin Calibration Wizard</h2>
+            <p class="font-label-caps text-[11px] text-outline">Mission Planner Style 6-Position Guided Alignment</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded text-[10px] font-label-caps font-bold bg-secondary/20 text-secondary border border-secondary/30">
+            🔒 Safe GCS Display Only • Drone Hardware Untouched
+          </span>
+          <button onclick="window.closeAhrsWizard()" class="p-1 rounded text-outline hover:text-on-surface hover:bg-surface-container-high cursor-pointer" title="Close Wizard">
+            <span class="material-symbols-outlined text-lg">close</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Wizard Step Progress Bar -->
+      <div class="px-6 py-2.5 bg-surface-container-lowest border-b border-surface-container-high/40 flex items-center justify-between gap-1.5 overflow-x-auto">
+        <span id="wiz-step-pill-level" class="px-2.5 py-1 rounded text-[11px] font-label-caps font-bold bg-primary text-on-primary shadow-md border border-primary flex items-center gap-1">1. LEVEL</span>
+        <span id="wiz-step-pill-nose_up" class="px-2 py-1 rounded text-[10px] font-label-caps text-outline bg-surface-container border border-surface-container-high">2. NOSE UP</span>
+        <span id="wiz-step-pill-nose_down" class="px-2 py-1 rounded text-[10px] font-label-caps text-outline bg-surface-container border border-surface-container-high">3. NOSE DOWN</span>
+        <span id="wiz-step-pill-left_side" class="px-2 py-1 rounded text-[10px] font-label-caps text-outline bg-surface-container border border-surface-container-high">4. LEFT SIDE</span>
+        <span id="wiz-step-pill-right_side" class="px-2 py-1 rounded text-[10px] font-label-caps text-outline bg-surface-container border border-surface-container-high">5. RIGHT SIDE</span>
+        <span id="wiz-step-pill-back" class="px-2 py-1 rounded text-[10px] font-label-caps text-outline bg-surface-container border border-surface-container-high">6. BACK</span>
+      </div>
+
+      <!-- Active Step Content -->
+      <div id="wizard-active-step-content" class="p-6 flex flex-col gap-4">
+        
+        <!-- Step Title & Instruction -->
+        <div class="flex flex-col gap-1 text-center">
+          <span id="wiz-step-title" class="font-label-caps text-xs font-bold text-primary tracking-wider uppercase">STEP 1 OF 6: PLACE DRONE FLAT &amp; LEVEL</span>
+          <h3 id="wiz-step-instruction" class="font-headline-sm text-lg font-bold text-on-surface">
+            Place your physical drone on a flat, level surface (table or floor) and let it rest still.
+          </h3>
+          <p id="wiz-step-hint" class="text-xs text-outline italic mt-0.5">
+            💡 Purpose: The digital twin will use this resting position as 0° Level pitch and roll.
+          </p>
+        </div>
+
+        <!-- Visual Pose Diagram Container -->
+        <div id="wizard-pose-diagram" class="w-full h-48 rounded-lg bg-surface-container-lowest border border-surface-container-high/60 flex items-center justify-center p-2 shadow-inner">
+          <!-- Procedural SVG rendered by JS -->
+        </div>
+
+        <!-- Live Telemetry Monitor Box -->
+        <div class="px-3 py-2 rounded bg-surface-container border border-surface-container-high/50 flex items-center justify-between text-xs font-data-sm">
+          <div class="flex items-center gap-1.5 text-on-surface">
+            <span class="inline-block w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+            <span id="wiz-live-telemetry">Live Telemetry: Pitch: +0.0° | Roll: +0.0° | Yaw: 0°</span>
+          </div>
+          <span class="text-[10px] font-label-caps text-outline">Press [SPACE] when ready</span>
+        </div>
+
+      </div>
+
+      <!-- Completion Screen (Hidden until finished) -->
+      <div id="wizard-completion-container" class="p-6 flex flex-col items-center text-center gap-4 hidden">
+        <div class="w-14 h-14 rounded-full bg-secondary/20 border border-secondary/40 flex items-center justify-center text-secondary shadow-lg">
+          <span class="material-symbols-outlined text-3xl">verified</span>
+        </div>
+        <div>
+          <h3 class="font-headline-md text-xl font-bold text-on-surface">Digital Twin Calibrated Successfully!</h3>
+          <p class="text-xs text-on-surface-variant max-w-md mx-auto mt-1">
+            All 6 orientations verified. Your digital twin's visual axes and level offsets have been calculated and synchronized with your physical drone.
+          </p>
+        </div>
+
+        <!-- Solved Metrics Card -->
+        <div class="w-full grid grid-cols-2 gap-2 text-left text-xs bg-surface-container-lowest p-3 rounded-lg border border-surface-container-high/50">
+          <div class="flex flex-col">
+            <span class="font-label-caps text-[10px] text-outline">RESTING LEVEL BASELINE:</span>
+            <span id="wiz-res-level" class="font-data-sm text-primary font-bold">P: 0.0° | R: 0.0°</span>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-label-caps text-[10px] text-outline">AXES MAPPING:</span>
+            <span id="wiz-res-swap" class="font-data-sm text-tertiary font-bold">STANDARD</span>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-label-caps text-[10px] text-outline">PITCH AXIS DIRECTION:</span>
+            <span id="wiz-res-pitch" class="font-data-sm text-on-surface font-bold">NORMAL</span>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-label-caps text-[10px] text-outline">ROLL AXIS DIRECTION:</span>
+            <span id="wiz-res-roll" class="font-data-sm text-on-surface font-bold">NORMAL</span>
+          </div>
+        </div>
+
+        <div class="px-3 py-1.5 rounded bg-secondary/10 border border-secondary/20 text-[11px] text-secondary font-semibold">
+          🛡️ Pixhawk Flight Controller Parameters &amp; Hard Calibration remain 100% UNTOUCHED
+        </div>
+      </div>
+
+      <!-- Wizard Modal Footer -->
+      <div class="p-4 bg-surface-container px-6 border-t border-surface-container-high flex items-center justify-between">
+        <button onclick="window.closeAhrsWizard()" class="px-3 py-1.5 rounded bg-surface-container-high hover:bg-surface-container-highest text-outline hover:text-on-surface font-label-caps text-xs cursor-pointer">
+          CANCEL WIZARD
+        </button>
+        <div class="flex items-center gap-2">
+          <button id="wizard-btn-confirm" onclick="window.confirmAhrsWizardStep()" class="px-5 py-2 rounded bg-primary hover:brightness-110 text-on-primary font-label-caps text-xs font-bold cursor-pointer shadow-md flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-sm">check_circle</span> CONFIRM POSITION [SPACE]
+          </button>
+          <button id="wizard-btn-finish" onclick="window.closeAhrsWizard()" class="px-6 py-2 rounded bg-secondary hover:brightness-110 text-on-secondary font-label-caps text-xs font-bold cursor-pointer shadow-md hidden flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-sm">rocket_launch</span> APPLY &amp; VIEW 3D DIGITAL TWIN
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>
+
