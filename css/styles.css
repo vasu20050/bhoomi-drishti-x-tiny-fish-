@@ -1,126 +1,306 @@
 /* ==========================================================================
-   BHOOMI DRISHTI | Ground Control Station - Lovable Dark Theme System
-   Inspired by Lovable.dev, Linear & Vercel modern aerospace interfaces.
-   Ultra-deep obsidian/slate dark mode with electric cyan & emerald telemetry accents.
+   BHOOMI DRISHTI | Ground Control Station - Editorial Noir & Ivory Theme
+   Inspired by Lovable, Passport, and luxury editorial dark interfaces.
+   Ultra-deep warm obsidian background, high-contrast serif typography,
+   crisp ivory buttons, champagne gold telemetry accents & hairline borders.
    ========================================================================== */
 
-/* Custom Smooth & Sleek Scrollbar */
+/* --------------------------------------------------------------------------
+   1. ROOT & BODY ATMOSPHERE (WARM SPOTLIGHT & DEEP NOIR)
+   -------------------------------------------------------------------------- */
+body {
+  background-color: #080807 !important;
+  background-image: 
+    radial-gradient(ellipse 75% 50% at 75% -5%, rgba(195, 150, 95, 0.12), transparent 70%),
+    radial-gradient(ellipse 55% 40% at 15% 5%, rgba(145, 110, 70, 0.08), transparent 65%) !important;
+  background-attachment: fixed !important;
+  color: #faf7f2 !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom Smooth & Sleek Editorial Scrollbar */
 ::-webkit-scrollbar {
   width: 5px;
   height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #06070a;
+  background: #080807;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e2638;
+  background: #242220;
   border-radius: 9999px;
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #38bdf8;
-  box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+  background: #f5f2eb;
+  box-shadow: 0 0 10px rgba(245, 242, 235, 0.4);
 }
 
-/* Base Body & Selection */
+/* Base Body Selection */
 ::selection {
-  background: rgba(56, 189, 248, 0.3);
-  color: #f8fafc;
+  background: rgba(245, 242, 235, 0.25);
+  color: #ffffff;
 }
 
-/* Glassmorphism Lovable Cards */
-.glass-panel {
-  background: rgba(16, 22, 36, 0.75);
+/* --------------------------------------------------------------------------
+   2. EDITORIAL TYPOGRAPHY & HEADINGS
+   -------------------------------------------------------------------------- */
+h1, h2, h3,
+.font-headline-xl,
+.font-headline-lg,
+.font-headline-md {
+  font-family: 'Newsreader', 'Playfair Display', 'Cormorant Garamond', Georgia, serif !important;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  letter-spacing: -0.015em;
+  color: #faf7f2;
+}
+
+h1 {
+  font-weight: 500;
+}
+
+.font-editorial-italic {
+  font-family: 'Newsreader', 'Cormorant Garamond', Georgia, serif !important;
+  font-style: italic !important;
+  font-weight: 400 !important;
+}
+
+/* Squiggly Wave Underline (Inspired by editorial accent lines) */
+.editorial-squiggle {
+  position: relative;
+  display: inline-block;
+}
+.editorial-squiggle::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 100%;
+  height: 6px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 12' preserveAspectRatio='none'%3E%3Cpath d='M0,5 Q25,0 50,5 T100,5' fill='none' stroke='rgba(245,242,235,0.7)' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") repeat-x;
+  background-size: 80px 6px;
+}
+
+/* Editorial Metadata Pill / Ticker */
+.editorial-ticker {
+  border-top: 1px solid rgba(255, 245, 230, 0.08);
+  border-bottom: 1px solid rgba(255, 245, 230, 0.08);
+  background: rgba(12, 11, 10, 0.6);
+  backdrop-filter: blur(8px);
+}
+
+/* --------------------------------------------------------------------------
+   3. LOVABLE EDITORIAL BUTTONS (IVORY SOLID & CRISP DARK TEXT)
+   -------------------------------------------------------------------------- */
+button {
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: 'Inter', -apple-system, sans-serif;
+}
+button:active {
+  transform: scale(0.98);
+}
+
+/* Primary Action Buttons (Crisp Ivory Solid with Dark Bold Text) */
+button.bg-primary,
+.btn-editorial-primary,
+#btn-save,
+#wizard-btn-confirm {
+  background-color: #f5f2eb !important;
+  color: #0a0908 !important;
+  font-weight: 600 !important;
+  border: 1px solid rgba(255, 255, 255, 0.9) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 3px 12px rgba(245, 242, 235, 0.12) !important;
+}
+
+button.bg-primary:hover,
+.btn-editorial-primary:hover,
+#btn-save:hover,
+#wizard-btn-confirm:hover {
+  background-color: #ffffff !important;
+  box-shadow: 0 2px 16px rgba(245, 242, 235, 0.22) !important;
+  transform: translateY(-1px);
+}
+
+button.bg-primary span,
+#btn-save span,
+#wizard-btn-confirm span {
+  color: #0a0908 !important;
+}
+
+/* Secondary & Header Action Buttons */
+.btn-editorial-secondary,
+button.bg-surface-container-high:not(#btn-action-arm):not(#btn-save) {
+  background-color: rgba(255, 255, 255, 0.04) !important;
+  color: #faf7f2 !important;
+  border: 1px solid rgba(255, 245, 230, 0.12) !important;
+}
+
+.btn-editorial-secondary:hover,
+button.bg-surface-container-high:not(#btn-action-arm):not(#btn-save):hover {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 245, 230, 0.25) !important;
+}
+
+/* --------------------------------------------------------------------------
+   4. GLASSMORPHISM & LOVABLE EDITORIAL CARDS
+   -------------------------------------------------------------------------- */
+.glass-panel,
+.lovable-card {
+  background: rgba(18, 17, 16, 0.78) !important;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.5), inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 245, 230, 0.08) !important;
+  border-radius: 6px !important;
+  box-shadow: 0 8px 30px -4px rgba(0, 0, 0, 0.65), inset 0 1px 0 0 rgba(255, 255, 255, 0.05) !important;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-panel:hover,
+.lovable-card:hover {
+  border-color: rgba(255, 245, 230, 0.16) !important;
+  box-shadow: 0 12px 36px -4px rgba(0, 0, 0, 0.75), inset 0 1px 0 0 rgba(255, 255, 255, 0.08) !important;
 }
 
 .glass-panel-glow {
-  box-shadow: 0 0 24px -2px rgba(56, 189, 248, 0.18), inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 24px -2px rgba(226, 184, 104, 0.18), inset 0 1px 0 0 rgba(255, 255, 255, 0.08) !important;
 }
 
-.lovable-card {
-  background: rgba(17, 22, 36, 0.7);
-  backdrop-filter: blur(14px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 10px;
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4), inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.lovable-card:hover {
-  border-color: rgba(255, 255, 255, 0.13);
-  box-shadow: 0 6px 28px -2px rgba(0, 0, 0, 0.5), inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
-}
-
-/* Pulse Animation for Critical Alerts & Status Indicators */
+/* --------------------------------------------------------------------------
+   5. PULSE ANIMATION & STATUS INDICATORS
+   -------------------------------------------------------------------------- */
 @keyframes ring-pulse {
-  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.7); }
-  70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(56, 189, 248, 0); }
-  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(226, 184, 104, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(226, 184, 104, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(226, 184, 104, 0); }
 }
 
 .ping-ring {
   animation: ring-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-/* Leaflet Dark Mode Customization */
+/* --------------------------------------------------------------------------
+   6. SIDEBAR NAVIGATION - ULTRA SLEEK EDITORIAL PILL
+   -------------------------------------------------------------------------- */
+.nav-link {
+  position: relative;
+  border: 1px solid transparent;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  border-radius: 6px !important;
+}
+
+.nav-link:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border-color: rgba(255, 245, 230, 0.08) !important;
+  color: #faf7f2 !important;
+  transform: translateX(2px);
+}
+
+.nav-link:hover:not(.active) .material-symbols-outlined {
+  color: #f5f2eb !important;
+}
+
+/* Lovable Active Navigation State */
+.nav-link.active {
+  background: linear-gradient(90deg, rgba(245, 242, 235, 0.09) 0%, rgba(245, 242, 235, 0.01) 100%) !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  border: 1px solid rgba(245, 242, 235, 0.18) !important;
+  border-left: 2px solid #f5f2eb !important;
+  box-shadow: 0 2px 14px -2px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+.nav-link.active .material-symbols-outlined {
+  color: #f5f2eb !important;
+  filter: drop-shadow(0 0 6px rgba(245, 242, 235, 0.5));
+}
+
+.nav-link.active span:last-child {
+  color: #f5f2eb !important;
+  font-weight: 700 !important;
+}
+
+/* --------------------------------------------------------------------------
+   7. FORM INPUTS & SELECTS
+   -------------------------------------------------------------------------- */
+input[type="text"],
+input[type="number"],
+input[type="range"],
+select {
+  background-color: #151413 !important;
+  border: 1px solid rgba(255, 245, 230, 0.12) !important;
+  color: #faf7f2 !important;
+  transition: all 0.2s ease;
+  border-radius: 4px;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+  border-color: #f5f2eb !important;
+  box-shadow: 0 0 0 2px rgba(245, 242, 235, 0.2) !important;
+  outline: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   8. LEAFLET CARTOGRAPHY (WARM DARK EDITORIAL SKIN)
+   -------------------------------------------------------------------------- */
 .leaflet-container {
-  background: #06070a !important;
+  background: #080807 !important;
   font-family: 'Inter', -apple-system, sans-serif !important;
 }
 
 .leaflet-bar a {
-  background-color: #0e121e !important;
-  color: #f8fafc !important;
-  border-color: rgba(255, 255, 255, 0.08) !important;
+  background-color: #121110 !important;
+  color: #faf7f2 !important;
+  border-color: rgba(255, 245, 230, 0.1) !important;
   transition: all 0.15s ease;
 }
 
 .leaflet-bar a:hover {
-  background-color: #161e30 !important;
-  color: #38bdf8 !important;
+  background-color: #1c1a18 !important;
+  color: #f5f2eb !important;
 }
 
 .leaflet-popup-content-wrapper {
-  background: rgba(14, 18, 30, 0.95) !important;
-  backdrop-filter: blur(12px) !important;
-  color: #f8fafc !important;
-  border: 1px solid rgba(56, 189, 248, 0.4) !important;
-  border-radius: 10px !important;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 15px rgba(56, 189, 248, 0.2) !important;
+  background: rgba(16, 15, 14, 0.95) !important;
+  backdrop-filter: blur(14px) !important;
+  color: #faf7f2 !important;
+  border: 1px solid rgba(245, 242, 235, 0.3) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 15px rgba(226, 184, 104, 0.15) !important;
 }
 
 .leaflet-popup-tip {
-  background: #0e121e !important;
+  background: #121110 !important;
 }
 
-/* Leaflet Layer Control Dark Mode */
+/* Leaflet Layer Control */
 .leaflet-control-layers {
-  background: rgba(14, 18, 30, 0.92) !important;
+  background: rgba(16, 15, 14, 0.94) !important;
   backdrop-filter: blur(12px) !important;
-  color: #f8fafc !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  border-radius: 8px !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6) !important;
+  color: #faf7f2 !important;
+  border: 1px solid rgba(255, 245, 230, 0.12) !important;
+  border-radius: 6px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7) !important;
   font-family: 'Inter', sans-serif !important;
   font-size: 11px !important;
   padding: 8px 12px !important;
 }
 
 .leaflet-control-layers-toggle {
-  background-color: #0e121e !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  background-color: #121110 !important;
+  border: 1px solid rgba(255, 245, 230, 0.1) !important;
   border-radius: 6px !important;
 }
 
 .leaflet-control-layers-expanded {
-  color: #e2e8f0 !important;
+  color: #faf7f2 !important;
 }
 
 .leaflet-control-layers-separator {
-  border-top-color: rgba(255, 255, 255, 0.1) !important;
+  border-top-color: rgba(255, 245, 230, 0.1) !important;
   margin: 6px 0 !important;
 }
 
@@ -134,36 +314,36 @@
 
 .leaflet-control-layers input[type="radio"],
 .leaflet-control-layers input[type="checkbox"] {
-  accent-color: #38bdf8;
+  accent-color: #e2b868;
   cursor: pointer;
 }
 
 /* Leaflet Scale Bar */
 .leaflet-control-scale-line {
-  background: rgba(14, 18, 30, 0.85) !important;
+  background: rgba(16, 15, 14, 0.88) !important;
   backdrop-filter: blur(8px) !important;
-  border-color: #38bdf8 !important;
-  color: #38bdf8 !important;
+  border-color: #e2b868 !important;
+  color: #e2b868 !important;
   font-family: 'JetBrains Mono', monospace !important;
   font-size: 10px !important;
   padding: 2px 6px !important;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5) !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6) !important;
 }
 
 /* Leaflet Attribution Bar */
 .leaflet-control-attribution {
-  background: rgba(9, 11, 18, 0.8) !important;
+  background: rgba(10, 9, 8, 0.85) !important;
   backdrop-filter: blur(6px) !important;
-  color: #64748b !important;
+  color: #a8a29a !important;
   font-size: 9px !important;
   padding: 3px 8px !important;
-  border-radius: 6px 0 0 0 !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
-  border-left: 1px solid rgba(255, 255, 255, 0.05) !important;
+  border-radius: 4px 0 0 0 !important;
+  border-top: 1px solid rgba(255, 245, 230, 0.06) !important;
+  border-left: 1px solid rgba(255, 245, 230, 0.06) !important;
 }
 
 .leaflet-control-attribution a {
-  color: #38bdf8 !important;
+  color: #f5f2eb !important;
   text-decoration: none !important;
 }
 
@@ -173,19 +353,19 @@
 
 /* Cadastral Polygon Styling */
 .cadastre-polygon-active {
-  stroke: #38bdf8;
+  stroke: #e2b868;
   stroke-width: 2;
-  fill: #0ea5e9;
-  fill-opacity: 0.18;
+  fill: #e2b868;
+  fill-opacity: 0.15;
 }
 
 /* Survey Transect Path Glow */
 .survey-flight-path {
-  stroke: #38bdf8;
-  stroke-width: 2.5;
+  stroke: #e2b868;
+  stroke-width: 2.2;
   stroke-dasharray: 6, 6;
   animation: dash 30s linear infinite;
-  filter: drop-shadow(0 0 4px rgba(56, 189, 248, 0.6));
+  filter: drop-shadow(0 0 4px rgba(226, 184, 104, 0.5));
 }
 
 @keyframes dash {
@@ -194,90 +374,27 @@
   }
 }
 
-/* FPV Reticle & Crosshair Styling */
+/* --------------------------------------------------------------------------
+   9. FPV HUD RETICLE & 3D AHRS
+   -------------------------------------------------------------------------- */
 .fpv-hud-overlay {
   pointer-events: none;
 }
 
 .pitch-ladder-line {
-  stroke: #38bdf8;
+  stroke: #f5f2eb;
   stroke-width: 1.5;
   stroke-opacity: 0.9;
 }
 
-/* 3D Canvas Container */
 #orientation-3d-canvas {
   width: 100% !important;
   height: 100% !important;
   display: block;
 }
 
-/* Telemetry Gauge Circular SVG Meter */
 .meter-ring {
   transform: rotate(-90deg);
   transform-origin: 50% 50%;
   transition: stroke-dashoffset 0.35s ease;
-}
-
-/* ==========================================================================
-   LOVABLE SIDEBAR NAVIGATION - ULTRA SLEEK PILL WITH GLOW
-   ========================================================================== */
-.nav-link {
-  position: relative;
-  border: 1px solid transparent;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  border-radius: 8px !important;
-}
-
-.nav-link:hover:not(.active) {
-  background: rgba(255, 255, 255, 0.04) !important;
-  border-color: rgba(255, 255, 255, 0.06) !important;
-  color: #f8fafc !important;
-  transform: translateX(2px);
-}
-
-.nav-link:hover:not(.active) .material-symbols-outlined {
-  color: #38bdf8 !important;
-}
-
-/* Lovable Active Navigation State */
-.nav-link.active {
-  background: linear-gradient(90deg, rgba(56, 189, 248, 0.14) 0%, rgba(56, 189, 248, 0.03) 100%) !important;
-  color: #ffffff !important;
-  font-weight: 600 !important;
-  border: 1px solid rgba(56, 189, 248, 0.3) !important;
-  border-left: 3px solid #38bdf8 !important;
-  box-shadow: 0 2px 14px -2px rgba(56, 189, 248, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
-}
-
-.nav-link.active .material-symbols-outlined {
-  color: #38bdf8 !important;
-  filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.6));
-}
-
-.nav-link.active span:last-child {
-  color: #38bdf8 !important;
-  font-weight: 700 !important;
-}
-
-/* Lovable Micro-Interactions on Interactive Buttons */
-button {
-  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
-}
-button:active {
-  transform: scale(0.98);
-}
-
-/* Sleek Lovable Input Fields */
-input[type="text"],
-input[type="number"],
-input[type="range"],
-select {
-  transition: all 0.2s ease;
-}
-input[type="text"]:focus,
-input[type="number"]:focus,
-select:focus {
-  border-color: #38bdf8 !important;
-  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.25) !important;
 }

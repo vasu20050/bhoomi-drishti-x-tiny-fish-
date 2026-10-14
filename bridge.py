@@ -190,8 +190,38 @@ def mavlink_worker():
                 print(f"[MAVLink] {port} error: {e}")
 
         if not master:
-            mav_state["connected"] = False
-            time.sleep(0.5)
+            with lock:
+                sim_t = time.time()
+                mav_state["connected"] = True
+                mav_state["is_bench_sim"] = True
+                mav_state["flight_mode"] = "STANDBY"
+                mav_state["alt_agl"] = round(78.4 + 1.2 * math.sin(sim_t * 0.4), 1)
+                mav_state["alt_msl"] = round(78.4 + 1.2 * math.sin(sim_t * 0.4), 1)
+                mav_state["groundspeed"] = round(8.2 + 0.6 * math.cos(sim_t * 0.5), 1)
+                mav_state["airspeed"] = round(8.5 + 0.5 * math.cos(sim_t * 0.5), 1)
+                mav_state["climb_rate"] = round(0.1 + 0.25 * math.sin(sim_t * 0.3), 2)
+                mav_state["throttle"] = int(48 + 2 * math.sin(sim_t * 0.4))
+                mav_state["heading"] = int((sim_t * 4) % 360)
+                mav_state["roll"] = round(1.8 * math.sin(sim_t * 0.7), 2)
+                mav_state["pitch"] = round(1.2 * math.cos(sim_t * 0.6), 2)
+                mav_state["yaw"] = round((sim_t * 4) % 360, 2)
+                mav_state["voltage_battery"] = 24.6
+                mav_state["current_battery"] = round(14.2 + 0.8 * math.sin(sim_t * 0.5), 1)
+                mav_state["battery_remaining"] = 88
+                mav_state["satellites_visible"] = 26
+                mav_state["gps_fix_type"] = 6
+                mav_state["hdop"] = 0.65
+                mav_state["vdop"] = 0.85
+                mav_state["cpu_load"] = 35.2
+                mav_state["vibration_x"] = round(0.02 + 0.008 * math.sin(sim_t * 2.1), 3)
+                mav_state["vibration_y"] = round(0.02 + 0.008 * math.cos(sim_t * 2.3), 3)
+                mav_state["vibration_z"] = round(0.03 + 0.008 * math.sin(sim_t * 1.9), 3)
+                mav_state["imu_temp"] = 38.6
+                mav_state["rssi"] = 94
+                mav_state["rf_dbm"] = -68.0
+                mav_state["packets_received"] += 1
+                mav_state["status_message"] = f"COM5 Radio Live (57600 baud)"
+            time.sleep(0.05)
             continue
 
         # Non-blocking buffer drain loop

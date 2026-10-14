@@ -10,13 +10,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500;1,6..72,600;1,700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600;1,700&display=swap" rel="stylesheet">
   
   <!-- Leaflet CSS for GIS Mapping -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   
   <!-- Custom Stylesheet -->
-  <link rel="stylesheet" href="css/styles.css?v=2.7.0" />
+  <link rel="stylesheet" href="css/styles.css?v=2.8.0" />
 
   <!-- Tailwind CSS via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -26,58 +26,58 @@
       theme: {
         extend: {
           "colors": {
-            "secondary-fixed": "#6ee7b7",
-            "inverse-surface": "#f8fafc",
-            "on-tertiary": "#0f172a",
+            "secondary-fixed": "#e2b868",
+            "inverse-surface": "#faf7f2",
+            "on-tertiary": "#0a0908",
             "tertiary-fixed": "#fef08a",
-            "surface-container": "#111624",
-            "surface-tint": "#38bdf8",
-            "primary-fixed-dim": "#38bdf8",
-            "tertiary": "#fbbf24",
-            "background": "#08090d",
-            "on-tertiary-container": "#451a03",
-            "surface-container-high": "#161d2f",
-            "on-secondary-container": "#022c22",
-            "on-primary-container": "#0369a1",
-            "surface-bright": "#222c42",
-            "on-secondary": "#022c22",
-            "on-surface-variant": "#94a3b8",
-            "surface-dim": "#08090d",
-            "surface-container-low": "#0b0e17",
+            "surface-container": "#151413",
+            "surface-tint": "#f5f2eb",
+            "primary-fixed-dim": "#e8e3d5",
+            "tertiary": "#d4af37",
+            "background": "#080807",
+            "on-tertiary-container": "#fef3c7",
+            "surface-container-high": "#1c1a18",
+            "on-secondary-container": "#fde68a",
+            "on-primary-container": "#18140c",
+            "surface-bright": "#2c2a27",
+            "on-secondary": "#0a0908",
+            "on-surface-variant": "#a39d94",
+            "surface-dim": "#080807",
+            "surface-container-low": "#0f0e0d",
             "on-tertiary-fixed-variant": "#78350f",
-            "outline": "#64748b",
-            "surface-container-lowest": "#06070a",
-            "surface-container-highest": "#1c2438",
-            "secondary-fixed-dim": "#34d399",
-            "on-surface": "#f8fafc",
-            "on-tertiary-fixed": "#0f172a",
-            "outline-variant": "#283347",
-            "primary-container": "#0284c7",
-            "on-primary-fixed": "#0f172a",
-            "on-primary": "#040814",
+            "outline": "#635c53",
+            "surface-container-lowest": "#060605",
+            "surface-container-highest": "#242220",
+            "secondary-fixed-dim": "#d4af37",
+            "on-surface": "#faf7f2",
+            "on-tertiary-fixed": "#0a0908",
+            "outline-variant": "#2c2925",
+            "primary-container": "#f5f2eb",
+            "on-primary-fixed": "#0a0908",
+            "on-primary": "#0a0908",
             "error": "#f87171",
-            "secondary-container": "#065f46",
-            "primary-fixed": "#bae6fd",
+            "secondary-container": "#2c2211",
+            "primary-fixed": "#faf7f2",
             "on-error-container": "#fecaca",
-            "primary": "#38bdf8",
-            "tertiary-container": "#d97706",
+            "primary": "#f5f2eb",
+            "tertiary-container": "#332612",
             "on-error": "#450a0a",
-            "on-secondary-fixed": "#022c22",
-            "error-container": "#450a0a",
-            "inverse-primary": "#0284c7",
-            "on-primary-fixed-variant": "#075985",
-            "surface-variant": "#1c2438",
-            "surface": "#08090d",
+            "on-secondary-fixed": "#0a0908",
+            "error-container": "#361212",
+            "inverse-primary": "#242220",
+            "on-primary-fixed-variant": "#242220",
+            "surface-variant": "#242220",
+            "surface": "#0a0908",
             "tertiary-fixed-dim": "#fde047",
-            "on-secondary-fixed-variant": "#065f46",
-            "inverse-on-surface": "#161d2f",
-            "secondary": "#34d399",
-            "on-background": "#f8fafc"
+            "on-secondary-fixed-variant": "#d4af37",
+            "inverse-on-surface": "#1c1a18",
+            "secondary": "#e2b868",
+            "on-background": "#faf7f2"
           },
           "borderRadius": {
             "DEFAULT": "0.375rem",
-            "lg": "0.625rem",
-            "xl": "0.875rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
             "full": "9999px"
           },
           "spacing": {
@@ -92,30 +92,32 @@
             "margin-desktop": "1.25rem"
           },
           "fontFamily": {
-            "label-caps": ["JetBrains Mono"],
-            "data-lg": ["JetBrains Mono"],
-            "data-md": ["JetBrains Mono"],
-            "headline-md": ["Inter"],
-            "data-sm": ["JetBrains Mono"],
-            "body-lg": ["Inter"],
-            "body-sm": ["Inter"],
-            "headline-sm": ["Inter"],
-            "headline-xl": ["Inter"],
-            "body-md": ["Inter"],
-            "headline-lg": ["Inter"]
+            "label-caps": ["JetBrains Mono", "monospace"],
+            "data-lg": ["JetBrains Mono", "monospace"],
+            "data-md": ["JetBrains Mono", "monospace"],
+            "headline-md": ["Newsreader", "Playfair Display", "Cormorant Garamond", "serif"],
+            "data-sm": ["JetBrains Mono", "monospace"],
+            "body-lg": ["Inter", "-apple-system", "sans-serif"],
+            "body-sm": ["Inter", "-apple-system", "sans-serif"],
+            "headline-sm": ["Inter", "-apple-system", "sans-serif"],
+            "headline-xl": ["Newsreader", "Playfair Display", "Cormorant Garamond", "serif"],
+            "body-md": ["Inter", "-apple-system", "sans-serif"],
+            "headline-lg": ["Newsreader", "Playfair Display", "Cormorant Garamond", "serif"],
+            "serif-editorial": ["Newsreader", "Playfair Display", "Cormorant Garamond", "serif"],
+            "serif-italic": ["Newsreader", "Cormorant Garamond", "serif"]
           },
           "fontSize": {
-            "label-caps": ["10px", { "lineHeight": "12px", "letterSpacing": "0.08em", "fontWeight": "600" }],
+            "label-caps": ["10px", { "lineHeight": "13px", "letterSpacing": "0.12em", "fontWeight": "600" }],
             "data-lg": ["16px", { "lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
             "data-md": ["13px", { "lineHeight": "16px", "fontWeight": "500" }],
             "headline-md": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
             "data-sm": ["11px", { "lineHeight": "14px", "fontWeight": "500" }],
-            "body-lg": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
-            "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
-            "headline-sm": ["15px", { "lineHeight": "20px", "fontWeight": "600" }],
-            "headline-xl": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
-            "body-md": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
-            "headline-lg": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" }]
+            "body-lg": ["14px", { "lineHeight": "22px", "fontWeight": "400" }],
+            "body-sm": ["12px", { "lineHeight": "17px", "fontWeight": "400" }],
+            "headline-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+            "headline-xl": ["32px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "body-md": ["13px", { "lineHeight": "19px", "fontWeight": "400" }],
+            "headline-lg": ["24px", { "lineHeight": "30px", "letterSpacing": "-0.015em", "fontWeight": "600" }]
           }
         }
       }
@@ -131,35 +133,35 @@
 <body class="bg-surface-container-lowest font-body-md text-on-surface antialiased min-h-screen selection:bg-primary-container selection:text-on-primary-container">
 
   <!-- TOP HEADER -->
-  <header class="fixed top-0 left-0 right-0 h-16 z-50 bg-[#07090e]/90 backdrop-blur-xl shadow-[0_1px_16px_rgba(0,0,0,0.55)] border-b border-white/[0.08]">
-    <div class="w-full h-16 px-gutter-desktop flex items-center justify-between gap-space-md">
+  <header class="fixed top-0 left-0 right-0 h-16 z-50 bg-[#0a0908]/90 backdrop-blur-xl shadow-[0_1px_16px_rgba(0,0,0,0.6)] border-b border-white/[0.08]">
+    <div class="w-full h-16 px-4 lg:px-6 flex items-center justify-between gap-3">
       <!-- Brand & Time -->
-      <div class="flex items-center gap-space-md shrink-0">
-        <div class="flex items-center gap-space-sm cursor-pointer" onclick="window.navigateTo('overview')">
-          <div class="w-9 h-9 rounded-lg bg-surface-container-high flex items-center justify-center border border-primary/30 shadow-[0_0_12px_rgba(56,189,248,0.2)]">
-            <span class="material-symbols-outlined text-primary text-xl">explore</span>
+      <div class="flex items-center gap-3 shrink-0">
+        <div class="flex items-center gap-2 cursor-pointer" onclick="window.navigateTo('overview')">
+          <div class="w-8 h-8 rounded bg-[#f5f2eb] flex items-center justify-center border border-[#f5f2eb] shadow-[0_2px_8px_rgba(0,0,0,0.5)] shrink-0">
+            <span class="font-serif font-black text-sm text-[#0a0908] tracking-tighter">B</span>
           </div>
           <div>
-            <div class="flex items-center gap-space-xs">
+            <div class="flex items-center gap-1.5">
               <span class="font-headline-sm text-headline-sm font-bold tracking-tight text-on-surface">BHOOMI DRISHTI</span>
-              <span class="font-label-caps text-label-caps px-1.5 py-0.5 rounded-full bg-primary/10 border border-primary/25 text-primary font-bold">GCS v2.4-RC3</span>
+              <span class="font-label-caps text-label-caps px-1.5 py-0.5 rounded-full bg-secondary/15 border border-secondary/30 text-secondary font-bold">GCS v2.4-RC3</span>
             </div>
-            <p class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">See the Land. Map the Truth.</p>
+            <p class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest text-[9px]">• SEE THE LAND · MAP THE TRUTH</p>
           </div>
         </div>
-        <div class="hidden xl:flex items-center gap-space-sm px- space-sm py-1 rounded-lg bg-surface-container-low border border-white/[0.06]">
-          <div class="flex items-center gap-space-xs font-data-sm text-data-sm text-on-surface-variant px-2 py-0.5">
+        <div class="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-surface-container-low border border-white/[0.06] shrink-0">
+          <div class="flex items-center gap-1.5 font-data-sm text-data-sm text-on-surface-variant px-1 py-0.5">
             <span class="material-symbols-outlined text-sm text-primary">schedule</span>
             <span class="font-data-sm text-data-sm text-on-surface" id="utc-clock">UTC --:--:--</span>
             <span class="text-outline-variant">|</span>
-            <span class="font-data-sm text-data-sm text-primary font-bold" id="ist-clock">IST --:--:--</span>
+            <span class="font-data-sm text-data-sm text-secondary font-bold" id="ist-clock">IST --:--:--</span>
           </div>
         </div>
       </div>
 
-      <!-- Telemetry Status Pills & Port Switcher -->
-      <div class="hidden lg:flex items-center gap-space-sm flex-wrap">
-        <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-surface-container-high border border-primary/30 shadow-[0_0_12px_rgba(56,189,248,0.15)]">
+      <!-- Telemetry Status Pills & Port Switcher (Flex Nowrap with Zero Stacking) -->
+      <div class="hidden lg:flex items-center gap-2 flex-nowrap shrink-0 overflow-x-auto">
+        <div class="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-surface-container-high border border-white/[0.1] shadow-[0_0_12px_rgba(245,242,235,0.06)] shrink-0">
           <span class="material-symbols-outlined text-xs text-primary">settings_ethernet</span>
           <select id="hdr-port-selector" class="bg-surface-container-high font-data-sm text-xs text-primary font-bold outline-none cursor-pointer pr-1">
             <option value="AUTO">⚡ Auto-Detect Link</option>
@@ -167,33 +169,33 @@
             <option value="COM8">🔌 COM8 - USB (115200)</option>
           </select>
         </div>
-        <div id="hardware-connection-badge" class="flex items-center gap-space-xs px-2.5 py-1 rounded-lg bg-secondary/10 border border-secondary/25">
+        <div id="hardware-connection-badge" class="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-secondary/10 border border-secondary/25 shrink-0">
           <span class="relative flex h-2 w-2">
             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
             <span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span>
           </span>
           <span class="font-label-caps text-label-caps text-secondary font-semibold">PIXHAWK LIVE</span>
         </div>
-        <div class="flex items-center gap-space-xs px-2.5 py-1 rounded-lg bg-surface-container-low border border-white/[0.05]">
+        <div class="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-surface-container-low border border-white/[0.05] shrink-0">
           <span class="material-symbols-outlined text-xs text-primary">memory</span>
           <span class="font-data-sm text-data-sm text-on-surface">PIXHAWK 4 / ARDUPILOT 4.5.1</span>
         </div>
-        <div class="flex items-center gap-space-xs px-2.5 py-1 rounded-lg bg-surface-container-high border border-primary/25">
+        <div class="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-surface-container-high border border-white/[0.1] shrink-0">
           <span class="material-symbols-outlined text-xs text-primary">flight_takeoff</span>
           <span id="hdr-flight-mode-badge" class="font-label-caps text-label-caps text-primary font-bold">STANDBY</span>
         </div>
       </div>
 
       <!-- Simulation Switch & Officer Profile -->
-      <div class="flex items-center gap-space-md shrink-0">
+      <div class="flex items-center gap-3 shrink-0">
         <button onclick="window.bhoomiAudio.beep()" title="Test Audio Tone" class="p-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high border border-white/[0.06] text-primary flex items-center justify-center">
           <span class="material-symbols-outlined text-sm">volume_up</span>
         </button>
         <div class="hidden md:flex flex-col text-right">
           <span class="font-headline-sm text-headline-sm font-semibold text-on-surface leading-none">Capt. R. Sharma</span>
-          <span class="font-label-caps text-label-caps text-on-surface-variant uppercase mt-0.5">Surveyor Officer • Reg #BD-9042</span>
+          <span class="font-label-caps text-label-caps text-on-surface-variant uppercase mt-0.5 text-[9px]">Surveyor Officer • Reg #BD-9042</span>
         </div>
-        <div class="relative flex items-center justify-center p-0.5 rounded-full bg-surface-container-high border border-white/[0.1]">
+        <div class="relative flex items-center justify-center p-0.5 rounded-full bg-surface-container-high border border-white/[0.1] shrink-0">
           <img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1W-t_oph0RVDC6r8WMhIk6Cj4DnQ2Mbz3tJybpRAjDWa-XDqydM2nNpVi15PYXCHXyKmFN8Ox4strmxDr80logzEOhhcrSkmbu5wp8fI6PusEy2rp5ELdlYAdx2sr8-rcpYrjxsRVn5uOqRZoB9flK7JkdpjwZ03lmqPaqSfRCKaXxDTclrPvLHhPBIAZFropu1-kRqtVXgMFMsA0SY29aCtv3-TsMnFFiEuN1CQrSqsvaN-NUBrVlFlyM">
         </div>
       </div>
@@ -201,76 +203,76 @@
   </header>
 
   <!-- SIDEBAR NAVIGATION -->
-  <aside class="fixed left-0 top-16 bottom-0 w-72 z-40 bg-[#080b13]/90 backdrop-blur-xl flex flex-col justify-between shadow-[1px_0_20px_rgba(0,0,0,0.55)] border-r border-white/[0.08]">
+  <aside class="fixed left-0 top-16 bottom-0 w-72 z-40 bg-[#0c0b0a]/90 backdrop-blur-xl flex flex-col justify-between shadow-[1px_0_20px_rgba(0,0,0,0.6)] border-r border-white/[0.08]">
     <div class="flex-1 flex flex-col min-h-0 pt-space-md">
-      <div class="px-space-md pb-space-sm flex items-center justify-between">
-        <div class="font-label-caps text-label-caps text-outline uppercase tracking-widest">Mission Console</div>
+      <div class="px-4 pb-2 flex items-center justify-between">
+        <div class="font-label-caps text-label-caps text-outline uppercase tracking-widest text-[9px]">Mission Console</div>
         <span class="font-label-caps text-[9px] px-1.5 py-0.5 rounded-full bg-secondary/15 border border-secondary/25 text-secondary font-bold">ONLINE</span>
       </div>
-      <nav class="flex-1 px-space-sm space-y-1 overflow-y-auto" id="sidebar-nav">
+      <nav class="flex-1 px-2 space-y-1 overflow-y-auto" id="sidebar-nav">
         <!-- 01 Overview -->
-        <a class="nav-link group flex items-center justify-between px-space-md py-2.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="overview" href="#overview">
-          <div class="flex items-center gap-space-md">
-            <span class="material-symbols-outlined text-lg text-primary">grid_view</span>
-            <span class="font-body-md text-body-md">Overview</span>
+        <a class="nav-link group flex items-center justify-between px-3 py-2.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all gap-2" data-path="overview" href="#overview">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <span class="material-symbols-outlined text-lg text-primary shrink-0">grid_view</span>
+            <span class="font-body-md text-body-md truncate">Overview</span>
           </div>
-          <span class="font-label-caps text-label-caps text-outline group-hover:text-primary">01</span>
+          <span class="font-label-caps text-label-caps text-outline group-hover:text-primary shrink-0">01</span>
         </a>
         <!-- 02 Telemetry -->
-        <a class="nav-link group flex items-center justify-between px-space-md py-2.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="drone-telemetry" href="#drone-telemetry">
-          <div class="flex items-center gap-space-md">
-            <span class="material-symbols-outlined text-lg text-primary">sensors</span>
-            <span class="font-body-md text-body-md">Drone Telemetry &amp; Sensors</span>
+        <a class="nav-link group flex items-center justify-between px-3 py-2.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all gap-2" data-path="drone-telemetry" href="#drone-telemetry">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <span class="material-symbols-outlined text-lg text-primary shrink-0">sensors</span>
+            <span class="font-body-md text-body-md truncate">Drone Telemetry &amp; Sensors</span>
           </div>
-          <span class="font-label-caps text-label-caps text-secondary font-bold">NOMINAL</span>
+          <span class="font-label-caps text-label-caps text-secondary font-bold shrink-0">NOMINAL</span>
         </a>
         <!-- 03 FC Health -->
-        <a class="nav-link group flex items-center justify-between px-space-md py-2.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="flight-controller-health" href="#flight-controller-health">
-          <div class="flex items-center gap-space-md">
-            <span class="material-symbols-outlined text-lg text-primary">developer_board</span>
-            <span class="font-body-md text-body-md">Flight Controller Health</span>
+        <a class="nav-link group flex items-center justify-between px-3 py-2.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all gap-2" data-path="flight-controller-health" href="#flight-controller-health">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <span class="material-symbols-outlined text-lg text-primary shrink-0">developer_board</span>
+            <span class="font-body-md text-body-md truncate">Flight Controller Health</span>
           </div>
-          <span class="font-label-caps text-label-caps text-outline group-hover:text-primary">03</span>
+          <span class="font-label-caps text-label-caps text-outline group-hover:text-primary shrink-0">03</span>
         </a>
         <!-- 04 Live Orientation -->
-        <a class="nav-link group flex items-center justify-between px-space-md py-2.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="live-orientation" href="#live-orientation">
-          <div class="flex items-center gap-space-md">
-            <span class="material-symbols-outlined text-lg text-primary">navigation</span>
-            <span class="font-body-md text-body-md">Live Orientation</span>
+        <a class="nav-link group flex items-center justify-between px-3 py-2.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all gap-2" data-path="live-orientation" href="#live-orientation">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <span class="material-symbols-outlined text-lg text-primary shrink-0">navigation</span>
+            <span class="font-body-md text-body-md truncate">Live Orientation</span>
           </div>
-          <span class="font-label-caps text-label-caps text-primary">3D AHRS</span>
+          <span class="font-label-caps text-label-caps text-primary shrink-0">3D AHRS</span>
         </a>
         <!-- 05 Land Mapping Workspace -->
-        <a class="nav-link group flex items-center justify-between px-space-md py-2.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="land-mapping-workspace" href="#land-mapping-workspace">
-          <div class="flex items-center gap-space-md">
-            <span class="material-symbols-outlined text-lg text-primary">layers</span>
-            <span class="font-body-md text-body-md">Land Mapping Workspace</span>
+        <a class="nav-link group flex items-center justify-between px-3 py-2.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all gap-2" data-path="land-mapping-workspace" href="#land-mapping-workspace">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <span class="material-symbols-outlined text-lg text-primary shrink-0">layers</span>
+            <span class="font-body-md text-body-md truncate">Land Mapping Workspace</span>
           </div>
-          <span class="font-label-caps text-label-caps text-primary group-hover:text-primary font-bold">OSM / GIS</span>
+          <span class="font-label-caps text-label-caps text-primary group-hover:text-primary font-bold shrink-0">OSM / GIS</span>
         </a>
         <!-- 06 Survey History -->
-        <a class="nav-link group flex items-center justify-between px-space-md py-2.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="survey-history-logs" href="#survey-history-logs">
-          <div class="flex items-center gap-space-md">
-            <span class="material-symbols-outlined text-lg text-primary">dataset</span>
-            <span class="font-body-md text-body-md">Survey History &amp; Logs</span>
+        <a class="nav-link group flex items-center justify-between px-3 py-2.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all gap-2" data-path="survey-history-logs" href="#survey-history-logs">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <span class="material-symbols-outlined text-lg text-primary shrink-0">dataset</span>
+            <span class="font-body-md text-body-md truncate">Survey History &amp; Logs</span>
           </div>
-          <span class="font-label-caps text-label-caps text-outline group-hover:text-primary">06</span>
+          <span class="font-label-caps text-label-caps text-outline group-hover:text-primary shrink-0">06</span>
         </a>
         <!-- 07 Alerts -->
-        <a class="nav-link group flex items-center justify-between px-space-md py-2.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="alerts-system-events" href="#alerts-system-events">
-          <div class="flex items-center gap-space-md">
-            <span class="material-symbols-outlined text-lg text-primary">notification_important</span>
-            <span class="font-body-md text-body-md">Alerts &amp; System Events</span>
+        <a class="nav-link group flex items-center justify-between px-3 py-2.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all gap-2" data-path="alerts-system-events" href="#alerts-system-events">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <span class="material-symbols-outlined text-lg text-primary shrink-0">notification_important</span>
+            <span class="font-body-md text-body-md truncate">Alerts &amp; System Events</span>
           </div>
-          <span class="px-1.5 py-0.5 rounded font-label-caps text-label-caps bg-error-container text-on-error-container font-bold">2 WARN</span>
+          <span class="px-1.5 py-0.5 rounded font-label-caps text-label-caps bg-error-container text-on-error-container font-bold shrink-0">2 WARN</span>
         </a>
         <!-- 08 Device Settings & Radio -->
-        <a class="nav-link group flex items-center justify-between px-space-md py-2.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="device-settings" href="#device-settings">
-          <div class="flex items-center gap-space-md">
-            <span class="material-symbols-outlined text-lg text-primary">tune</span>
-            <span class="font-body-md text-body-md">Device Settings &amp; Radio</span>
+        <a class="nav-link group flex items-center justify-between px-3 py-2.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all gap-2" data-path="device-settings" href="#device-settings">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <span class="material-symbols-outlined text-lg text-primary shrink-0">tune</span>
+            <span class="font-body-md text-body-md truncate">Device Settings &amp; Radio</span>
           </div>
-          <span class="font-label-caps text-label-caps text-outline group-hover:text-primary">08</span>
+          <span class="font-label-caps text-label-caps text-outline group-hover:text-primary shrink-0">08</span>
         </a>
       </nav>
     </div>
