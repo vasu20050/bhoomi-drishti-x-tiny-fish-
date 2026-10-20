@@ -1,101 +1,107 @@
-# 🛰️ BHOOMI DRISHTI | Ground Control Station (GCS v2.4-RC3)
+# 🛰️ BHOOMI DRISHTI × TINYFISH AI | Autonomous UAV Ground Control Station (GCS v2.8-AI)
 
-> **"See the Land. Map the Truth."**  
-> An enterprise-grade, browser-based UAV Ground Control Station tailored for cadastral land mapping (SVAMITVA Scheme), real-time Pixhawk / ArduPilot telemetry, and 3D digital twin visualization with Lovable-inspired dark theme aesthetics.
+> **"See the Land. Map the Truth. Commanded by AI."**  
+> An enterprise-grade, browser-based UAV Ground Control Station tailored for cadastral land mapping (SVAMITVA Scheme), real-time Pixhawk / ArduPilot telemetry, 3D digital twin visualization, and **TinyFish Autonomous Web & AI/ML Agents**.
 
 ---
 
 ## 🌟 Key Features
 
-### 1. 🛩️ Real-Time 3D Drone Digital Twin (AHRS)
-- **High-Visibility Airframe**: High-contrast surveyor matte white airframe with platinum canopy, anodized gold motor bells, and cyan/amber navigation LED strips.
-- **Three.js Multi-Point Studio Lighting Rig**: Zenith overhead light, hemisphere soft fill, sun key, and rim lighting with ACES Filmic tone mapping.
-- **Dynamic 6-DOF Synchronization**: Smooth pitch, roll, and yaw representation directly fed from MAVLink `ATTITUDE` and `VFR_HUD`.
-- **Mission Planner-Style 6-Axis Alignment Wizard**: Safe, client-side visual display calibration wizard (Level, Nose Up, Nose Down, Left, Right, Upside Down) with zero writes to Pixhawk flight controller hardware parameters.
-- **Camera Views & Quick Actions**: `NORTH-UP`, `TOP`, `CHASE`, `FRONT`, `ISO`, and `💡 BOOST LIGHT` mode toggle.
+### 1. 🤖 TinyFish Autonomous Web Agent (SSE Streaming)
+- **Official TinyFish SDK Integration**: Powered by `@tiny-fish/sdk` / Python `tinyfish`.
+- **Live Server-Sent Events (SSE) Streaming**: Terminal runner streaming live agent navigation, DOM extraction, and reasoning steps directly into the GCS UI.
+- **One-Click Mission Presets**:
+  - 🇮🇳 **DGCA Green Zone Clearance**: Live airspace classification and regulatory check.
+  - 📜 **SVAMITVA Survey SOP**: Survey of India GSD tolerances and cadastral parcel norms.
+  - 🗺️ **UP Bhulekh Circulars**: Real-time land revenue circulars & boundary dispute protocols.
+  - 🌤️ **Aviation Weather & Microburst Scout**: Live boundary layer wind profile (0-120m AGL).
 
-### 2. 🗺️ Land Mapping Workspace (GIS / SVAMITVA Scheme)
-- **Interactive Leaflet Mapping**: Live drone GPS coordinates tracking with auto-follow and parcel fitting.
-- **Cadastral Polygon Visualizer**: Interactive SVAMITVA Khasra parcel overlays with boundary calculation and area computation.
-- **Multi-Source Basemaps**: Seamless switching between OpenStreetMap, Humanitarian OSM, Satellite Ortho, and Dark Cadastre Vector tiles.
-- **GeoJSON Export**: Instant download of survey flight transects and parcel boundaries.
+### 2. 🩺 AI/ML Telemetry Anomaly Diagnostics
+- **Vibration Severity Classifier (ISO 10816)**: Composite 3-axis vibration magnitude ($\sqrt{x^2 + y^2 + z^2}$), accelerometer clipping detection, and dynamic propeller/motor balance index.
+- **Predictive Battery Degradation & Safe Endurance**: Calculates internal resistance ($\Delta V / I$) under current load to project safe remaining flight minutes before the 20% RTL threshold.
+- **EKF3 Multi-Lane Innovation Variance**: Evaluates velocity, position, and compass innovation variances to detect GPS spoofing and filter divergence.
+- **Unified AI Flight Readiness Index**: Continuous 0-100% composite avionic safety rating.
 
-### 3. 📊 Full Telemetry & Sensor Suite
-- **Primary Flight Instruments**: Airspeed, groundspeed, altitude AGL/MSL, vertical climb rate, and throttle gauges.
-- **Vibration & Dynamics Analysis**: 3-axis accelerometer and gyro vibration time-series graphs (`VIBE` MAVLink message).
-- **Power Monitoring**: Real-time battery voltage, current draw, remaining capacity, and estimated flight time.
-- **Per-Rotor ESC Bus**: Live RPM, current, and temperature readouts for quadcopter propulsion systems.
+### 3. 🗺️ Land Mapping & Cadastral Workspace (GIS / SVAMITVA)
+- **Interactive Leaflet Mapping**: Live drone GPS tracking with auto-follow, parcel fitting, and multi-source basemaps (OSM, Satellite Ortho, Cadastre Vector).
+- **Cadastral Polygon Visualizer**: SVAMITVA Khasra parcel overlays with area calculation and GeoJSON export.
+- **Optimal Survey Altitude Calculator**: Automatically calculates required flight altitude ($78.5\text{m AGL}$) for Sony $\alpha$7R IV (61MP) to achieve $1.2\text{ cm/pixel}$ GSD.
 
-### 4. 🩺 Flight Controller Health (Pixhawk & ArduPilot)
-- **EKF3 Kalman Filter Diagnostics**: Multi-lane tracking for velocity, horizontal position, vertical height, compass magnetic variance, and terrain altitude.
-- **Compute Core Metrics**: STM32 MCU load, free RAM, Flash CRC integrity, and sensor bus status (DroneCAN, SPI, I2C).
-- **16-Channel Radio Monitor**: Live SBUS / CRSF PWM input bars for all 16 transmitter channels with link quality indicators.
+### 4. 🎙️ AI Drone Flight Copilot (Voice & Text)
+- **50Hz Telemetry-Aware Intelligence**: Conversational copilot aware of live altitude, battery, GPS fix, flight mode, and EKF status.
+- **Speech Synthesis (Web Speech API)**: Speaks audio briefings, checklist confirmations, and warnings directly to the pilot.
 
-### 5. 📻 Hardware Connectivity & Radio Bus
-- **Dynamic Port Switcher**: Automatic switching between Telemetry Radio (`COM5` @ 57600 baud) and USB Direct (`COM8` @ 115200 baud).
-- **Silicon Labs CP210x / RFD900X Support**: Real-time RSSI signal quality sparklines, FHSS Net ID configuration, and RF power output tuning.
+### 5. 🛩️ Real-Time 3D Drone Digital Twin (AHRS)
+- **Three.js Lighting Rig**: High-contrast surveyor airframe with dynamic 6-DOF roll, pitch, and yaw fed from MAVLink `ATTITUDE` and `VFR_HUD`.
+- **6-Axis Visual Calibration Wizard**: Safe client-side display alignment wizard leaving flight controller parameters untouched.
 
-### 6. 🖤 Lovable Dark Theme
-- Inspired by modern SaaS design systems (Lovable.dev, Linear, Raycast).
-- Deep obsidian dark palette (`#06070a` - `#111624`), electric sky cyan accents (`#38bdf8`), and emerald live indicators (`#34d399`).
-- Frosted glassmorphic cards with subtle translucent borders and smooth micro-interactions.
+### 6. 📻 Hardware Connectivity & Low-Latency Bridge
+- **Ultra-Low Latency**: 50Hz WebSocket broadcast loop with serial buffer drain.
+- **Dual Connection Modes**: Seamless switching between Telemetry Radio (`COM5` @ 57600 baud) and USB Direct (`COM8` @ 115200 baud), with automatic fallback to high-fidelity bench simulation when hardware is disconnected.
 
 ---
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- **Python 3.10+** (Python 3.12 recommended)
-- **Pixhawk Autopilot** or **SITL Simulator** running ArduPilot 4.5+ or PX4
+- **Python 3.10+** (Python 3.12 / 3.14 compatible)
+- Modern web browser (Chrome, Edge, Firefox, Brave)
 
 ### Dependencies
-Install the required Python packages:
+Install the required packages:
 ```bash
-pip install fastapi uvicorn pyserial pymavlink websockets
+pip install fastapi uvicorn pyserial pymavlink websockets httpx pydantic tinyfish python-dotenv
 ```
 
-### Running the GCS
-1. Launch the MAVLink telemetry bridge server:
-   ```bash
-   python bridge.py
-   ```
-   Or double-click `run_bhoomigcs.bat`.
+### Environment Configuration (Optional)
+Copy `.env.example` to `.env`:
+```bash
+cp .env.example .env
+```
+Fill in your API keys (optional — the application operates with smart simulation fallback out-of-the-box):
+- `TINYFISH_API_KEY`: Get yours at [agent.tinyfish.ai/api-keys](https://agent.tinyfish.ai/api-keys)
+- `GEMINI_API_KEY`: Get yours at [aistudio.google.com/apikey](https://aistudio.google.com/apikey)
 
-2. Open your browser and navigate to:
-   ```text
-   http://localhost:8000
-   ```
+### Running the GCS
+Launch the server:
+```bash
+python bridge.py
+```
+Or double-click `run_bhoomigcs.bat`.
+
+Open your browser and navigate to:
+```text
+http://localhost:8000
+```
 
 ---
 
 ## 📁 Repository Structure
 
 ```text
-├── bridge.py             # FastAPI WebSocket MAVLink serial telemetry bridge
-├── index.html            # Main GCS Single Page Application shell
-├── run_bhoomigcs.bat     # One-click Windows startup batch script
+├── bridge.py                # FastAPI MAVLink, WebSocket & TinyFish SSE Gateway
+├── tinyfish_service.py      # Official TinyFish SDK client, AI/ML diagnostics & scout
+├── index.html               # Main GCS Single Page Application shell (View 01 to View 09)
+├── run_bhoomigcs.bat        # Windows one-click startup script
+├── .env.example             # Configuration template for TinyFish & LLM keys
 ├── css/
-│   └── styles.css        # Lovable dark theme styles, glassmorphism & Leaflet customization
+│   └── styles.css           # Lovable dark theme styles, glassmorphism & Leaflet CSS
 ├── js/
-│   ├── app.js            # Global state, router, and WebSocket telemetry stream handler
+│   ├── app.js               # Global state, router, and 50Hz WebSocket telemetry stream
 │   └── views/
-│       ├── overview.js   # Cockpit dashboard, FPV HUD & avionic subsystems
-│       ├── telemetry.js  # Chart.js telemetry graphs & gauges
-│       ├── fcHealth.js   # EKF3 lane variance & 16-channel RC monitor
-│       ├── orientation.js# Three.js 3D drone digital twin & calibration wizard
-│       ├── mapping.js    # Leaflet GIS cadastral map planner
+│       ├── tinyfishAgent.js # TinyFish Agent SSE runner, ML diagnostics & AI Copilot
+│       ├── overview.js      # Cockpit dashboard, FPV HUD & avionic subsystems
+│       ├── telemetry.js     # Live telemetry graphs & gauges
+│       ├── fcHealth.js      # EKF3 Kalman filter & 16-channel RC monitor
+│       ├── orientation.js   # Three.js 3D drone digital twin & calibration wizard
+│       ├── mapping.js       # Leaflet GIS cadastral map planner
 │       ├── surveyHistory.js # Cadastral mission logs & reports
-│       ├── alerts.js     # STATUSTEXT event feed & alarms
-│       └── settings.js   # Radio transceiver bus & vehicle parameters
-└── test_mavlink.py       # Diagnostic script for MAVLink telemetry ports
+│       ├── alerts.js        # STATUSTEXT event feed & alarms
+│       └── settings.js      # Radio bus switcher & TinyFish API config
+└── tinyfish_cookbook_repo/  # Complete TinyFish cookbook recipes & agent examples
 ```
 
 ---
 
-## 🔒 Safety Notice
-All visual orientation display calibration, axes swapping, and offsets configured in the GCS are **strictly client-side in the browser**. Physical Pixhawk flight controller hardware calibration and ArduPilot onboard parameters are **100% untouched**.
-
----
-
 ## 📜 License
-Distributed under the MIT License. Developed for advanced survey operations and drone telemetry monitoring.
+Distributed under the MIT License. Developed for enterprise survey operations, cadastral land mapping, and autonomous UAV telemetry intelligence.

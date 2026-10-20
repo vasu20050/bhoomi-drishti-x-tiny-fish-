@@ -44,3 +44,29 @@ function renderParamsTable(params) {
     </tr>
   `).join('');
 }
+
+// TinyFish API Key & Agent Configuration
+window.saveTinyFishConfig = async function() {
+  const tinyfishKey = document.getElementById('cfg-tinyfish-key')?.value.trim();
+  const geminiKey = document.getElementById('cfg-gemini-key')?.value.trim();
+  const agentMode = document.getElementById('cfg-agent-mode')?.value || 'AUTO';
+
+  window.showNotification("Saving AI configuration...");
+  try {
+    const res = await fetch('/api/tinyfish/config', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        tinyfish_api_key: tinyfishKey,
+        gemini_api_key: geminiKey,
+        agent_mode: agentMode
+      })
+    });
+    const data = await res.json();
+    window.showNotification("TinyFish AI Configuration updated!");
+    if (window.initTinyFishAgent) window.initTinyFishAgent();
+  } catch (err) {
+    console.error("Config save error:", err);
+    window.showNotification("Failed to save AI configuration", true);
+  }
+};

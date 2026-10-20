@@ -187,7 +187,11 @@
       </div>
 
       <!-- Simulation Switch & Officer Profile -->
-      <div class="flex items-center gap-3 shrink-0">
+      <div class="flex items-center gap-2.5 shrink-0">
+        <button onclick="window.navigateTo('tinyfish-agent')" title="Launch TinyFish AI Agent & Copilot" class="px-2.5 py-1.5 rounded-lg bg-secondary/15 hover:bg-secondary/25 border border-secondary/35 text-secondary font-label-caps text-xs font-bold flex items-center gap-1.5 transition-all shadow-[0_0_12px_rgba(226,184,104,0.15)] cursor-pointer">
+          <span class="material-symbols-outlined text-sm">smart_toy</span>
+          <span class="hidden xl:inline">AI COPILOT</span>
+        </button>
         <button onclick="window.bhoomiAudio.beep()" title="Test Audio Tone" class="p-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high border border-white/[0.06] text-primary flex items-center justify-center">
           <span class="material-symbols-outlined text-sm">volume_up</span>
         </button>
@@ -273,6 +277,14 @@
             <span class="font-body-md text-body-md truncate">Device Settings &amp; Radio</span>
           </div>
           <span class="font-label-caps text-label-caps text-outline group-hover:text-primary shrink-0">08</span>
+        </a>
+        <!-- 09 TinyFish AI Agent & ML -->
+        <a class="nav-link group flex items-center justify-between px-3 py-2.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all gap-2" data-path="tinyfish-agent" href="#tinyfish-agent">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <span class="material-symbols-outlined text-lg text-secondary shrink-0">smart_toy</span>
+            <span class="font-body-md text-body-md truncate font-semibold text-secondary">TinyFish AI Agent</span>
+          </div>
+          <span class="px-1.5 py-0.5 rounded font-label-caps text-label-caps bg-secondary/15 border border-secondary/30 text-secondary font-bold shrink-0">AI / ML</span>
         </a>
       </nav>
     </div>
@@ -643,6 +655,60 @@
                     </div>
                     <span class="font-label-caps text-label-caps px-space-sm py-1 rounded bg-primary-container/20 text-primary font-bold">CONTINUE</span>
                   </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Section 2B: TinyFish Agent & AI Cloud Configuration -->
+            <div class="rounded-lg bg-surface-container-low p-space-lg flex flex-col gap-space-md border border-secondary/30 shadow-[0_0_16px_rgba(226,184,104,0.06)]">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-space-sm">
+                  <div class="w-8 h-8 rounded bg-secondary/15 border border-secondary/30 flex items-center justify-center text-secondary">
+                    <span class="material-symbols-outlined text-base">smart_toy</span>
+                  </div>
+                  <div>
+                    <span class="font-headline-sm text-headline-sm text-on-surface font-bold">TinyFish AI Agent &amp; LLM Cloud Configuration</span>
+                    <span class="font-label-caps text-[9px] text-secondary ml-2">• @tiny-fish/sdk v0.9.0</span>
+                  </div>
+                </div>
+                <span class="font-label-caps text-label-caps px-2 py-0.5 rounded bg-secondary/15 border border-secondary/30 text-secondary font-bold">AUTONOMOUS SCRAPER &amp; COPILOT</span>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-space-md">
+                <!-- TinyFish API Key -->
+                <div class="bg-surface-container-lowest p-space-md rounded flex flex-col justify-between border border-surface-container-high/50">
+                  <div>
+                    <span class="font-label-caps text-label-caps text-outline block">TINYFISH API KEY</span>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant my-1">Powers real browser scraping, search, &amp; autonomous agent streams.</p>
+                    <input type="password" id="cfg-tinyfish-key" placeholder="tf_live_..." class="w-full mt-2 bg-surface-container font-mono text-xs text-on-surface px-2.5 py-1.5 rounded outline-none border border-surface-container-high focus:border-secondary" />
+                  </div>
+                  <span class="font-label-caps text-[9px] text-outline mt-2">Get free key: <a href="https://agent.tinyfish.ai/api-keys" target="_blank" class="text-secondary hover:underline">agent.tinyfish.ai</a></span>
+                </div>
+
+                <!-- Gemini API Key -->
+                <div class="bg-surface-container-lowest p-space-md rounded flex flex-col justify-between border border-surface-container-high/50">
+                  <div>
+                    <span class="font-label-caps text-label-caps text-outline block">GEMINI / LLM API KEY (OPTIONAL)</span>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant my-1">Used for deep geospatial reasoning and conversational voice synthesis.</p>
+                    <input type="password" id="cfg-gemini-key" placeholder="AIzaSy..." class="w-full mt-2 bg-surface-container font-mono text-xs text-on-surface px-2.5 py-1.5 rounded outline-none border border-surface-container-high focus:border-secondary" />
+                  </div>
+                  <span class="font-label-caps text-[9px] text-outline mt-2">Google AI Studio: <a href="https://aistudio.google.com/apikey" target="_blank" class="text-secondary hover:underline">aistudio.google.com</a></span>
+                </div>
+
+                <!-- Agent Mode Selection & Save -->
+                <div class="bg-surface-container-lowest p-space-md rounded flex flex-col justify-between border border-surface-container-high/50">
+                  <div>
+                    <span class="font-label-caps text-label-caps text-outline block">EXECUTION MODE</span>
+                    <select id="cfg-agent-mode" class="w-full mt-2 bg-surface-container font-label-caps text-xs text-secondary font-bold px-2 py-1.5 rounded outline-none border border-surface-container-high cursor-pointer">
+                      <option value="AUTO">⚡ AUTO (Smart Simulation + Cloud Key)</option>
+                      <option value="LIVE">🌐 LIVE (Requires TinyFish Cloud Key)</option>
+                      <option value="SIMULATION">💻 SIMULATION (Offline Demo Mode)</option>
+                    </select>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant mt-2 text-[11px]">When no key is configured, fallback simulation provides instant offline functionality.</p>
+                  </div>
+                  <button onclick="saveTinyFishConfig()" class="w-full mt-3 py-1.5 rounded bg-secondary hover:brightness-110 text-on-secondary font-label-caps text-xs font-bold transition-all shadow flex items-center justify-center gap-1 cursor-pointer">
+                    <span class="material-symbols-outlined text-xs">save</span> SAVE AI CONFIGURATION
+                  </button>
                 </div>
               </div>
             </div>
@@ -1723,6 +1789,376 @@
         </div>
       </section>
 
+      <!-- ======================================================== -->
+      <!-- VIEW 09: TINYFISH AI AGENT & CADASTRAL INTELLIGENCE      -->
+      <!-- ======================================================== -->
+      <section id="view-tinyfish-agent" class="view-section hidden flex flex-col w-full">
+        <!-- Operational Header Strip -->
+        <div class="w-full bg-surface-container-low px-gutter-desktop py-space-md flex flex-wrap items-center justify-between gap-space-md border-b border-surface-container-high/40">
+          <div class="flex items-center gap-space-md">
+            <div class="w-10 h-10 rounded-lg bg-secondary/15 border border-secondary/30 flex items-center justify-center text-secondary shadow-[0_0_16px_rgba(226,184,104,0.15)]">
+              <span class="material-symbols-outlined text-xl">smart_toy</span>
+            </div>
+            <div class="flex flex-col">
+              <div class="flex items-center gap-space-sm">
+                <span class="font-label-caps text-label-caps text-outline uppercase tracking-wider">AI AVIONICS &amp; GEOSPATIAL INTELLIGENCE</span>
+                <span id="tinyfish-status-pill" class="px-2 py-0.5 rounded text-[10px] font-label-caps bg-secondary/15 border border-secondary/30 text-secondary font-bold flex items-center gap-1.5">
+                  <span class="inline-block w-2 h-2 rounded-full bg-secondary"></span> SMART SIMULATION (v0.9.0)
+                </span>
+              </div>
+              <h1 class="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tight mt-0.5">TinyFish AI Agent &amp; Cadastral Console</h1>
+              <span id="tinyfish-mode-desc" class="font-label-caps text-label-caps text-on-surface-variant text-[10px] mt-0.5">
+                Autonomous Web Scraping &amp; Synthesis (@tiny-fish/sdk) • ML Telemetry Diagnostics • SVAMITVA Copilot
+              </span>
+            </div>
+          </div>
+
+          <!-- Quick Navigation Subtabs -->
+          <div class="flex items-center gap-1.5 bg-surface-container-lowest p-1 rounded-lg border border-surface-container-high/50">
+            <button onclick="window.switchTinyFishTab('agent-terminal')" data-tab="agent-terminal" class="tf-subtab-btn px-3 py-1.5 rounded bg-primary text-on-primary font-label-caps text-xs font-bold transition-all shadow-md flex items-center gap-1.5 cursor-pointer">
+              <span class="material-symbols-outlined text-sm">terminal</span> BROWSER AGENT (SSE)
+            </button>
+            <button onclick="window.switchTinyFishTab('ml-diagnostics')" data-tab="ml-diagnostics" class="tf-subtab-btn px-3 py-1.5 rounded bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-caps text-xs transition-all flex items-center gap-1.5 cursor-pointer">
+              <span class="material-symbols-outlined text-sm">monitor_heart</span> ML DIAGNOSTICS
+            </button>
+            <button onclick="window.switchTinyFishTab('cadastral-scout')" data-tab="cadastral-scout" class="tf-subtab-btn px-3 py-1.5 rounded bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-caps text-xs transition-all flex items-center gap-1.5 cursor-pointer">
+              <span class="material-symbols-outlined text-sm">travel_explore</span> CADASTRAL SCOUT
+            </button>
+            <button onclick="window.switchTinyFishTab('copilot-chat')" data-tab="copilot-chat" class="tf-subtab-btn px-3 py-1.5 rounded bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-caps text-xs transition-all flex items-center gap-1.5 cursor-pointer">
+              <span class="material-symbols-outlined text-sm">forum</span> AI COPILOT
+            </button>
+          </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="p-gutter-desktop space-y-space-md">
+
+          <!-- ============================================== -->
+          <!-- PANE 1: AUTONOMOUS BROWSER AGENT (SSE RUNNER)  -->
+          <!-- ============================================== -->
+          <div id="tf-pane-agent-terminal" class="space-y-space-md">
+            <!-- Goal Input Card -->
+            <div class="rounded-lg bg-surface-container-low p-space-lg border border-surface-container-high/30 flex flex-col gap-3">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="material-symbols-outlined text-secondary text-lg">psychology</span>
+                  <span class="font-headline-sm text-sm font-bold text-on-surface uppercase tracking-wide">Autonomous TinyFish Web Agent</span>
+                </div>
+                <span class="font-label-caps text-[10px] text-outline">NATURAL LANGUAGE GOAL &rarr; REAL BROWSER STREAMING &rarr; STRUCTURED JSON</span>
+              </div>
+
+              <!-- Input and Dispatch Button -->
+              <div class="flex flex-col sm:flex-row gap-2">
+                <input type="text" id="tf-agent-goal-input" placeholder="e.g. Scout DGCA Green Zone permissions & wind forecast for current GPS coordinates..." 
+                       value="Scout DGCA Green Zone permissions & wind forecast for current GPS coordinates"
+                       class="flex-1 bg-surface-container-lowest font-body-md text-xs text-on-surface px-3 py-2 rounded-lg outline-none border border-surface-container-high focus:border-secondary transition-colors" />
+                <button id="tf-agent-run-btn" onclick="window.runTinyFishAgent()" 
+                        class="px-5 py-2 rounded-lg bg-secondary hover:brightness-110 text-on-secondary font-label-caps text-xs font-bold transition-all shadow-md flex items-center justify-center gap-1.5 shrink-0 cursor-pointer">
+                  <span class="material-symbols-outlined text-sm">rocket_launch</span> DISPATCH AGENT
+                </button>
+              </div>
+
+              <!-- Quick Preset Goal Chips -->
+              <div class="flex items-center gap-1.5 flex-wrap pt-1">
+                <span class="font-label-caps text-[10px] text-outline mr-1">PRESETS:</span>
+                <button onclick="window.runTinyFishAgent('Scout DGCA Green Zone permissions & airspace restrictions at 28.4701, 77.4941')" class="px-2 py-1 rounded bg-surface-container hover:bg-surface-container-high text-on-surface text-[11px] font-label-caps border border-white/[0.05] transition-all cursor-pointer">
+                  🇮🇳 DGCA Green Zone Check
+                </button>
+                <button onclick="window.runTinyFishAgent('Verify SVAMITVA village cadastral survey guidelines and GSD tolerances')" class="px-2 py-1 rounded bg-surface-container hover:bg-surface-container-high text-on-surface text-[11px] font-label-caps border border-white/[0.05] transition-all cursor-pointer">
+                  📜 SVAMITVA Survey SOP
+                </button>
+                <button onclick="window.runTinyFishAgent('Extract boundary dispute circulars & Khasra norms from UP Bhulekh')" class="px-2 py-1 rounded bg-surface-container hover:bg-surface-container-high text-on-surface text-[11px] font-label-caps border border-white/[0.05] transition-all cursor-pointer">
+                  🗺️ UP Bhulekh Circulars
+                </button>
+                <button onclick="window.runTinyFishAgent('Audit real-time wind gusts, METAR, and microburst risk for drone flight')" class="px-2 py-1 rounded bg-surface-container hover:bg-surface-container-high text-on-surface text-[11px] font-label-caps border border-white/[0.05] transition-all cursor-pointer">
+                  🌤️ Live Aviation Weather
+                </button>
+              </div>
+            </div>
+
+            <!-- Streaming Terminal Display -->
+            <div class="rounded-lg bg-[#07090e] border border-white/[0.08] p-space-md shadow-2xl flex flex-col">
+              <div class="flex items-center justify-between pb-2 border-b border-white/[0.06] mb-2">
+                <div class="flex items-center gap-2">
+                  <span class="flex h-2.5 w-2.5 relative">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                  </span>
+                  <span class="font-label-caps text-[10px] font-bold text-on-surface uppercase tracking-wider">TINYFISH AGENT STREAMING TERMINAL</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span id="tf-agent-exec-status" class="px-2 py-0.5 rounded text-[10px] font-label-caps bg-surface-container text-outline font-bold">READY</span>
+                  <button onclick="document.getElementById('tf-agent-terminal-logs').innerHTML = '';" class="p-1 rounded hover:bg-surface-container text-outline hover:text-on-surface text-xs" title="Clear Terminal">
+                    <span class="material-symbols-outlined text-xs">delete</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Monospace Logs Scroll View -->
+              <div id="tf-agent-terminal-logs" class="h-64 overflow-y-auto font-mono text-xs text-on-surface space-y-1 p-2 bg-[#05060a] rounded border border-white/[0.04]">
+                <div class="text-outline italic select-none py-1">// TinyFish Agent SSE Stream ready. Enter a goal above or click a preset to launch autonomous retrieval.</div>
+              </div>
+            </div>
+
+            <!-- Structured Result Card (Revealed on Completion) -->
+            <div id="tf-agent-result-card" class="rounded-lg bg-surface-container-low p-space-lg border border-secondary/30 hidden flex flex-col gap-3">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="material-symbols-outlined text-secondary text-lg">verified</span>
+                  <span class="font-headline-sm text-sm font-bold text-on-surface">SYNTHESIZED INTELLIGENCE REPORT</span>
+                </div>
+                <span id="tf-agent-result-verdict" class="font-label-caps text-xs font-bold px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">APPROVED</span>
+              </div>
+
+              <div id="tf-agent-result-summary"></div>
+
+              <div class="mt-2">
+                <div class="flex items-center justify-between mb-1">
+                  <span class="font-label-caps text-[10px] text-outline uppercase">RAW STRUCTURED JSON (AGENT OUTPUT)</span>
+                  <button onclick="navigator.clipboard.writeText(document.getElementById('tf-agent-result-json').textContent); window.showNotification('JSON copied to clipboard!');" 
+                          class="font-label-caps text-[10px] text-secondary hover:underline cursor-pointer flex items-center gap-1">
+                    <span class="material-symbols-outlined text-xs">content_copy</span> COPY JSON
+                  </button>
+                </div>
+                <pre id="tf-agent-result-json" class="p-3 rounded bg-surface-container-lowest font-mono text-xs text-primary max-h-48 overflow-y-auto border border-surface-container-high/50"></pre>
+              </div>
+            </div>
+          </div>
+
+          <!-- ============================================== -->
+          <!-- PANE 2: AI/ML TELEMETRY ANOMALY DIAGNOSTICS    -->
+          <!-- ============================================== -->
+          <div id="tf-pane-ml-diagnostics" class="hidden space-y-space-md">
+            <!-- Overall Health Banner -->
+            <div class="rounded-lg bg-gradient-to-r from-surface-container-low via-surface-container to-surface-container-low p-space-lg border border-white/[0.08] flex flex-wrap items-center justify-between gap-4">
+              <div class="flex items-center gap-4">
+                <div class="w-16 h-16 rounded-xl bg-surface-container-lowest border border-white/[0.1] flex flex-col items-center justify-center shadow-inner">
+                  <span id="ml-composite-score" class="font-headline-md text-2xl font-bold text-secondary">98.6%</span>
+                  <span class="font-label-caps text-[9px] text-outline">SAFETY IDX</span>
+                </div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="font-headline-sm text-base font-bold text-on-surface">Autonomous Flight Health Assessment</span>
+                    <span id="ml-verdict-badge" class="px-2 py-0.5 rounded text-[11px] font-label-caps bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 font-bold">FLIGHT READY PRIME</span>
+                  </div>
+                  <p id="ml-recommendation-text" class="text-xs text-on-surface-variant mt-1 max-w-xl">
+                    All avionics nominal. Cadastral survey transects cleared for execution. Estimated safe mapping window: 24.5 min before RTL reserve threshold.
+                  </p>
+                </div>
+              </div>
+              <button onclick="window.loadMLDiagnostics(); window.showNotification('ML Diagnostics updated!');" class="px-4 py-2 rounded bg-surface-container-high hover:bg-surface-bright text-on-surface font-label-caps text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer">
+                <span class="material-symbols-outlined text-sm">refresh</span> RE-EVALUATE AVIONICS
+              </button>
+            </div>
+
+            <!-- Diagnostics Matrix Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-space-md">
+              <!-- Vibration Severity -->
+              <div class="rounded-lg bg-surface-container-low p-space-md border border-surface-container-high/40 flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="font-label-caps text-[10px] text-outline uppercase tracking-wider">VIBRATION (ISO 10816)</span>
+                    <span id="ml-vib-status" class="font-label-caps text-xs font-bold text-emerald-400">EXCELLENT</span>
+                  </div>
+                  <div class="flex items-baseline gap-1 my-1">
+                    <span id="ml-vib-mag" class="font-headline-md text-xl font-bold text-on-surface">0.041 RMS</span>
+                  </div>
+                  <p class="font-data-sm text-[11px] text-on-surface-variant">Composite 3-axis accelerometer vector. Zero clipping detected.</p>
+                </div>
+                <div class="pt-2 mt-2 border-t border-surface-container-high/40 flex justify-between font-label-caps text-[10px] text-outline">
+                  <span>CLIPPING: <span id="ml-vib-clip" class="text-primary font-bold">0 clips</span></span>
+                  <span>HARMONICS: NORMAL</span>
+                </div>
+              </div>
+
+              <!-- Battery Endurance -->
+              <div class="rounded-lg bg-surface-container-low p-space-md border border-surface-container-high/40 flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="font-label-caps text-[10px] text-outline uppercase tracking-wider">BATTERY ENDURANCE</span>
+                    <span class="font-label-caps text-xs font-bold text-secondary">6S LiPo (24.6V)</span>
+                  </div>
+                  <div class="flex items-baseline gap-1 my-1">
+                    <span id="ml-bat-mins" class="font-headline-md text-xl font-bold text-on-surface">~24.5 min</span>
+                    <span class="font-label-caps text-xs text-outline">REMAINING</span>
+                  </div>
+                  <p class="font-data-sm text-[11px] text-on-surface-variant">Projected flight time until 20% Return-to-Launch battery reserve.</p>
+                </div>
+                <div class="pt-2 mt-2 border-t border-surface-container-high/40 flex justify-between font-label-caps text-[10px] text-outline">
+                  <span>PACK: <span id="ml-bat-volts" class="text-primary font-bold">24.6V</span></span>
+                  <span>R_INT: <span id="ml-bat-res" class="text-secondary font-bold">0.042 Ω</span></span>
+                </div>
+              </div>
+
+              <!-- EKF3 Variance -->
+              <div class="rounded-lg bg-surface-container-low p-space-md border border-surface-container-high/40 flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="font-label-caps text-[10px] text-outline uppercase tracking-wider">EKF3 KALMAN FILTER</span>
+                    <span id="ml-ekf-status" class="font-label-caps text-xs font-bold text-primary">OPTIMAL_LOCKED</span>
+                  </div>
+                  <div class="flex items-baseline gap-1 my-1">
+                    <span id="ml-ekf-var" class="font-headline-md text-xl font-bold text-on-surface">0.040</span>
+                    <span class="font-label-caps text-xs text-outline">MAX VARIANCE</span>
+                  </div>
+                  <p class="font-data-sm text-[11px] text-on-surface-variant">Multi-lane velocity, position &amp; compass innovation variance.</p>
+                </div>
+                <div class="pt-2 mt-2 border-t border-surface-container-high/40 flex justify-between font-label-caps text-[10px] text-outline">
+                  <span>LANE: 1 / 3 ACTIVE</span>
+                  <span>SPOOFING RISK: LOW</span>
+                </div>
+              </div>
+
+              <!-- GPS Constellation -->
+              <div class="rounded-lg bg-surface-container-low p-space-md border border-surface-container-high/40 flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="font-label-caps text-[10px] text-outline uppercase tracking-wider">RTK GNSS GEOMETRY</span>
+                    <span class="font-label-caps text-xs font-bold text-emerald-400">CENTIMETER</span>
+                  </div>
+                  <div class="flex items-baseline gap-1 my-1">
+                    <span id="ml-gps-status" class="font-headline-md text-xl font-bold text-on-surface">RTK Fixed</span>
+                  </div>
+                  <p class="font-data-sm text-[11px] text-on-surface-variant">Survey of India CORS base station differential corrections active.</p>
+                </div>
+                <div class="pt-2 mt-2 border-t border-surface-container-high/40 flex justify-between font-label-caps text-[10px] text-outline">
+                  <span id="ml-gps-sats" class="text-primary font-bold">26 sats (HDOP 0.65)</span>
+                  <span>VDOP: 0.85</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ============================================== -->
+          <!-- PANE 3: CADASTRAL & SVAMITVA LAND SCOUT        -->
+          <!-- ============================================== -->
+          <div id="tf-pane-cadastral-scout" class="hidden space-y-space-md">
+            <div class="rounded-lg bg-surface-container-low p-space-lg border border-surface-container-high/30 flex flex-col gap-3">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="material-symbols-outlined text-secondary text-lg">travel_explore</span>
+                  <span class="font-headline-sm text-sm font-bold text-on-surface uppercase tracking-wide">Cadastral &amp; SVAMITVA Parcel Intelligence</span>
+                </div>
+                <span class="font-label-caps text-[10px] text-outline">CROSS-REFERENCED VIA TINYFISH SEARCH &amp; FETCH</span>
+              </div>
+
+              <div class="flex flex-col sm:flex-row gap-2">
+                <input type="text" id="cs-parcel-id-input" placeholder="Enter Khasra / Parcel Number (e.g. SVAMITVA-KH-402/1)..." 
+                       value="SVAMITVA-KH-402/1"
+                       class="flex-1 bg-surface-container-lowest font-body-md text-xs text-on-surface px-3 py-2 rounded-lg outline-none border border-surface-container-high focus:border-secondary transition-colors" />
+                <button id="cs-scout-btn" onclick="window.runCadastralScout()" 
+                        class="px-5 py-2 rounded-lg bg-primary hover:brightness-110 text-on-primary font-label-caps text-xs font-bold transition-all shadow-md flex items-center justify-center gap-1.5 shrink-0 cursor-pointer">
+                  <span class="material-symbols-outlined text-sm">search</span> QUERY CADASTRAL REGISTRY
+                </button>
+              </div>
+            </div>
+
+            <!-- Results Card -->
+            <div id="cs-results-container" class="rounded-lg bg-surface-container-low p-space-lg border border-white/[0.08] hidden flex flex-col gap-4">
+              <div class="flex items-center justify-between border-b border-surface-container-high pb-2">
+                <div class="flex items-center gap-2">
+                  <span class="font-headline-md text-base font-bold text-on-surface" id="cs-res-parcel-id">SVAMITVA-KH-402/1</span>
+                  <span class="font-label-caps text-xs px-2 py-0.5 rounded bg-secondary/15 text-secondary border border-secondary/30 font-bold" id="cs-res-village">Rampur Abadi, Gautam Buddha Nagar</span>
+                </div>
+                <span class="font-label-caps text-[10px] text-emerald-400 font-bold">AUTHENTICATED • SURVEY OF INDIA CORS TIED</span>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                <div class="p-3 rounded bg-surface-container-lowest border border-surface-container-high/50">
+                  <span class="font-label-caps text-[10px] text-outline">TOTAL PARCEL AREA:</span>
+                  <div class="font-data-md text-base font-bold text-on-surface mt-0.5" id="cs-res-area">14.8 Ha (38 Sub-parcels)</div>
+                </div>
+                <div class="p-3 rounded bg-surface-container-lowest border border-surface-container-high/50">
+                  <span class="font-label-caps text-[10px] text-outline">OPTIMAL FLIGHT ALTITUDE:</span>
+                  <div class="font-data-md text-base font-bold text-primary mt-0.5" id="cs-res-alt">78.5m AGL</div>
+                </div>
+                <div class="p-3 rounded bg-surface-container-lowest border border-surface-container-high/50">
+                  <span class="font-label-caps text-[10px] text-outline">ACHIEVED GSD:</span>
+                  <div class="font-data-md text-base font-bold text-secondary mt-0.5" id="cs-res-gsd">1.2 cm/pixel</div>
+                </div>
+                <div class="p-3 rounded bg-surface-container-lowest border border-surface-container-high/50">
+                  <span class="font-label-caps text-[10px] text-outline">CAMERA PAYLOAD:</span>
+                  <div class="font-data-md text-xs font-bold text-on-surface mt-0.5">Sony α7R IV (61MP)</div>
+                </div>
+              </div>
+
+              <!-- Live Web Intelligence Sources retrieved via TinyFish -->
+              <div>
+                <span class="font-label-caps text-[10px] text-outline uppercase tracking-wider block mb-2">LIVE INTELLIGENCE SOURCES (TINYFISH SEARCH / FETCH)</span>
+                <div id="cs-res-sources" class="space-y-2"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ============================================== -->
+          <!-- PANE 4: AI COPILOT VOICE & TEXT CHAT           -->
+          <!-- ============================================== -->
+          <div id="tf-pane-copilot-chat" class="hidden space-y-space-md">
+            <div class="rounded-lg bg-surface-container-low border border-surface-container-high/30 flex flex-col h-[520px]">
+              <!-- Chat Header -->
+              <div class="p-3 px-4 bg-surface-container flex items-center justify-between border-b border-surface-container-high">
+                <div class="flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-full bg-secondary/20 border border-secondary/35 flex items-center justify-center text-secondary">
+                    <span class="material-symbols-outlined text-sm">smart_toy</span>
+                  </div>
+                  <div>
+                    <span class="font-headline-sm text-xs font-bold text-on-surface">BHOOMI DRISHTI AI COPILOT</span>
+                    <span class="font-label-caps text-[9px] text-secondary ml-2">• 50Hz TELEMETRY AWARE</span>
+                  </div>
+                </div>
+                <button id="copilot-voice-toggle-btn" onclick="window.toggleCopilotVoice()" class="px-2.5 py-1 rounded bg-surface-container-high hover:bg-surface-bright font-label-caps text-xs text-secondary flex items-center gap-1 cursor-pointer transition-colors">
+                  <span class="material-symbols-outlined text-xs">volume_up</span> VOICE ON
+                </button>
+              </div>
+
+              <!-- Messages Body -->
+              <div id="copilot-chat-messages" class="flex-1 p-4 overflow-y-auto space-y-3 bg-surface-container-lowest">
+                <div class="flex justify-start mb-3">
+                  <div class="max-w-[85%] p-3 rounded-lg text-xs leading-relaxed bg-surface-container-high border border-white/[0.08] text-on-surface rounded-bl-none shadow-md">
+                    <div class="flex items-center gap-1.5 font-label-caps text-[9px] mb-1 text-secondary">
+                      <span class="material-symbols-outlined text-xs">smart_toy</span>
+                      <span>BHOOMI COPILOT (TINYFISH)</span>
+                    </div>
+                    <div>
+                      Welcome Capt. Sharma! I am your AI Survey Copilot integrated with live MAVLink telemetry and TinyFish web agents.
+                      <br><br>
+                      Current status: <strong>STANDBY @ 78.4m AGL</strong> | Battery: <strong>88%</strong> | RTK: <strong>26 Sats Locked</strong>.
+                      How can I assist your mission?
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Quick Prompt Buttons -->
+              <div class="p-2 px-3 bg-surface-container/60 border-t border-surface-container-high flex items-center gap-1.5 overflow-x-auto text-xs">
+                <button onclick="window.sendCopilotMessage('Run pre-flight survey checklist')" class="px-2.5 py-1 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-caps text-[10px] shrink-0 border border-white/[0.05] cursor-pointer">
+                  📋 Pre-flight Checklist
+                </button>
+                <button onclick="window.sendCopilotMessage('Check live weather and wind limits for survey')" class="px-2.5 py-1 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-caps text-[10px] shrink-0 border border-white/[0.05] cursor-pointer">
+                  🌤️ Weather &amp; Wind Check
+                </button>
+                <button onclick="window.sendCopilotMessage('Analyze battery endurance and safe flight minutes')" class="px-2.5 py-1 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-caps text-[10px] shrink-0 border border-white/[0.05] cursor-pointer">
+                  ⚡ Battery Endurance
+                </button>
+                <button onclick="window.sendCopilotMessage('Identify cadastral khasra parcel and recommended altitude')" class="px-2.5 py-1 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-caps text-[10px] shrink-0 border border-white/[0.05] cursor-pointer">
+                  🗺️ Khasra Land Info
+                </button>
+              </div>
+
+              <!-- Message Input Bar -->
+              <div class="p-3 bg-surface-container border-t border-surface-container-high flex items-center gap-2">
+                <input type="text" id="copilot-chat-input" placeholder="Ask AI Copilot about telemetry, cadastral norms, weather..." 
+                       class="flex-1 bg-surface-container-lowest font-body-md text-xs text-on-surface px-3 py-2 rounded-lg outline-none border border-surface-container-high focus:border-secondary transition-colors" />
+                <button id="copilot-send-btn" onclick="window.sendCopilotMessage()" class="px-4 py-2 rounded-lg bg-secondary hover:brightness-110 text-on-secondary font-label-caps text-xs font-bold transition-all shadow cursor-pointer flex items-center gap-1">
+                  <span class="material-symbols-outlined text-sm">send</span> SEND
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
       <!-- Realtime Telemetry Monitor Footer Bar (Always visible) -->
       <footer class="w-full bg-surface-container-low px-gutter-desktop py-space-sm flex flex-wrap items-center justify-between text-outline font-data-sm text-data-sm border-t border-surface-container-high/40 mt-auto">
         <div class="flex items-center gap-space-md">
@@ -1772,6 +2208,7 @@
   <script src="js/views/surveyHistory.js?v=2.6.7"></script>
   <script src="js/views/alerts.js?v=2.6.7"></script>
   <script src="js/views/settings.js?v=2.6.7"></script>
+  <script src="js/views/tinyfishAgent.js?v=2.8.0"></script>
 
   <!-- Real-time Clocks & Init -->
   <script>

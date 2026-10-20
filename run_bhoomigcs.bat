@@ -1,19 +1,19 @@
 @echo off
-title Bhoomi Drishti GCS - Low-Latency Gateway
-echo ===================================================
-echo   BHOOMI DRISHTI GCS v2.4-RC3 (Autonomous Gateway)
-echo   Hardware Telemetry Bridge (USB COM8 ^& Radio COM5)
-echo ===================================================
+title Bhoomi Drishti x TinyFish AI GCS
+echo ======================================================================
+echo   BHOOMI DRISHTI x TINYFISH AI/ML GROUND CONTROL STATION (v2.8-AI)
+echo   Autonomous Web Agent, Real-Time MAVLink Telemetry, SVAMITVA Cadastre
+echo ======================================================================
 echo.
 
-set PY_PATH=C:\Users\meapu\AppData\Local\Programs\Python\Python312\python.exe
+:: Launch default browser after 2 seconds in background
+start "" /b cmd /c "timeout /t 2 >nul & start http://localhost:8000"
 
-if exist "%PY_PATH%" (
-    echo Starting Bhoomi Drishti Gateway via Python 3.12...
-    "%PY_PATH%" bridge.py
-) else (
-    echo Starting Bhoomi Drishti Gateway via default Python...
-    python bridge.py
+:: Start the FastAPI + TinyFish + MAVLink Gateway
+python bridge.py
+
+if %ERRORLEVEL% NEQ 0 (
+    echo.
+    echo [ERROR] Python exited with error code %ERRORLEVEL%.
+    pause
 )
-
-pause

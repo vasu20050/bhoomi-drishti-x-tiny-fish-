@@ -161,6 +161,9 @@ window.navigateTo = function(viewId) {
   if (viewId === 'overview' && window.initOverviewMiniMap) {
     window.initOverviewMiniMap();
   }
+  if (viewId === 'tinyfish-agent' && window.initTinyFishAgent) {
+    window.initTinyFishAgent();
+  }
 
   window.showNotification(`Active Console: ${viewId.replace(/-/g, ' ').toUpperCase()}`);
 };
