@@ -1,0 +1,9 @@
+{
+  "name": "bhoomi-drishti-x-tiny-fish",
+  "version": "2.8.0",
+  "private": true,
+  "description": "Bhoomi Drishti x TinyFish Autonomous Ground Control Station",
+  "scripts": {
+    "build": "echo 'Build successful'"
+  }
+}
