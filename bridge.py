@@ -12,7 +12,7 @@ import math
 import json
 import asyncio
 import threading
-from typing import Set, Dict, Any, Optional
+from typing import Set, Dict, Any
 
 from pymavlink import mavutil
 import serial.tools.list_ports
@@ -220,6 +220,11 @@ def mavlink_worker():
                 mav_state["rssi"] = 94
                 mav_state["rf_dbm"] = -68.0
                 mav_state["packets_received"] += 1
+                base_lat = mav_state.get("base_lat", 0.0)
+                base_lon = mav_state.get("base_lon", 0.0)
+                if base_lat != 0.0:
+                    mav_state["lat"] = round(base_lat + 0.00015 * math.sin(sim_t * 0.2), 7)
+                    mav_state["lon"] = round(base_lon + 0.00015 * math.cos(sim_t * 0.2), 7)
                 mav_state["status_message"] = f"COM5 Radio Live (57600 baud)"
             time.sleep(0.05)
             continue
@@ -404,113 +409,16 @@ async def get_telemetry():
     with lock:
         return mav_state
 
-# ==============================================================================
-# TINYFISH AGENT & AI/ML INTELLIGENCE API ENDPOINTS
-# ==============================================================================
-import tinyfish_service
-from fastapi.responses import StreamingResponse
-
-@app.get("/api/tinyfish/status")
-async def tinyfish_status():
-    """Return status of TinyFish SDK and configured AI keys."""
-    return {
-        "installed": tinyfish_service.TINYFISH_INSTALLED,
-        "has_tinyfish_key": bool(tinyfish_service.CONFIG["tinyfish_api_key"]),
-        "has_gemini_key": bool(tinyfish_service.CONFIG["gemini_api_key"]),
-        "agent_mode": tinyfish_service.CONFIG["agent_mode"],
-        "version": getattr(tinyfish_service, "__version__", "0.9.0")
-    }
-
-@app.post("/api/tinyfish/config")
-async def update_tinyfish_config(payload: Dict[str, Any] = Body(...)):
-    """Update API keys and agent mode dynamically from GCS UI."""
-    if "tinyfish_api_key" in payload:
-        tinyfish_service.CONFIG["tinyfish_api_key"] = payload["tinyfish_api_key"].strip()
-    if "gemini_api_key" in payload:
-        tinyfish_service.CONFIG["gemini_api_key"] = payload["gemini_api_key"].strip()
-    if "agent_mode" in payload:
-        tinyfish_service.CONFIG["agent_mode"] = payload["agent_mode"]
-    return {
-        "status": "success",
-        "config": {
-            "has_tinyfish_key": bool(tinyfish_service.CONFIG["tinyfish_api_key"]),
-            "has_gemini_key": bool(tinyfish_service.CONFIG["gemini_api_key"]),
-            "agent_mode": tinyfish_service.CONFIG["agent_mode"]
-        }
-    }
-
-@app.post("/api/tinyfish/search")
-async def api_tinyfish_search(payload: Dict[str, Any] = Body(...)):
-    """Execute TinyFish web search query for flight corridor, weather, or land records."""
-    query = payload.get("query", "")
-    limit = int(payload.get("limit", 5))
-    location = payload.get("location", "IN")
-    results = await tinyfish_service.tinyfish_search(query=query, limit=limit, location=location)
-    return {"query": query, "count": len(results), "results": results}
-
-@app.post("/api/tinyfish/fetch")
-async def api_tinyfish_fetch(payload: Dict[str, Any] = Body(...)):
-    """Fetch clean content from any URL using TinyFish Fetch."""
-    url = payload.get("url", "")
-    res = await tinyfish_service.tinyfish_fetch(url=url)
-    return res
-
-@app.get("/api/tinyfish/agent/stream")
-@app.post("/api/tinyfish/agent/stream")
-async def api_tinyfish_agent_stream(request: Request):
-    """
-    Server-Sent Events (SSE) streaming endpoint for autonomous TinyFish browser agent.
-    Streams live actions, progress, and synthesized JSON results to the frontend terminal.
-    """
-    goal = request.query_params.get("goal")
-    url = request.query_params.get("url")
-
-    if request.method == "POST":
-        try:
-            body = await request.json()
-            goal = body.get("goal") or goal
-            url = body.get("url") or url
-        except Exception:
-            pass
-
-    resolved_goal = goal or "Scout cadastral mapping guidelines and airspace safety"
-    return StreamingResponse(
-        tinyfish_service.stream_tinyfish_agent(goal=resolved_goal, target_url=url),
-        media_type="text/event-stream",
-        headers={
-            "Cache-Control": "no-cache",
-            "Connection": "keep-alive",
-            "X-Accel-Buffering": "no"
-        }
-    )
-
-@app.get("/api/aiml/diagnostics")
-async def api_aiml_diagnostics():
-    """Real-time ML anomaly detection over live MAVLink telemetry."""
+@app.post("/api/set-location")
+async def set_sim_location(payload: Dict[str, Any] = Body(...)):
+    new_lat = float(payload.get("lat", 0.0))
+    new_lon = float(payload.get("lon", 0.0))
     with lock:
-        current_state = dict(mav_state)
-    return tinyfish_service.analyze_telemetry_ml(current_state)
-
-@app.post("/api/aiml/cadastral-scout")
-async def api_aiml_cadastral_scout(payload: Dict[str, Any] = Body(...)):
-    """Scout cadastral land parcel boundaries, village registry, and flight survey transects."""
-    with lock:
-        current_lat = mav_state.get("lat") or 28.4701886
-        current_lon = mav_state.get("lon") or 77.4941820
-
-    lat = float(payload.get("lat", current_lat))
-    lon = float(payload.get("lon", current_lon))
-    parcel_id = payload.get("parcel_id")
-    return await tinyfish_service.scout_cadastral_parcel(lat=lat, lon=lon, parcel_id=parcel_id)
-
-@app.post("/api/aiml/copilot")
-async def api_aiml_copilot(payload: Dict[str, Any] = Body(...)):
-    """Natural language AI Flight Copilot chat with live drone telemetry awareness."""
-    message = payload.get("message", "What is my flight status?")
-    history = payload.get("history", [])
-    with lock:
-        current_state = dict(mav_state)
-    return await tinyfish_service.copilot_chat_response(message=message, mav_state=current_state, history=history)
+        mav_state["lat"] = new_lat
+        mav_state["lon"] = new_lon
+        mav_state["base_lat"] = new_lat
+        mav_state["base_lon"] = new_lon
+    return {"status": "ok", "lat": new_lat, "lon": new_lon}
 
 # Ultra-Low-Latency 50Hz WebSocket broadcast (20ms interval)
 @app.websocket("/ws")
@@ -538,6 +446,5 @@ async def serve_index():
     return FileResponse(os.path.join(workspace_dir, "index.html"))
 
 if __name__ == "__main__":
-    print("Starting Bhoomi Drishti x TinyFish Low-Latency Gateway on http://localhost:8000...")
+    print("Starting Bhoomi Drishti Low-Latency Gateway on http://localhost:8000...")
     uvicorn.run(app, host="0.0.0.0", port=8000, log_level="warning")
-

@@ -1,179 +1,160 @@
 /* ==========================================================================
-   BHOOMI DRISHTI | Ground Control Station - Editorial Noir & Ivory Theme
-   Inspired by Lovable, Passport, and luxury editorial dark interfaces.
-   Ultra-deep warm obsidian background, high-contrast serif typography,
-   crisp ivory buttons, champagne gold telemetry accents & hairline borders.
+   BHOOMI DRISHTI | AI Mission Control & Geospatial Operations Console
+   Engineered for Professional Aerospace Ground Control & Cadastral Survey
+   Aesthetic: Deep Graphite, Hairline Glass, Restrained Cyan/Amber Accents,
+   High-Contrast Modern Typography & Sub-pixel Monospace Telemetry.
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   1. ROOT & BODY ATMOSPHERE (WARM SPOTLIGHT & DEEP NOIR)
+   1. ROOT & BODY ATMOSPHERE (DEEP GRAPHITE / OBSIDIAN)
    -------------------------------------------------------------------------- */
+:root {
+  --color-bg: #09090b;
+  --color-surface: #0e1117;
+  --color-surface-elevated: #141822;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-subtle: rgba(255, 255, 255, 0.04);
+  --color-border-cyan: rgba(6, 182, 212, 0.3);
+  --color-cyan: #06b6d4;
+  --color-cyan-glow: rgba(6, 182, 212, 0.15);
+  --color-amber: #f59e0b;
+  --color-red: #ef4444;
+  --color-emerald: #10b981;
+}
+
 body {
-  background-color: #080807 !important;
+  background-color: #09090b !important;
   background-image: 
-    radial-gradient(ellipse 75% 50% at 75% -5%, rgba(195, 150, 95, 0.12), transparent 70%),
-    radial-gradient(ellipse 55% 40% at 15% 5%, rgba(145, 110, 70, 0.08), transparent 65%) !important;
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(6, 182, 212, 0.06), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 90% 10%, rgba(14, 165, 233, 0.04), transparent 60%) !important;
   background-attachment: fixed !important;
-  color: #faf7f2 !important;
+  color: #f4f4f5 !important;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom Smooth & Sleek Editorial Scrollbar */
+/* Precision Engineering Scrollbar */
 ::-webkit-scrollbar {
   width: 5px;
   height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #080807;
+  background: #09090b;
 }
 ::-webkit-scrollbar-thumb {
-  background: #242220;
-  border-radius: 9999px;
+  background: #27272a;
+  border-radius: 4px;
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #f5f2eb;
-  box-shadow: 0 0 10px rgba(245, 242, 235, 0.4);
+  background: #38bdf8;
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
 }
 
-/* Base Body Selection */
 ::selection {
-  background: rgba(245, 242, 235, 0.25);
+  background: rgba(6, 182, 212, 0.3);
   color: #ffffff;
 }
 
 /* --------------------------------------------------------------------------
-   2. EDITORIAL TYPOGRAPHY & HEADINGS
+   2. HIGH-CONTRAST TYPOGRAPHY & DATA HEADINGS
    -------------------------------------------------------------------------- */
-h1, h2, h3,
+h1, h2, h3, h4,
 .font-headline-xl,
 .font-headline-lg,
-.font-headline-md {
-  font-family: 'Newsreader', 'Playfair Display', 'Cormorant Garamond', Georgia, serif !important;
-  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
-  letter-spacing: -0.015em;
-  color: #faf7f2;
+.font-headline-md,
+.font-headline-sm {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  letter-spacing: -0.02em;
+  color: #f4f4f5;
+  font-weight: 600;
 }
 
-h1 {
-  font-weight: 500;
-}
-
-.font-editorial-italic {
-  font-family: 'Newsreader', 'Cormorant Garamond', Georgia, serif !important;
-  font-style: italic !important;
-  font-weight: 400 !important;
-}
-
-/* Squiggly Wave Underline (Inspired by editorial accent lines) */
-.editorial-squiggle {
-  position: relative;
-  display: inline-block;
-}
-.editorial-squiggle::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -4px;
-  width: 100%;
-  height: 6px;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 12' preserveAspectRatio='none'%3E%3Cpath d='M0,5 Q25,0 50,5 T100,5' fill='none' stroke='rgba(245,242,235,0.7)' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") repeat-x;
-  background-size: 80px 6px;
-}
-
-/* Editorial Metadata Pill / Ticker */
-.editorial-ticker {
-  border-top: 1px solid rgba(255, 245, 230, 0.08);
-  border-bottom: 1px solid rgba(255, 245, 230, 0.08);
-  background: rgba(12, 11, 10, 0.6);
-  backdrop-filter: blur(8px);
+.font-mono,
+.font-data-sm,
+.telemetry-val {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+  font-feature-settings: "zero" 1, "tnum" 1;
 }
 
 /* --------------------------------------------------------------------------
-   3. LOVABLE EDITORIAL BUTTONS (IVORY SOLID & CRISP DARK TEXT)
+   3. AEROSPACE MISSION BUTTONS & CONTROLS
    -------------------------------------------------------------------------- */
 button {
-  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
   font-family: 'Inter', -apple-system, sans-serif;
 }
 button:active {
-  transform: scale(0.98);
+  transform: scale(0.97);
 }
 
-/* Primary Action Buttons (Crisp Ivory Solid with Dark Bold Text) */
+/* Primary Action Buttons (Crisp Cyan-Sky Solid with Dark Text) */
 button.bg-primary,
-.btn-editorial-primary,
-#btn-save,
-#wizard-btn-confirm {
-  background-color: #f5f2eb !important;
-  color: #0a0908 !important;
+.btn-aerospace-primary {
+  background: #0ea5e9 !important;
+  color: #ffffff !important;
   font-weight: 600 !important;
-  border: 1px solid rgba(255, 255, 255, 0.9) !important;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 3px 12px rgba(245, 242, 235, 0.12) !important;
+  border: 1px solid rgba(56, 189, 248, 0.8) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), 0 0 12px rgba(14, 165, 233, 0.25) !important;
 }
 
 button.bg-primary:hover,
-.btn-editorial-primary:hover,
-#btn-save:hover,
-#wizard-btn-confirm:hover {
-  background-color: #ffffff !important;
-  box-shadow: 0 2px 16px rgba(245, 242, 235, 0.22) !important;
+.btn-aerospace-primary:hover {
+  background: #38bdf8 !important;
+  box-shadow: 0 2px 16px rgba(56, 189, 248, 0.4) !important;
   transform: translateY(-1px);
 }
 
 button.bg-primary span,
-#btn-save span,
-#wizard-btn-confirm span {
-  color: #0a0908 !important;
+.btn-aerospace-primary span {
+  color: #ffffff !important;
 }
 
 /* Secondary & Header Action Buttons */
-.btn-editorial-secondary,
+.btn-aerospace-secondary,
 button.bg-surface-container-high:not(#btn-action-arm):not(#btn-save) {
-  background-color: rgba(255, 255, 255, 0.04) !important;
-  color: #faf7f2 !important;
-  border: 1px solid rgba(255, 245, 230, 0.12) !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  color: #f4f4f5 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
 }
 
-.btn-editorial-secondary:hover,
 button.bg-surface-container-high:not(#btn-action-arm):not(#btn-save):hover {
-  background-color: rgba(255, 255, 255, 0.08) !important;
-  border-color: rgba(255, 245, 230, 0.25) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(6, 182, 212, 0.3) !important;
 }
 
 /* --------------------------------------------------------------------------
-   4. GLASSMORPHISM & LOVABLE EDITORIAL CARDS
+   4. GLASSMORPHISM & PRECISION PANELS
    -------------------------------------------------------------------------- */
 .glass-panel,
 .lovable-card {
-  background: rgba(18, 17, 16, 0.78) !important;
+  background: rgba(14, 17, 23, 0.78) !important;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 245, 230, 0.08) !important;
-  border-radius: 6px !important;
-  box-shadow: 0 8px 30px -4px rgba(0, 0, 0, 0.65), inset 0 1px 0 0 rgba(255, 255, 255, 0.05) !important;
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.7), inset 0 1px 0 0 rgba(255, 255, 255, 0.04) !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-panel:hover,
 .lovable-card:hover {
-  border-color: rgba(255, 245, 230, 0.16) !important;
-  box-shadow: 0 12px 36px -4px rgba(0, 0, 0, 0.75), inset 0 1px 0 0 rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(6, 182, 212, 0.22) !important;
+  box-shadow: 0 12px 36px -4px rgba(0, 0, 0, 0.8), inset 0 1px 0 0 rgba(255, 255, 255, 0.06) !important;
 }
 
 .glass-panel-glow {
-  box-shadow: 0 0 24px -2px rgba(226, 184, 104, 0.18), inset 0 1px 0 0 rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 0 24px -2px rgba(6, 182, 212, 0.2), inset 0 1px 0 0 rgba(255, 255, 255, 0.08) !important;
 }
 
 /* --------------------------------------------------------------------------
-   5. PULSE ANIMATION & STATUS INDICATORS
+   5. STATUS INDICATORS & ANIMATIONS
    -------------------------------------------------------------------------- */
 @keyframes ring-pulse {
-  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(226, 184, 104, 0.7); }
-  70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(226, 184, 104, 0); }
-  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(226, 184, 104, 0); }
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(6, 182, 212, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(6, 182, 212, 0); }
 }
 
 .ping-ring {
@@ -181,191 +162,159 @@ button.bg-surface-container-high:not(#btn-action-arm):not(#btn-save):hover {
 }
 
 /* --------------------------------------------------------------------------
-   6. SIDEBAR NAVIGATION - ULTRA SLEEK EDITORIAL PILL
+   6. SIDEBAR NAVIGATION - ULTRA SLEEK MISSION PILL
    -------------------------------------------------------------------------- */
 .nav-link {
   position: relative;
   border: 1px solid transparent;
-  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: all 0.16s cubic-bezier(0.16, 1, 0.3, 1) !important;
   border-radius: 6px !important;
 }
 
 .nav-link:hover:not(.active) {
   background: rgba(255, 255, 255, 0.04) !important;
-  border-color: rgba(255, 245, 230, 0.08) !important;
-  color: #faf7f2 !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  color: #f4f4f5 !important;
   transform: translateX(2px);
 }
 
 .nav-link:hover:not(.active) .material-symbols-outlined {
-  color: #f5f2eb !important;
+  color: #38bdf8 !important;
 }
 
-/* Lovable Active Navigation State */
 .nav-link.active {
-  background: linear-gradient(90deg, rgba(245, 242, 235, 0.09) 0%, rgba(245, 242, 235, 0.01) 100%) !important;
-  color: #ffffff !important;
+  background: rgba(14, 165, 233, 0.12) !important;
+  border-color: rgba(14, 165, 233, 0.4) !important;
+  color: #38bdf8 !important;
   font-weight: 600 !important;
-  border: 1px solid rgba(245, 242, 235, 0.18) !important;
-  border-left: 2px solid #f5f2eb !important;
-  box-shadow: 0 2px 14px -2px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 0 14px rgba(14, 165, 233, 0.12), inset 0 0 8px rgba(14, 165, 233, 0.06) !important;
 }
 
 .nav-link.active .material-symbols-outlined {
-  color: #f5f2eb !important;
-  filter: drop-shadow(0 0 6px rgba(245, 242, 235, 0.5));
+  color: #38bdf8 !important;
 }
 
-.nav-link.active span:last-child {
-  color: #f5f2eb !important;
-  font-weight: 700 !important;
+.nav-link.active::before {
+  content: "";
+  position: absolute;
+  left: -2px;
+  top: 6px;
+  bottom: 6px;
+  width: 3px;
+  border-radius: 9999px;
+  background: #38bdf8;
+  box-shadow: 0 0 8px #38bdf8;
 }
 
 /* --------------------------------------------------------------------------
-   7. FORM INPUTS & SELECTS
+   7. MISSION CANVAS CONTAINER & FULLSCREEN
    -------------------------------------------------------------------------- */
-input[type="text"],
-input[type="number"],
-input[type="range"],
-select {
-  background-color: #151413 !important;
-  border: 1px solid rgba(255, 245, 230, 0.12) !important;
-  color: #faf7f2 !important;
-  transition: all 0.2s ease;
-  border-radius: 4px;
+#cockpit-screen-viewport,
+.mission-canvas-container {
+  background: #06080e !important;
+  border: 1px solid rgba(6, 182, 212, 0.25) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7), inset 0 0 24px rgba(0, 0, 0, 0.8) !important;
 }
 
-input[type="text"]:focus,
-input[type="number"]:focus,
-select:focus {
-  border-color: #f5f2eb !important;
-  box-shadow: 0 0 0 2px rgba(245, 242, 235, 0.2) !important;
-  outline: none !important;
+.mission-canvas-container:fullscreen {
+  width: 100vw !important;
+  height: 100vh !important;
+  border-radius: 0 !important;
+  border: none !important;
+  padding: 0 !important;
 }
 
 /* --------------------------------------------------------------------------
-   8. LEAFLET CARTOGRAPHY (WARM DARK EDITORIAL SKIN)
+   8. LEAFLET DARK GIS STYLING (PRECISION AEROSPACE MAP)
    -------------------------------------------------------------------------- */
 .leaflet-container {
-  background: #080807 !important;
-  font-family: 'Inter', -apple-system, sans-serif !important;
+  background-color: #07090e !important;
+  font-family: 'Inter', sans-serif !important;
 }
 
-.leaflet-bar a {
-  background-color: #121110 !important;
-  color: #faf7f2 !important;
-  border-color: rgba(255, 245, 230, 0.1) !important;
+/* Tile styling */
+.leaflet-tile {
+  filter: brightness(0.85) contrast(1.1) saturate(1.05);
+}
+
+/* Leaflet Zoom and Custom Control Buttons */
+.leaflet-bar,
+.leaflet-control-zoom {
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background: rgba(14, 17, 23, 0.9) !important;
+  backdrop-filter: blur(12px) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6) !important;
+  border-radius: 6px !important;
+  overflow: hidden;
+}
+
+.leaflet-bar a,
+.leaflet-control-zoom a {
+  background-color: rgba(14, 17, 23, 0.9) !important;
+  color: #f4f4f5 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
   transition: all 0.15s ease;
 }
 
-.leaflet-bar a:hover {
-  background-color: #1c1a18 !important;
-  color: #f5f2eb !important;
+.leaflet-bar a:hover,
+.leaflet-control-zoom a:hover {
+  background-color: #0ea5e9 !important;
+  color: #ffffff !important;
 }
 
+/* Leaflet Popup Styling */
 .leaflet-popup-content-wrapper {
-  background: rgba(16, 15, 14, 0.95) !important;
-  backdrop-filter: blur(14px) !important;
-  color: #faf7f2 !important;
-  border: 1px solid rgba(245, 242, 235, 0.3) !important;
+  background: rgba(14, 17, 23, 0.95) !important;
+  backdrop-filter: blur(16px) !important;
+  color: #f4f4f5 !important;
+  border: 1px solid rgba(6, 182, 212, 0.35) !important;
   border-radius: 8px !important;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 15px rgba(226, 184, 104, 0.15) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8), 0 0 16px rgba(6, 182, 212, 0.15) !important;
+  padding: 2px !important;
 }
 
 .leaflet-popup-tip {
-  background: #121110 !important;
+  background: rgba(14, 17, 23, 0.95) !important;
+  border: 1px solid rgba(6, 182, 212, 0.35) !important;
 }
 
-/* Leaflet Layer Control */
-.leaflet-control-layers {
-  background: rgba(16, 15, 14, 0.94) !important;
-  backdrop-filter: blur(12px) !important;
-  color: #faf7f2 !important;
-  border: 1px solid rgba(255, 245, 230, 0.12) !important;
-  border-radius: 6px !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7) !important;
-  font-family: 'Inter', sans-serif !important;
-  font-size: 11px !important;
-  padding: 8px 12px !important;
+.leaflet-popup-close-button {
+  color: #94a3b8 !important;
+  padding: 6px !important;
+}
+.leaflet-popup-close-button:hover {
+  color: #38bdf8 !important;
 }
 
-.leaflet-control-layers-toggle {
-  background-color: #121110 !important;
-  border: 1px solid rgba(255, 245, 230, 0.1) !important;
-  border-radius: 6px !important;
-}
-
-.leaflet-control-layers-expanded {
-  color: #faf7f2 !important;
-}
-
-.leaflet-control-layers-separator {
-  border-top-color: rgba(255, 245, 230, 0.1) !important;
-  margin: 6px 0 !important;
-}
-
-.leaflet-control-layers label {
-  cursor: pointer;
-  margin-bottom: 4px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.leaflet-control-layers input[type="radio"],
-.leaflet-control-layers input[type="checkbox"] {
-  accent-color: #e2b868;
-  cursor: pointer;
-}
-
-/* Leaflet Scale Bar */
+/* Scale & Attribution */
 .leaflet-control-scale-line {
-  background: rgba(16, 15, 14, 0.88) !important;
-  backdrop-filter: blur(8px) !important;
-  border-color: #e2b868 !important;
-  color: #e2b868 !important;
+  background: rgba(14, 17, 23, 0.85) !important;
+  border-color: #38bdf8 !important;
+  color: #38bdf8 !important;
   font-family: 'JetBrains Mono', monospace !important;
   font-size: 10px !important;
   padding: 2px 6px !important;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6) !important;
+  border-radius: 3px !important;
 }
 
-/* Leaflet Attribution Bar */
 .leaflet-control-attribution {
-  background: rgba(10, 9, 8, 0.85) !important;
-  backdrop-filter: blur(6px) !important;
-  color: #a8a29a !important;
+  background: rgba(9, 9, 11, 0.85) !important;
+  color: #64748b !important;
   font-size: 9px !important;
-  padding: 3px 8px !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
   border-radius: 4px 0 0 0 !important;
-  border-top: 1px solid rgba(255, 245, 230, 0.06) !important;
-  border-left: 1px solid rgba(255, 245, 230, 0.06) !important;
 }
-
 .leaflet-control-attribution a {
-  color: #f5f2eb !important;
-  text-decoration: none !important;
+  color: #94a3b8 !important;
 }
 
-.leaflet-control-attribution a:hover {
-  text-decoration: underline !important;
-}
-
-/* Cadastral Polygon Styling */
-.cadastre-polygon-active {
-  stroke: #e2b868;
-  stroke-width: 2;
-  fill: #e2b868;
-  fill-opacity: 0.15;
-}
-
-/* Survey Transect Path Glow */
+/* Survey Transect Flight Path Animation */
 .survey-flight-path {
-  stroke: #e2b868;
+  stroke: #38bdf8;
   stroke-width: 2.2;
   stroke-dasharray: 6, 6;
   animation: dash 30s linear infinite;
-  filter: drop-shadow(0 0 4px rgba(226, 184, 104, 0.5));
+  filter: drop-shadow(0 0 5px rgba(56, 189, 248, 0.6));
 }
 
 @keyframes dash {
@@ -374,27 +323,20 @@ select:focus {
   }
 }
 
+/* Drone Icon Pulse in Map */
+.ov-drone-marker {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 /* --------------------------------------------------------------------------
-   9. FPV HUD RETICLE & 3D AHRS
+   9. RETICLE & ATTITUDE OVERLAYS
    -------------------------------------------------------------------------- */
 .fpv-hud-overlay {
   pointer-events: none;
 }
 
-.pitch-ladder-line {
-  stroke: #f5f2eb;
+.nadir-crosshair {
+  stroke: rgba(6, 182, 212, 0.85);
   stroke-width: 1.5;
-  stroke-opacity: 0.9;
-}
-
-#orientation-3d-canvas {
-  width: 100% !important;
-  height: 100% !important;
-  display: block;
-}
-
-.meter-ring {
-  transform: rotate(-90deg);
-  transform-origin: 50% 50%;
-  transition: stroke-dashoffset 0.35s ease;
+  filter: drop-shadow(0 0 4px rgba(6, 182, 212, 0.5));
 }

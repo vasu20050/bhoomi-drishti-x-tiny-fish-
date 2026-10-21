@@ -11,61 +11,68 @@ let flightPathPolyline = null;
 let surveyFlightInterval = null;
 let isMissionSimulating = false;
 
-// Sample Indian Cadastral Village Land Parcels (SVAMITVA Scheme Survey Data)
-const sampleKhasraParcels = [
-  {
-    khasraNo: "101/A",
-    farmer: "Rameshwar Singh",
-    areaHa: 4.8,
-    status: "SURVEYED",
-    statusColor: "#4edea3",
-    coords: [
-      [28.6130, 77.2070],
-      [28.6155, 77.2072],
-      [28.6152, 77.2105],
-      [28.6128, 77.2100]
-    ]
-  },
-  {
-    khasraNo: "102/B",
-    farmer: "Kamla Devi",
-    areaHa: 6.2,
-    status: "IN PROGRESS",
-    statusColor: "#4cd7f6",
-    coords: [
-      [28.6155, 77.2072],
-      [28.6185, 77.2075],
-      [28.6180, 77.2112],
-      [28.6152, 77.2105]
-    ]
-  },
-  {
-    khasraNo: "103/C",
-    farmer: "Harish Chandra & Brothers",
-    areaHa: 8.5,
-    status: "PENDING VERIFICATION",
-    statusColor: "#7bd0ff",
-    coords: [
-      [28.6128, 77.2100],
-      [28.6152, 77.2105],
-      [28.6148, 77.2140],
-      [28.6122, 77.2135]
-    ]
-  },
-  {
-    khasraNo: "104/D (Gaon Sabha)",
-    farmer: "Community Land / Panchayat",
-    areaHa: 9.0,
-    status: "PROTECTED WATERBODY",
-    statusColor: "#06b6d4",
-    coords: [
-      [28.6152, 77.2105],
-      [28.6180, 77.2112],
-      [28.6175, 77.2145],
-      [28.6148, 77.2140]
-    ]
-  }
-];
+// Dynamic Indian Cadastral Village Land Parcels (SVAMITVA Scheme Survey Data)
+let sampleKhasraParcels = [];
+
+function generateKhasraParcelsAt(centerLat, centerLng) {
+  // Generate 4 adjacent SVAMITVA Khasra parcels centered around coordinate
+  const dLat = 0.0022;
+  const dLng = 0.0025;
+  return [
+    {
+      khasraNo: "101/A",
+      farmer: "Rameshwar Singh",
+      areaHa: 4.8,
+      status: "SURVEYED",
+      statusColor: "#4edea3",
+      coords: [
+        [centerLat - dLat, centerLng - dLng],
+        [centerLat, centerLng - dLng * 0.9],
+        [centerLat, centerLng],
+        [centerLat - dLat, centerLng - dLng * 0.1]
+      ]
+    },
+    {
+      khasraNo: "102/B",
+      farmer: "Kamla Devi",
+      areaHa: 6.2,
+      status: "IN PROGRESS",
+      statusColor: "#4cd7f6",
+      coords: [
+        [centerLat, centerLng - dLng * 0.9],
+        [centerLat + dLat, centerLng - dLng * 0.8],
+        [centerLat + dLat, centerLng + dLng * 0.2],
+        [centerLat, centerLng]
+      ]
+    },
+    {
+      khasraNo: "103/C",
+      farmer: "Harish Chandra & Brothers",
+      areaHa: 8.5,
+      status: "PENDING VERIFICATION",
+      statusColor: "#7bd0ff",
+      coords: [
+        [centerLat - dLat, centerLng - dLng * 0.1],
+        [centerLat, centerLng],
+        [centerLat - dLat * 0.1, centerLng + dLng],
+        [centerLat - dLat * 1.1, centerLng + dLng * 0.9]
+      ]
+    },
+    {
+      khasraNo: "104/D (Gaon Sabha)",
+      farmer: "Community Land / Panchayat",
+      areaHa: 9.0,
+      status: "PROTECTED WATERBODY",
+      statusColor: "#06b6d4",
+      coords: [
+        [centerLat, centerLng],
+        [centerLat + dLat, centerLng + dLng * 0.2],
+        [centerLat + dLat * 0.9, centerLng + dLng * 1.1],
+        [centerLat - dLat * 0.1, centerLng + dLng]
+      ]
+    }
+  ];
+}
 
 window.initCadastreMap = function() {
   const mapContainer = document.getElementById('cadastre-leaflet-map');
@@ -76,14 +83,22 @@ window.initCadastreMap = function() {
     return;
   }
 
-  const initialLat = (window.bhoomiState && window.bhoomiState.droneLat && window.bhoomiState.droneLat !== 0) 
-    ? window.bhoomiState.droneLat 
-    : 28.4702108;
-  const initialLng = (window.bhoomiState && window.bhoomiState.droneLng && window.bhoomiState.droneLng !== 0) 
-    ? window.bhoomiState.droneLng 
-    : 77.4942966;
+  const savedLat = parseFloat(localStorage.getItem('bhoomi_custom_lat'));
+  const savedLng = parseFloat(localStorage.getItem('bhoomi_custom_lng'));
+  const initialLat = (!isNaN(savedLat) && savedLat !== 0) 
+    ? savedLat 
+    : ((window.bhoomiState && window.bhoomiState.droneLat && window.bhoomiState.droneLat !== 0) 
+        ? window.bhoomiState.droneLat 
+        : 28.4702108);
+  const initialLng = (!isNaN(savedLng) && savedLng !== 0) 
+    ? savedLng 
+    : ((window.bhoomiState && window.bhoomiState.droneLng && window.bhoomiState.droneLng !== 0) 
+        ? window.bhoomiState.droneLng 
+        : 77.4942966);
 
-  // Create Leaflet map centered on real Pixhawk GPS location
+  sampleKhasraParcels = generateKhasraParcelsAt(initialLat, initialLng);
+
+  // Create Leaflet map centered on active survey coordinates
   cadastreMap = L.map('cadastre-leaflet-map', {
     zoomControl: false,
     attributionControl: true
@@ -162,39 +177,45 @@ window.initCadastreMap = function() {
   parcelPolygonLayer = L.featureGroup().addTo(cadastreMap);
   window.parcelPolygonLayer = parcelPolygonLayer;
 
-  sampleKhasraParcels.forEach((parcel) => {
-    const polygon = L.polygon(parcel.coords, {
-      color: parcel.statusColor,
-      weight: 2,
-      opacity: 0.9,
-      fillColor: parcel.statusColor,
-      fillOpacity: 0.18
-    }).addTo(parcelPolygonLayer);
+  window.renderKhasraParcels = function() {
+    if (!cadastreMap || !parcelPolygonLayer) return;
+    parcelPolygonLayer.clearLayers();
 
-    polygon.bindPopup(`
-      <div class="p-2 space-y-1 font-body-sm text-on-surface">
-        <div class="flex items-center justify-between border-b border-surface-container pb-1">
-          <span class="font-bold text-primary font-headline-sm text-sm">KHASRA #${parcel.khasraNo}</span>
-          <span class="text-xs px-1.5 py-0.5 rounded bg-surface-container font-label-caps" style="color:${parcel.statusColor}">${parcel.status}</span>
-        </div>
-        <div class="text-xs text-on-surface-variant pt-1">
-          <b>Owner / Titleholder:</b> ${parcel.farmer}<br/>
-          <b>Surveyed Area:</b> ${parcel.areaHa} Hectares (~${(parcel.areaHa * 3.95).toFixed(1)} Bigha)<br/>
-          <b>SVAMITVA ID:</b> IN-UP-9042-${parcel.khasraNo.replace('/', '')}
-        </div>
-        <button onclick="window.selectParcelForFlightPlan('${parcel.khasraNo}')" class="w-full mt-2 py-1 rounded bg-primary text-on-primary font-label-caps text-xs font-bold hover:bg-primary-fixed-dim">
-          GENERATE FLIGHT TRANSECT
-        </button>
-      </div>
-    `);
+    sampleKhasraParcels.forEach((parcel) => {
+      const polygon = L.polygon(parcel.coords, {
+        color: parcel.statusColor,
+        weight: 2,
+        opacity: 0.9,
+        fillColor: parcel.statusColor,
+        fillOpacity: 0.18
+      }).addTo(parcelPolygonLayer);
 
-    // Center tooltip
-    polygon.bindTooltip(`Khasra ${parcel.khasraNo} (${parcel.areaHa} Ha)`, {
-      permanent: true,
-      direction: 'center',
-      className: 'bg-surface-container-lowest/80 text-primary border border-primary/40 font-label-caps text-[10px] px-1 py-0.5 rounded shadow'
+      polygon.bindPopup(`
+        <div class="p-2 space-y-1 font-body-sm text-on-surface">
+          <div class="flex items-center justify-between border-b border-surface-container pb-1">
+            <span class="font-bold text-primary font-headline-sm text-sm">KHASRA #${parcel.khasraNo}</span>
+            <span class="text-xs px-1.5 py-0.5 rounded bg-surface-container font-label-caps" style="color:${parcel.statusColor}">${parcel.status}</span>
+          </div>
+          <div class="text-xs text-on-surface-variant pt-1">
+            <b>Owner / Titleholder:</b> ${parcel.farmer}<br/>
+            <b>Surveyed Area:</b> ${parcel.areaHa} Hectares (~${(parcel.areaHa * 3.95).toFixed(1)} Bigha)<br/>
+            <b>SVAMITVA ID:</b> IN-UP-9042-${parcel.khasraNo.replace('/', '')}
+          </div>
+          <button onclick="window.selectParcelForFlightPlan('${parcel.khasraNo}')" class="w-full mt-2 py-1 rounded bg-primary text-on-primary font-label-caps text-xs font-bold hover:bg-primary-fixed-dim">
+            GENERATE FLIGHT TRANSECT
+          </button>
+        </div>
+      `);
+
+      polygon.bindTooltip(`Khasra ${parcel.khasraNo} (${parcel.areaHa} Ha)`, {
+        permanent: true,
+        direction: 'center',
+        className: 'bg-surface-container-lowest/80 text-primary border border-primary/40 font-label-caps text-[10px] px-1 py-0.5 rounded shadow'
+      });
     });
-  });
+  };
+
+  window.renderKhasraParcels();
 
   // Drone Position Marker with Directional Heading Arrow
   const droneSvgIcon = L.divIcon({
@@ -259,6 +280,33 @@ window.initCadastreMap = function() {
       coordsEl.textContent = `LAT: ${e.latlng.lat.toFixed(6)}°  LON: ${e.latlng.lng.toFixed(6)}° | ZOOM: ${cadastreMap.getZoom()}`;
     }
   });
+
+  // Map Click Picker for custom survey site
+  let isMapPickerMode = false;
+  cadastreMap.on('click', function(e) {
+    if (isMapPickerMode) {
+      window.rebuildParcelsAndFlightGrid(e.latlng.lat, e.latlng.lng, true, "Clicked Map Location");
+      window.toggleMapPickerMode(false);
+    }
+  });
+
+  window.toggleMapPickerMode = function(forceState) {
+    isMapPickerMode = (forceState !== undefined) ? forceState : !isMapPickerMode;
+    const btn = document.getElementById('btn-toggle-map-picker');
+    const container = document.getElementById('cadastre-leaflet-map');
+    if (btn) {
+      if (isMapPickerMode) {
+        btn.className = "px-2.5 py-1.5 rounded bg-primary text-on-primary font-label-caps text-xs flex items-center justify-center gap-1 cursor-pointer transition-all shadow";
+        btn.innerHTML = `<span class="material-symbols-outlined text-xs">location_searching</span> CLICK ON MAP...`;
+        if (container) container.style.cursor = 'crosshair';
+        window.showNotification("Click anywhere on the map to set survey site coordinates.");
+      } else {
+        btn.className = "px-2.5 py-1.5 rounded bg-surface-container text-on-surface hover:bg-surface-container-highest font-label-caps text-xs flex items-center justify-center gap-1 cursor-pointer transition-all";
+        btn.innerHTML = `<span class="material-symbols-outlined text-xs text-tertiary">ads_click</span> PICK ON MAP`;
+        if (container) container.style.cursor = '';
+      }
+    }
+  };
 
   // Live GPS Tracking & Auto-Follow State
   window.autoFollowDrone = true;
@@ -351,23 +399,143 @@ window.initCadastreMap = function() {
     }
   };
 
+  window.rebuildParcelsAndFlightGrid = function(lat, lng, flyTo = true, locationName = "Custom Survey Site") {
+    lat = parseFloat(lat);
+    lng = parseFloat(lng);
+    if (isNaN(lat) || isNaN(lng) || (lat === 0 && lng === 0)) {
+      window.showNotification("Please enter valid Latitude and Longitude values.", true);
+      return;
+    }
+
+    // 1. Update State & LocalStorage
+    if (window.bhoomiState) {
+      window.bhoomiState.droneLat = lat;
+      window.bhoomiState.droneLng = lng;
+    }
+    localStorage.setItem('bhoomi_custom_lat', lat.toString());
+    localStorage.setItem('bhoomi_custom_lng', lng.toString());
+
+    // 2. Generate SVAMITVA parcels around this center
+    sampleKhasraParcels = generateKhasraParcelsAt(lat, lng);
+
+    // 3. Render parcels
+    if (window.renderKhasraParcels) {
+      window.renderKhasraParcels();
+    }
+
+    // 4. Regenerate survey lawnmower transects for Parcel 102/B
+    window.selectParcelForFlightPlan("102/B");
+
+    // 5. Update Drone marker position
+    if (droneMapMarker) {
+      droneMapMarker.setLatLng([lat, lng]);
+    }
+    if (window.overviewDroneMarker) {
+      window.overviewDroneMarker.setLatLng([lat, lng]);
+    }
+    if (window.overviewMiniMap && flyTo) {
+      window.overviewMiniMap.setView([lat, lng], 16);
+    }
+
+    // 6. Fly main map
+    if (cadastreMap && flyTo) {
+      cadastreMap.flyTo([lat, lng], 17);
+    }
+
+    // 7. Update UI input boxes & displays
+    const inLat = document.getElementById('input-custom-lat');
+    const inLng = document.getElementById('input-custom-lng');
+    if (inLat) inLat.value = lat.toFixed(6);
+    if (inLng) inLng.value = lng.toFixed(6);
+
+    const statusEl = document.getElementById('custom-coords-status');
+    if (statusEl) {
+      statusEl.textContent = `📍 ${locationName} (${lat.toFixed(5)}°, ${lng.toFixed(5)}°)`;
+    }
+
+    const gpsReadout = document.getElementById('map-live-gps-readout');
+    if (gpsReadout) {
+      gpsReadout.textContent = `GPS: ${lat.toFixed(6)}° N, ${lng.toFixed(6)}° E`;
+    }
+
+    // 8. Inform backend bridge (bench sim sync)
+    fetch('/api/set-location', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ lat, lon: lng })
+    }).catch(() => {});
+
+    window.showNotification(`Survey site moved to: ${lat.toFixed(5)}°, ${lng.toFixed(5)}°`);
+  };
+
+  window.applyCustomCoordinatesFromInput = function() {
+    const latInput = document.getElementById('input-custom-lat');
+    const lngInput = document.getElementById('input-custom-lng');
+    if (!latInput || !lngInput) return;
+    const lat = parseFloat(latInput.value);
+    const lng = parseFloat(lngInput.value);
+    if (isNaN(lat) || isNaN(lng)) {
+      window.showNotification("Please enter valid decimal coordinates (e.g. 28.470211, 77.494297)", true);
+      return;
+    }
+    window.rebuildParcelsAndFlightGrid(lat, lng, true, "Custom Survey Site");
+  };
+
+  window.detectBrowserLocation = function() {
+    if (!navigator.geolocation) {
+      window.showNotification("Geolocation is not supported by your browser.", true);
+      return;
+    }
+    window.showNotification("Fetching your current device GPS position...");
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+        window.rebuildParcelsAndFlightGrid(lat, lng, true, "Your Device Location");
+        window.showNotification(`Device location found! Centered survey site on (${lat.toFixed(5)}°, ${lng.toFixed(5)}°)`);
+      },
+      (err) => {
+        console.warn("Geolocation error:", err);
+        window.showNotification("Could not acquire browser GPS permission. You can enter coordinates manually.", true);
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+    );
+  };
+
+  window.resetToDefaultCoordinates = function() {
+    localStorage.removeItem('bhoomi_custom_lat');
+    localStorage.removeItem('bhoomi_custom_lng');
+    window.rebuildParcelsAndFlightGrid(28.4701886, 77.4941820, true, "Greater Noida Drone Site");
+  };
+
   window.jumpToSurveyLocation = function(locKey) {
     const locations = {
-      'varanasi': { name: "Rampur Khas (Varanasi Site)", coords: [28.6155, 77.2105], zoom: 16 },
       'greater_noida': { name: "Knowledge Park (Greater Noida)", coords: [28.4701886, 77.4941820], zoom: 16 },
+      'varanasi': { name: "Rampur Khas (Varanasi Site)", coords: [25.3176, 82.9739], zoom: 16 },
       'ayodhya': { name: "Ayodhya Cadastre Belt", coords: [26.7922, 82.1998], zoom: 15 },
       'lucknow': { name: "Lucknow IT City Enclave", coords: [26.7922, 80.9995], zoom: 15 },
       'delhi': { name: "Delhi Survey Region", coords: [28.6139, 77.2090], zoom: 16 }
     };
     const loc = locations[locKey];
-    if (loc && cadastreMap) {
-      cadastreMap.flyTo(loc.coords, loc.zoom);
-      window.showNotification(`Flew OpenStreetMap to ${loc.name}`);
+    if (loc) {
+      window.rebuildParcelsAndFlightGrid(loc.coords[0], loc.coords[1], true, loc.name);
     }
   };
 
   // Generate initial flight transects for Parcel 102/B
   window.selectParcelForFlightPlan("102/B");
+
+  // Populate custom coordinate input boxes
+  setTimeout(() => {
+    const inLat = document.getElementById('input-custom-lat');
+    const inLng = document.getElementById('input-custom-lng');
+    if (inLat && !inLat.value) inLat.value = initialLat.toFixed(6);
+    if (inLng && !inLng.value) inLng.value = initialLng.toFixed(6);
+    const statusEl = document.getElementById('custom-coords-status');
+    if (statusEl) {
+      statusEl.textContent = `📍 Active: (${initialLat.toFixed(5)}°, ${initialLng.toFixed(5)}°)`;
+    }
+  }, 100);
 };
 
 // Generate Lawn-mower Flight Grid Transects over target Khasra
