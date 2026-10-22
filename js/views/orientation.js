@@ -678,11 +678,15 @@ window.initOrientation3D = function() {
 
     if (orbitControls) orbitControls.update();
 
-    // Propeller High-RPM Spin
-    const spinSpeed = (window.bhoomiState && window.bhoomiState.armed) ? 0.65 : 0.28;
-    droneProps.forEach(p => {
-      p.group.rotation.y += p.cw ? spinSpeed : -spinSpeed;
-    });
+    // Propeller Spin: Only spin when motors armed or simulation demo is running
+    const s = window.bhoomiState;
+    const isSpinning = s && (s.armed || s.simulationRunning);
+    const spinSpeed = isSpinning ? (s.armed ? 0.65 : 0.45) : 0.0;
+    if (spinSpeed > 0) {
+      droneProps.forEach(p => {
+        p.group.rotation.y += p.cw ? spinSpeed : -spinSpeed;
+      });
+    }
 
     // Tail Strobe Beacon Blink
     if (navBeaconLight) {

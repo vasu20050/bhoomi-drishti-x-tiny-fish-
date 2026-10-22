@@ -190,9 +190,10 @@ window.navigateTo = function(viewId) {
 };
 
 // Switch Active MAVLink Port (COM5 Telemetry @ 57600 or COM8 USB @ 115200)
+// Switch Active MAVLink Port (COM5 Telemetry @ 57600, COM8 USB @ 115200, UDP 14550, or AUTO)
 window.switchMavlinkPort = async function(port, baud) {
   baud = parseInt(baud) || (port === 'COM5' ? 57600 : 115200);
-  window.showNotification(`Configuring MAVLink link: ${port} @ ${baud} baud...`);
+  window.showNotification(`Switching target port to ${port} @ ${baud} baud...`);
 
   try {
     const res = await fetch('/api/switch-port', {
@@ -205,8 +206,9 @@ window.switchMavlinkPort = async function(port, baud) {
       window.bhoomiState.targetPort = port;
       window.bhoomiState.baudRate = baud;
       window.bhoomiState.comPort = port;
-      window.showNotification(data.message || `Switched to ${port}`);
-      updateHardwareBadge(false, `Connecting to ${port}...`);
+      window.showNotification(data.message || `Switched target port to ${port}`);
+      updateHardwareBadge(false, `Searching for ${port}...`);
+      refreshAvailablePorts();
       return;
     }
   } catch (err) {
@@ -217,39 +219,119 @@ window.switchMavlinkPort = async function(port, baud) {
   window.bhoomiState.targetPort = port;
   window.bhoomiState.baudRate = baud;
   window.bhoomiState.comPort = port;
-  window.showNotification(`Port configured: ${port} @ ${baud} baud (Local bridge.py not detected)`);
+  window.showNotification(`Port configured: ${port} @ ${baud} baud (Local bridge.py offline)`);
   updateHardwareBadge(window.bhoomiState.hardwareConnected);
 };
 
-// Fetch list of physical COM ports
+// Fetch list of physical COM ports and diagnostic status
 async function refreshAvailablePorts() {
   try {
     const res = await fetch('/api/ports');
     if (res.ok) {
       const data = await res.json();
       window.bhoomiState.availablePorts = data.ports || [];
-      renderPortSwitcher(data.ports, data.current_active, data.target_port);
+      renderPortSwitcher(data.ports, data.current_active, data.target_port, data.has_real_ports);
+      updateTroubleshootingStatus(data);
     }
   } catch (e) {
     // Running in static preview mode
   }
 }
 
-function renderPortSwitcher(ports, activePort, targetPort) {
+function renderPortSwitcher(ports, activePort, targetPort, hasRealPorts) {
   const headerSelect = document.getElementById('hdr-port-selector');
   if (!headerSelect) return;
-  if (headerSelect.options.length <= 1) {
-    headerSelect.innerHTML = `
-      <option value="AUTO">⚡ Auto-Detect Port</option>
-      <option value="COM5">📻 COM5 - Telemetry Radio (57600)</option>
-      <option value="COM8">🔌 COM8 - Pixhawk USB (115200)</option>
-    `;
+  if (headerSelect.matches(':focus')) return; // Do not interrupt user if dropdown is open
+
+  const target = targetPort || activePort || window.bhoomiState.targetPort || 'AUTO';
+  const serialPorts = (ports || []).filter(p => p.port && !p.port.startsWith('udp'));
+
+  let html = `<option value="AUTO">⚡ Auto-Detect Link</option>`;
+
+  if (serialPorts.length === 0) {
+    html += `<option value="NO_PORTS" disabled>❌ No Telemetry Dongle Detected</option>`;
+  } else {
+    serialPorts.forEach(p => {
+      const icon = p.is_radio ? '📻' : '🔌';
+      html += `<option value="${p.port}">${icon} ${p.port} - ${p.description || 'Serial'} (${p.recommended_baud})</option>`;
+    });
   }
-  const desired = targetPort || activePort || 'AUTO';
-  if (headerSelect.value !== desired && !headerSelect.matches(':focus')) {
-    headerSelect.value = desired;
+
+  // Always offer standard options
+  html += `<option value="COM5">📻 COM5 (Force Telemetry @ 57600)</option>`;
+  html += `<option value="udpin:0.0.0.0:14550">🌐 UDP 14550 (SITL / Mission Planner)</option>`;
+  html += `<option value="SIM">🧪 Virtual Simulation Demo</option>`;
+
+  headerSelect.innerHTML = html;
+
+  if ([...headerSelect.options].some(o => o.value === target)) {
+    headerSelect.value = target;
+  } else {
+    headerSelect.value = 'AUTO';
   }
 }
+
+function updateTroubleshootingStatus(data) {
+  const diagPorts = document.getElementById('diag-detected-ports');
+  if (diagPorts) {
+    const serialPorts = (data.ports || []).filter(p => p.port && !p.port.startsWith('udp'));
+    if (serialPorts.length === 0) {
+      diagPorts.innerHTML = `<span class="text-rose-400 font-bold">None (No COM ports found in Windows)</span>`;
+    } else {
+      diagPorts.innerHTML = serialPorts.map(p => `<span class="text-emerald-400 font-bold font-mono">${p.port} (${p.description})</span>`).join(', ');
+    }
+  }
+
+  const diagTarget = document.getElementById('diag-target-port');
+  if (diagTarget) {
+    diagTarget.textContent = `${data.target_port || 'AUTO'} @ ${data.baud || 57600} baud`;
+  }
+
+  const diagStatus = document.getElementById('diag-status-msg');
+  if (diagStatus) {
+    diagStatus.textContent = data.status_message || (data.connected ? 'LINK LIVE' : 'DISCONNECTED');
+    diagStatus.className = data.connected ? 'text-emerald-400 font-bold' : 'text-amber-400 font-bold';
+  }
+}
+
+// Telemetry Radio Troubleshooting & Setup Modal
+window.showRadioSetupGuide = function() {
+  const modal = document.getElementById('radio-setup-modal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    refreshAvailablePorts();
+  }
+};
+
+window.closeRadioSetupGuide = function() {
+  const modal = document.getElementById('radio-setup-modal');
+  if (modal) modal.classList.add('hidden');
+};
+
+window.launchCp2102Installer = async function() {
+  window.showNotification("Launching Silicon Labs CP2102 Driver installer...");
+  try {
+    const res = await fetch('/api/launch-driver-installer', { method: 'POST' });
+    const data = await res.json();
+    window.showNotification(data.message || "Installer launched");
+  } catch (e) {
+    window.showNotification("Please run pololu-cp2102-setup-x64.exe manually", true);
+  }
+};
+
+window.toggleSimulationMode = async function() {
+  const s = window.bhoomiState;
+  s.simulationRunning = !s.simulationRunning;
+  try {
+    await fetch('/api/toggle-simulation', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ enabled: s.simulationRunning })
+    });
+  } catch (e) {}
+  window.showNotification(s.simulationRunning ? "Simulation Mode: Enabled (Hexacopter Flight)" : "Simulation Mode: Disabled");
+  updateHardwareBadge(s.simulationRunning);
+};
 
 // Global Dark Mode Toggle
 window.toggleDarkMode = function() {
@@ -409,20 +491,14 @@ function initWebSocket() {
     ws = new WebSocket(wsUrl);
 
     ws.onopen = () => {
-      console.log("[Bhoomi Drishti] MAVLink WebSocket Connected!");
-      window.bhoomiState.hardwareConnected = true;
-      window.bhoomiState.simulationRunning = false;
-      window.bhoomiState.lastRealPacketTime = Date.now();
+      console.log("[Bhoomi Drishti] Telemetry Gateway WebSocket connected");
+      window.bhoomiState.gatewayConnected = true;
       refreshAvailablePorts();
-      updateHardwareBadge(true);
-      window.showNotification("MAVLink Telemetry Bridge Connected Live!");
     };
 
     ws.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
-        window.bhoomiState.lastRealPacketTime = Date.now();
-        window.bhoomiState.hardwareConnected = true;
         applyMavlinkData(data);
       } catch (e) {
         console.error("Error parsing telemetry packet:", e);
@@ -430,8 +506,10 @@ function initWebSocket() {
     };
 
     ws.onclose = () => {
+      window.bhoomiState.gatewayConnected = false;
+      window.bhoomiState.connected = false;
       window.bhoomiState.hardwareConnected = false;
-      updateHardwareBadge(false);
+      updateHardwareBadge(false, "GATEWAY OFFLINE (PORT 8000)");
       setTimeout(initWebSocket, 2500);
     };
 
@@ -452,25 +530,10 @@ function startTelemetryHeartbeat() {
     const s = window.bhoomiState;
     const now = Date.now();
 
-    // 1. If real WebSocket packet arrived in the last 2000ms, live hardware is driving
-    if (s.lastRealPacketTime && (now - s.lastRealPacketTime < 2000)) {
-      s.connectionStatus = 'LIVE';
-      return;
-    }
-
-    // 2. If real connection was present but packet is older than 2s, mark stale
-    if (s.hardwareConnected && s.lastRealPacketTime && (now - s.lastRealPacketTime >= 2000)) {
-      s.connectionStatus = 'STALE';
-      updateHardwareBadge(true, '⚠ LINK STALE (>2s)');
-      return;
-    }
-
-    // 3. If Simulation Mode is explicitly enabled by the user
+    // 1. Simulation Mode
     if (s.simulationRunning) {
       s.connectionStatus = 'SIMULATING';
       const t = now / 1000;
-
-      // Realistic autonomous survey pattern progression
       const centerLat = 28.4701886;
       const centerLng = 77.4941820;
       const radius = 0.0018;
@@ -494,7 +557,7 @@ function startTelemetryHeartbeat() {
         climb_rate: Number((0.15 * Math.sin(t * 0.25)).toFixed(2)),
         throttle: Math.floor(48 + 2 * Math.sin(t * 0.3)),
         satellites_visible: 26,
-        gps_fix_type: 6, // RTK FIXED
+        gps_fix_type: 6,
         hdop: 0.65,
         vdop: 0.85,
         cpu_load: 35.2,
@@ -516,7 +579,20 @@ function startTelemetryHeartbeat() {
       return;
     }
 
-    // 4. Default state: Disconnected / Awaiting link
+    // 2. Hardware Live check: real packet within 2.5s
+    if (s.connected && s.lastRealPacketTime && (now - s.lastRealPacketTime < 2500)) {
+      s.connectionStatus = 'LIVE';
+      return;
+    }
+
+    // 3. Hardware Stale check: link connected but packets ceased (>2.5s)
+    if (s.connected && s.lastRealPacketTime && (now - s.lastRealPacketTime >= 2500)) {
+      s.connectionStatus = 'STALE';
+      updateHardwareBadge(true, '⚠ LINK STALE (>2.5s)');
+      return;
+    }
+
+    // 4. Disconnected / Searching
     s.connectionStatus = 'DISCONNECTED';
     updateHardwareBadge(false);
     updateCommonTelemetryDisplays();
@@ -525,65 +601,83 @@ function startTelemetryHeartbeat() {
 
 function applyMavlinkData(data) {
   const s = window.bhoomiState;
-  s.connected = !!data.connected;
+  const isConn = !!data.connected;
+  s.connected = isConn;
+  s.hardwareConnected = isConn;
   s.comPort = data.port || s.comPort;
   s.baudRate = data.baud || s.baudRate;
   s.connectionType = data.connection_type || 'SEARCHING';
   s.targetPort = data.target_port || s.targetPort;
-  s.armed = !!data.armed;
-  s.flightMode = data.flight_mode || 'STANDBY';
-  s.pitch = data.pitch !== undefined ? data.pitch : 0.0;
-  s.roll = data.roll !== undefined ? data.roll : 0.0;
-  s.yaw = data.yaw !== undefined ? data.yaw : 0.0;
-  s.heading = data.heading !== undefined ? data.heading : 0;
-  s.altitudeAGL = data.alt_agl !== undefined ? data.alt_agl : (data.alt_msl !== undefined ? data.alt_msl : null);
-  s.altitudeMSL = data.alt_msl !== undefined ? data.alt_msl : null;
-  s.groundSpeed = data.groundspeed !== undefined ? data.groundspeed : null;
-  s.airSpeed = data.airspeed !== undefined ? data.airspeed : null;
-  s.climbRate = data.climb_rate !== undefined ? data.climb_rate : null;
-  s.throttle = data.throttle !== undefined ? data.throttle : 0;
-  s.satellites = data.satellites_visible !== undefined ? data.satellites_visible : 0;
-  s.gpsFix = data.gps_fix_type >= 3 ? (data.gps_fix_type === 6 ? 'RTK FIXED' : '3D FIX') : 'NO FIX';
-  s.hdop = data.hdop !== undefined ? data.hdop : null;
-  s.vdop = data.vdop !== undefined ? data.vdop : null;
-  s.cpuLoad = data.cpu_load !== undefined ? data.cpu_load : null;
-  s.vibrationX = data.vibration_x !== undefined ? data.vibration_x : null;
-  s.vibrationY = data.vibration_y !== undefined ? data.vibration_y : null;
-  s.vibrationZ = data.vibration_z !== undefined ? data.vibration_z : null;
 
-  if (data.voltage_battery > 0) {
-    s.batteryVoltage = data.voltage_battery;
-    s.batteryCurrent = data.current_battery !== undefined ? data.current_battery : null;
-    s.batteryPercent = data.battery_remaining >= 0 ? data.battery_remaining : 88;
+  if (isConn) {
+    s.lastRealPacketTime = Date.now();
+    s.connectionStatus = 'LIVE';
+    s.armed = !!data.armed;
+    s.flightMode = data.flight_mode || 'STANDBY';
+    s.pitch = data.pitch !== undefined ? data.pitch : 0.0;
+    s.roll = data.roll !== undefined ? data.roll : 0.0;
+    s.yaw = data.yaw !== undefined ? data.yaw : 0.0;
+    s.heading = data.heading !== undefined ? data.heading : 0;
+    s.altitudeAGL = data.alt_agl !== undefined ? data.alt_agl : (data.alt_msl !== undefined ? data.alt_msl : null);
+    s.altitudeMSL = data.alt_msl !== undefined ? data.alt_msl : null;
+    s.groundSpeed = data.groundspeed !== undefined ? data.groundspeed : null;
+    s.airSpeed = data.airspeed !== undefined ? data.airspeed : null;
+    s.climbRate = data.climb_rate !== undefined ? data.climb_rate : null;
+    s.throttle = data.throttle !== undefined ? data.throttle : 0;
+    s.satellites = data.satellites_visible !== undefined ? data.satellites_visible : 0;
+    s.gpsFix = data.gps_fix_type >= 3 ? (data.gps_fix_type === 6 ? 'RTK FIXED' : '3D FIX') : 'NO FIX';
+    s.hdop = data.hdop !== undefined ? data.hdop : null;
+    s.vdop = data.vdop !== undefined ? data.vdop : null;
+    s.cpuLoad = data.cpu_load !== undefined ? data.cpu_load : null;
+    s.vibrationX = data.vibration_x !== undefined ? data.vibration_x : null;
+    s.vibrationY = data.vibration_y !== undefined ? data.vibration_y : null;
+    s.vibrationZ = data.vibration_z !== undefined ? data.vibration_z : null;
+
+    if (data.voltage_battery > 0) {
+      s.batteryVoltage = data.voltage_battery;
+      s.batteryCurrent = data.current_battery !== undefined ? data.current_battery : null;
+      s.batteryPercent = data.battery_remaining >= 0 ? data.battery_remaining : 88;
+    }
+
+    if (data.imu_temp !== undefined) s.imuTemp = data.imu_temp;
+    if (data.rssi !== undefined) s.rssi = data.rssi;
+    if (data.rf_dbm !== undefined) s.rfDbm = data.rf_dbm;
+
+    s.ekf = {
+      velocity_variance: data.velocity_variance,
+      pos_horiz_variance: data.pos_horiz_variance,
+      pos_vert_variance: data.pos_vert_variance,
+      compass_variance: data.compass_variance,
+      terrain_alt_variance: data.terrain_alt_variance
+    };
+
+    if (data.rc_channels && data.rc_channels.length > 0) {
+      s.rcChannels = data.rc_channels;
+    }
+
+    if (data.lat && data.lon && (data.lat !== 0 || data.lon !== 0)) {
+      s.droneLat = data.lat;
+      s.droneLng = data.lon;
+      if (window.droneMapMarker) window.droneMapMarker.setLatLng([data.lat, data.lon]);
+      if (window.overviewDroneMarker) window.overviewDroneMarker.setLatLng([data.lat, data.lon]);
+      if (window.updateMapDroneLocation) window.updateMapDroneLocation(data.lat, data.lon, s);
+    }
+
+    s.packetsReceived = data.packets_received || (s.packetsReceived + 1);
+  } else {
+    // When disconnected and not simulating, park readings
+    s.connectionStatus = 'DISCONNECTED';
+    if (!s.simulationRunning) {
+      s.armed = false;
+      s.flightMode = 'STANDBY';
+      s.groundSpeed = null;
+      s.airSpeed = null;
+      s.climbRate = null;
+      s.throttle = 0;
+    }
   }
 
-  if (data.imu_temp !== undefined) s.imuTemp = data.imu_temp;
-  if (data.rssi !== undefined) s.rssi = data.rssi;
-  if (data.rf_dbm !== undefined) s.rfDbm = data.rf_dbm;
-
-  s.ekf = {
-    velocity_variance: data.velocity_variance,
-    pos_horiz_variance: data.pos_horiz_variance,
-    pos_vert_variance: data.pos_vert_variance,
-    compass_variance: data.compass_variance,
-    terrain_alt_variance: data.terrain_alt_variance
-  };
-
-  if (data.rc_channels && data.rc_channels.length > 0) {
-    s.rcChannels = data.rc_channels;
-  }
-
-  if (data.lat && data.lon && (data.lat !== 0 || data.lon !== 0)) {
-    s.droneLat = data.lat;
-    s.droneLng = data.lon;
-    if (window.droneMapMarker) window.droneMapMarker.setLatLng([data.lat, data.lon]);
-    if (window.overviewDroneMarker) window.overviewDroneMarker.setLatLng([data.lat, data.lon]);
-    if (window.updateMapDroneLocation) window.updateMapDroneLocation(data.lat, data.lon, s);
-  }
-
-  s.packetsReceived = data.packets_received || (s.packetsReceived + 1);
-
-  updateHardwareBadge(data.connected, data.status_message);
+  updateHardwareBadge(isConn, data.status_message);
   updateCommonTelemetryDisplays();
 
   if (window.onTelemetryTick) window.onTelemetryTick(s);
@@ -593,27 +687,33 @@ function applyMavlinkData(data) {
 // Truthful Hardware Link & Connection Status Badge
 function updateHardwareBadge(isConnected, customMsg) {
   const badge = document.getElementById('hardware-connection-badge');
-  if (!badge) return;
-
+  const sidebarStatus = document.getElementById('sidebar-console-status');
   const s = window.bhoomiState;
 
   if (s.simulationRunning) {
-    badge.innerHTML = `
-      <span class="relative flex h-2 w-2">
-        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-        <span class="relative inline-flex rounded-full h-2 w-2 bg-cyan-400"></span>
-      </span>
-      <span class="font-mono text-xs text-cyan-300 font-bold tracking-tight">
-        ⚡ SIMULATION (DEMO)
-      </span>
-    `;
-    badge.className = "flex items-center gap-1.5 px-2.5 py-1 rounded bg-cyan-950/40 border border-cyan-500/30 shrink-0";
+    if (badge) {
+      badge.innerHTML = `
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-cyan-400"></span>
+        </span>
+        <span class="font-mono text-xs text-cyan-300 font-bold tracking-tight">
+          ⚡ SIMULATION (DEMO)
+        </span>
+      `;
+      badge.className = "flex items-center gap-1.5 px-2.5 py-1 rounded bg-cyan-950/40 border border-cyan-500/30 shrink-0 cursor-pointer hover:bg-cyan-900/50";
+      badge.onclick = window.showRadioSetupGuide;
+    }
+    if (sidebarStatus) {
+      sidebarStatus.textContent = "SIMULATION";
+      sidebarStatus.className = "font-label-caps text-[9px] px-1.5 py-0.5 rounded-full bg-cyan-500/15 border border-cyan-500/25 text-cyan-400 font-bold";
+    }
     return;
   }
 
-  if (isConnected || s.hardwareConnected) {
-    const isRadio = s.comPort === 'COM5';
-    const msg = customMsg || (isRadio ? '● COM5 TELEMETRY (10Hz)' : '● USB DIRECT (115200)');
+  if (isConnected && s.connected) {
+    const isRadio = s.comPort === 'COM5' || s.baudRate === 57600;
+    const msg = customMsg || (isRadio ? `● ${s.comPort} RADIO (57600)` : `● ${s.comPort} (115200)`);
     const isStale = s.connectionStatus === 'STALE';
 
     const dotColor = isStale ? 'bg-amber-400' : 'bg-emerald-400';
@@ -621,28 +721,45 @@ function updateHardwareBadge(isConnected, customMsg) {
     const border = isStale ? 'border-amber-500/30' : 'border-emerald-500/30';
     const bg = isStale ? 'bg-amber-950/40' : 'bg-emerald-950/40';
 
-    badge.innerHTML = `
-      <span class="relative flex h-2 w-2">
-        <span class="relative inline-flex rounded-full h-2 w-2 ${dotColor}"></span>
-      </span>
-      <span class="font-mono text-xs ${textColor} font-bold tracking-tight">
-        ${msg}
-      </span>
-    `;
-    badge.className = `flex items-center gap-1.5 px-2.5 py-1 rounded ${bg} border ${border} shrink-0`;
+    if (badge) {
+      badge.innerHTML = `
+        <span class="relative flex h-2 w-2">
+          <span class="relative inline-flex rounded-full h-2 w-2 ${dotColor}"></span>
+        </span>
+        <span class="font-mono text-xs ${textColor} font-bold tracking-tight">
+          ${msg}
+        </span>
+      `;
+      badge.className = `flex items-center gap-1.5 px-2.5 py-1 rounded ${bg} border ${border} shrink-0 cursor-pointer hover:brightness-110`;
+      badge.onclick = window.showRadioSetupGuide;
+    }
+    if (sidebarStatus) {
+      sidebarStatus.textContent = "ONLINE";
+      sidebarStatus.className = "font-label-caps text-[9px] px-1.5 py-0.5 rounded-full bg-secondary/15 border border-secondary/25 text-secondary font-bold";
+    }
     return;
   }
 
   // Disconnected / Offline State
-  badge.innerHTML = `
-    <span class="relative flex h-2 w-2">
-      <span class="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
-    </span>
-    <span class="font-mono text-xs text-rose-400 font-bold tracking-tight">
-      ○ DISCONNECTED (NO LINK)
-    </span>
-  `;
-  badge.className = "flex items-center gap-1.5 px-2.5 py-1 rounded bg-rose-950/30 border border-rose-500/25 shrink-0";
+  const target = s.targetPort || s.comPort || 'AUTO';
+  const displayMsg = customMsg || (target === 'AUTO' ? '○ SCANNING FOR RADIO...' : `○ ${target} DISCONNECTED`);
+
+  if (badge) {
+    badge.innerHTML = `
+      <span class="relative flex h-2 w-2">
+        <span class="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
+      </span>
+      <span class="font-mono text-xs text-rose-400 font-bold tracking-tight truncate max-w-[220px]" title="${displayMsg}">
+        ${displayMsg}
+      </span>
+    `;
+    badge.className = "flex items-center gap-1.5 px-2.5 py-1 rounded bg-rose-950/30 border border-rose-500/25 shrink-0 cursor-pointer hover:bg-rose-900/40";
+    badge.onclick = window.showRadioSetupGuide;
+  }
+  if (sidebarStatus) {
+    sidebarStatus.textContent = "DISCONNECTED";
+    sidebarStatus.className = "font-label-caps text-[9px] px-1.5 py-0.5 rounded-full bg-rose-500/15 border border-rose-500/25 text-rose-400 font-bold";
+  }
 }
 
 // Update Top Header & Shared Telemetry Elements Truthfully
