@@ -250,14 +250,14 @@ window.initOrientation3D = function() {
     opacity: 0.9
   });
 
-  // A. CENTRAL FUSELAGE CHASSIS (Bright Aerospace Surveyor Aerodynamic Shell)
-  const mainHullGeo = new THREE.CylinderGeometry(0.85, 0.95, 0.28, 8);
+  // A. CENTRAL FUSELAGE CHASSIS (Hexagonal Enterprise Surveyor Shell)
+  const mainHullGeo = new THREE.CylinderGeometry(0.95, 1.05, 0.28, 6);
   const mainHull = new THREE.Mesh(mainHullGeo, surveyorWhiteMat);
   mainHull.castShadow = true;
   droneModelGroup.add(mainHull);
 
-  // Top Deck Shield (Gleaming Platinum Canopy)
-  const topDeckGeo = new THREE.CylinderGeometry(0.68, 0.82, 0.12, 8);
+  // Top Deck Shield (Hexagonal Gleaming Platinum Canopy)
+  const topDeckGeo = new THREE.CylinderGeometry(0.72, 0.88, 0.12, 6);
   const topDeck = new THREE.Mesh(topDeckGeo, canopyPlatinumMat);
   topDeck.position.y = 0.18;
   droneModelGroup.add(topDeck);
@@ -334,14 +334,15 @@ window.initOrientation3D = function() {
   tailBeacon.position.set(0, 0.18, 1.05);
   droneModelGroup.add(tailBeacon);
 
-  // E. 4 HIGH-STRENGTH CARBON MOTOR ARMS & BRUSHLESS POWERPLANTS
-  // True geometric layout: horizontal arms at 45° X-Configuration
-  const armRadius = 2.1;
+  // E. 6 HIGH-STRENGTH CARBON MOTOR ARMS & BRUSHLESS POWERPLANTS (HEXACOPTER X-FRAME)
+  const armRadius = 2.25;
   const armConfigs = [
-    { angle: Math.PI * 0.25, name: 'M1_FR', isFront: true,  isRight: true,  cw: false },
-    { angle: Math.PI * 0.75, name: 'M4_RR', isFront: false, isRight: true,  cw: true  },
-    { angle: Math.PI * 1.25, name: 'M2_RL', isFront: false, isRight: false, cw: false },
-    { angle: Math.PI * 1.75, name: 'M3_FL', isFront: true,  isRight: false, cw: true  }
+    { angle: Math.PI / 6,      name: 'M1_FR', isFront: true,  isRight: true,  cw: false, label: 'M1 (FR)' }, // 30° Front-Right CCW
+    { angle: Math.PI / 2,      name: 'M5_R',  isFront: false, isRight: true,  cw: true,  label: 'M5 (R)'  }, // 90° Mid-Right CW
+    { angle: Math.PI * 5 / 6,  name: 'M3_RR', isFront: false, isRight: true,  cw: false, label: 'M3 (RR)' }, // 150° Rear-Right CCW
+    { angle: Math.PI * 7 / 6,  name: 'M4_RL', isFront: false, isRight: false, cw: true,  label: 'M4 (RL)' }, // 210° Rear-Left CW
+    { angle: Math.PI * 3 / 2,  name: 'M2_L',  isFront: false, isRight: false, cw: false, label: 'M2 (L)'  }, // 270° Mid-Left CCW
+    { angle: Math.PI * 11 / 6, name: 'M6_FL', isFront: true,  isRight: false, cw: true,  label: 'M6 (FL)' }  // 330° Front-Left CW
   ];
 
   armConfigs.forEach(m => {
@@ -350,22 +351,24 @@ window.initOrientation3D = function() {
     const zEnd = -Math.cos(m.angle) * armRadius;
 
     // Horizontal Tubular Carbon Arm
-    const armLen = armRadius - 0.75;
+    const armLen = armRadius - 0.72;
     const armGeo = new THREE.CylinderGeometry(0.065, 0.065, armLen, 12);
     // Tubular Aluminum-Titanium Arm (Bright silver metallic)
     const arm = new THREE.Mesh(armGeo, brightAlloyMat);
-    arm.rotation.z = Math.PI / 2;
-    arm.rotation.y = -m.angle + Math.PI / 2;
-    arm.position.set((xEnd * 0.6), 0, (zEnd * 0.6));
+    arm.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), new THREE.Vector3(xEnd, 0, zEnd).normalize());
+    arm.position.set(xEnd * 0.58, 0, zEnd * 0.58);
     droneModelGroup.add(arm);
 
     // Luminous Running Neon Strip underneath arm (high visibility)
     const neonGeo = new THREE.CylinderGeometry(0.02, 0.02, armLen * 0.85, 8);
-    const neonColor = m.isFront ? (m.isRight ? 0x22c55e : 0xef4444) : 0xf59e0b;
+    let neonColor = 0xf59e0b;
+    if (m.isFront && m.isRight) neonColor = 0x22c55e;
+    else if (m.isFront && !m.isRight) neonColor = 0xef4444;
+    else if (m.angle === Math.PI / 2 || m.angle === Math.PI * 3 / 2) neonColor = 0x06b6d4;
+
     const neon = new THREE.Mesh(neonGeo, new THREE.MeshBasicMaterial({ color: neonColor }));
-    neon.rotation.z = Math.PI / 2;
-    neon.rotation.y = -m.angle + Math.PI / 2;
-    neon.position.set((xEnd * 0.6), -0.07, (zEnd * 0.6));
+    neon.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), new THREE.Vector3(xEnd, 0, zEnd).normalize());
+    neon.position.set(xEnd * 0.58, -0.07, zEnd * 0.58);
     droneModelGroup.add(neon);
 
     // CNC Machined Motor Mount Clamp
@@ -392,10 +395,11 @@ window.initOrientation3D = function() {
     nut.position.set(xEnd, 0.35, zEnd);
     droneModelGroup.add(nut);
 
-    // FAA/DGCA Navigation LED (Front-Right: Green, Front-Left: Red, Rear: Amber/White)
+    // FAA/DGCA Navigation LED (Front-Right: Green, Front-Left: Red, Mid: Cyan, Rear: Amber)
     let ledColor = 0xffffff;
     if (m.isFront && m.isRight) ledColor = 0x22c55e; // Green (Starboard)
     else if (m.isFront && !m.isRight) ledColor = 0xef4444; // Red (Port)
+    else if (m.angle === Math.PI / 2 || m.angle === Math.PI * 3 / 2) ledColor = 0x38bdf8; // Cyan (Mid)
     else ledColor = 0xf59e0b; // Amber (Aft)
 
     const navLed = new THREE.Mesh(
@@ -410,12 +414,12 @@ window.initOrientation3D = function() {
     propGroup.position.set(xEnd, 0.31, zEnd);
 
     // Aerodynamic Twin Blade
-    const blade1 = new THREE.Mesh(new THREE.BoxGeometry(1.65, 0.012, 0.12), propMat);
+    const blade1 = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.012, 0.12), propMat);
     blade1.rotation.y = 0.05;
     propGroup.add(blade1);
 
     // Blade Tip Gold Edge
-    [-0.78, 0.78].forEach(tipX => {
+    [-0.7, 0.7].forEach(tipX => {
       const tip = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.015, 0.12), goldAnodizedMat);
       tip.position.x = tipX;
       propGroup.add(tip);
@@ -473,26 +477,26 @@ window.initOrientation3D = function() {
   droneModelGroup.add(gimbalGroup);
 
   // G. SWEPT AERODYNAMIC CARBON LANDING SKIDS (High-Visibility Silver Alloy)
-  [-0.72, 0.72].forEach(xOff => {
+  [-0.82, 0.82].forEach(xOff => {
     // Longitudinal runner skid
-    const skidGeo = new THREE.CylinderGeometry(0.045, 0.045, 2.3, 12);
+    const skidGeo = new THREE.CylinderGeometry(0.045, 0.045, 2.5, 12);
     const skid = new THREE.Mesh(skidGeo, brightAlloyMat);
     skid.rotation.x = Math.PI / 2;
     skid.position.set(xOff, -0.68, 0);
     droneModelGroup.add(skid);
 
     // Gold Skid End Caps
-    [-1.15, 1.15].forEach(zCap => {
+    [-1.25, 1.25].forEach(zCap => {
       const cap = new THREE.Mesh(new THREE.SphereGeometry(0.05, 8, 8), goldAnodizedMat);
       cap.position.set(xOff, -0.68, zCap);
       droneModelGroup.add(cap);
     });
 
     // Angled Arch Legs
-    [-0.65, 0.65].forEach(zLeg => {
-      const legGeo = new THREE.CylinderGeometry(0.04, 0.04, 0.62, 8);
+    [-0.7, 0.7].forEach(zLeg => {
+      const legGeo = new THREE.CylinderGeometry(0.04, 0.04, 0.65, 8);
       const leg = new THREE.Mesh(legGeo, brightAlloyMat);
-      leg.position.set(xOff * 0.7, -0.42, zLeg);
+      leg.position.set(xOff * 0.72, -0.42, zLeg);
       leg.rotation.z = xOff > 0 ? -0.35 : 0.35;
       droneModelGroup.add(leg);
     });
@@ -1264,19 +1268,23 @@ function renderWizardSvgDiagram(svgType) {
         <!-- Grid table surface -->
         <line x1="20" y1="160" x2="280" y2="160" stroke="#4edea3" stroke-width="2" stroke-dasharray="4,4"/>
         <text x="150" y="180" text-anchor="middle" fill="#4edea3" class="font-label-caps text-[11px] font-bold">FLAT LEVEL REFERENCE BENCH (0°)</text>
-        <!-- Horizontal Quadcopter -->
+        <!-- Horizontal Hexacopter (6-Rotor) -->
         <g transform="translate(150, 115)">
-          <rect x="-35" y="-12" width="70" height="24" rx="6" fill="#1e2230" stroke="#4cd7f6" stroke-width="2"/>
-          <circle cx="0" cy="0" r="8" fill="#4edea3"/>
-          <line x1="-70" y1="0" x2="70" y2="0" stroke="#dfe2ef" stroke-width="4"/>
-          <circle cx="-70" cy="-6" r="6" fill="#facc15"/>
-          <circle cx="70" cy="-6" r="6" fill="#facc15"/>
-          <!-- Props -->
-          <ellipse cx="-70" cy="-12" rx="28" ry="4" fill="#38bdf8" opacity="0.6"/>
-          <ellipse cx="70" cy="-12" rx="28" ry="4" fill="#38bdf8" opacity="0.6"/>
+          <polygon points="-35,-12 35,-12 45,0 35,12 -35,12 -45,0" fill="#1e2230" stroke="#4cd7f6" stroke-width="2"/>
+          <circle cx="0" cy="0" r="7" fill="#4edea3"/>
+          <line x1="-85" y1="0" x2="85" y2="0" stroke="#dfe2ef" stroke-width="3"/>
+          <!-- 6 Rotors / Props -->
+          <circle cx="-85" cy="-6" r="5" fill="#facc15"/>
+          <circle cx="-45" cy="-8" r="5" fill="#22c55e"/>
+          <circle cx="45" cy="-8" r="5" fill="#22c55e"/>
+          <circle cx="85" cy="-6" r="5" fill="#facc15"/>
+          <ellipse cx="-85" cy="-12" rx="20" ry="3.5" fill="#38bdf8" opacity="0.6"/>
+          <ellipse cx="-45" cy="-14" rx="18" ry="3.5" fill="#38bdf8" opacity="0.6"/>
+          <ellipse cx="45" cy="-14" rx="18" ry="3.5" fill="#38bdf8" opacity="0.6"/>
+          <ellipse cx="85" cy="-12" rx="20" ry="3.5" fill="#38bdf8" opacity="0.6"/>
           <!-- Level arrows -->
-          <line x1="-100" y1="20" x2="-80" y2="20" stroke="#4edea3" stroke-width="2"/>
-          <line x1="80" y1="20" x2="100" y2="20" stroke="#4edea3" stroke-width="2"/>
+          <line x1="-110" y1="20" x2="-90" y2="20" stroke="#4edea3" stroke-width="2"/>
+          <line x1="90" y1="20" x2="110" y2="20" stroke="#4edea3" stroke-width="2"/>
         </g>
       </svg>
     `;
@@ -1287,14 +1295,16 @@ function renderWizardSvgDiagram(svgType) {
         <!-- Upward Tilt Arrow -->
         <path d="M 60 150 Q 80 40 130 30" fill="none" stroke="#38bdf8" stroke-width="3" stroke-dasharray="4,4"/>
         <polygon points="135,24 135,36 122,30" fill="#38bdf8"/>
-        <!-- Vertical Quadcopter Nose Up (Tilted -75 deg) -->
+        <!-- Vertical Hexacopter Nose Up (Tilted -75 deg) -->
         <g transform="translate(160, 110) rotate(-75)">
           <rect x="-40" y="-12" width="80" height="24" rx="6" fill="#1e2230" stroke="#38bdf8" stroke-width="2"/>
           <circle cx="-25" cy="0" r="7" fill="#facc15"/>
           <text x="-25" y="4" text-anchor="middle" fill="#000" font-size="8" font-weight="bold">NOSE</text>
-          <line x1="-70" y1="0" x2="70" y2="0" stroke="#dfe2ef" stroke-width="4"/>
-          <ellipse cx="-70" cy="-12" rx="24" ry="4" fill="#38bdf8" opacity="0.6"/>
-          <ellipse cx="70" cy="-12" rx="24" ry="4" fill="#38bdf8" opacity="0.6"/>
+          <line x1="-80" y1="0" x2="80" y2="0" stroke="#dfe2ef" stroke-width="3"/>
+          <ellipse cx="-80" cy="-12" rx="20" ry="4" fill="#38bdf8" opacity="0.6"/>
+          <ellipse cx="-40" cy="-12" rx="16" ry="4" fill="#38bdf8" opacity="0.6"/>
+          <ellipse cx="40" cy="-12" rx="16" ry="4" fill="#38bdf8" opacity="0.6"/>
+          <ellipse cx="80" cy="-12" rx="20" ry="4" fill="#38bdf8" opacity="0.6"/>
         </g>
         <text x="215" y="60" fill="#38bdf8" class="font-label-caps text-[10px] font-bold">NOSE UP (+75°..90°)</text>
       </svg>
@@ -1306,14 +1316,16 @@ function renderWizardSvgDiagram(svgType) {
         <!-- Downward Tilt Arrow -->
         <path d="M 60 40 Q 80 150 130 160" fill="none" stroke="#ffb4ab" stroke-width="3" stroke-dasharray="4,4"/>
         <polygon points="135,166 135,154 122,160" fill="#ffb4ab"/>
-        <!-- Vertical Quadcopter Nose Down (Tilted +75 deg) -->
+        <!-- Vertical Hexacopter Nose Down (Tilted +75 deg) -->
         <g transform="translate(160, 90) rotate(75)">
           <rect x="-40" y="-12" width="80" height="24" rx="6" fill="#1e2230" stroke="#ffb4ab" stroke-width="2"/>
           <circle cx="-25" cy="0" r="7" fill="#facc15"/>
           <text x="-25" y="4" text-anchor="middle" fill="#000" font-size="8" font-weight="bold">NOSE</text>
-          <line x1="-70" y1="0" x2="70" y2="0" stroke="#dfe2ef" stroke-width="4"/>
-          <ellipse cx="-70" cy="-12" rx="24" ry="4" fill="#ffb4ab" opacity="0.6"/>
-          <ellipse cx="70" cy="-12" rx="24" ry="4" fill="#ffb4ab" opacity="0.6"/>
+          <line x1="-80" y1="0" x2="80" y2="0" stroke="#dfe2ef" stroke-width="3"/>
+          <ellipse cx="-80" cy="-12" rx="20" ry="4" fill="#ffb4ab" opacity="0.6"/>
+          <ellipse cx="-40" cy="-12" rx="16" ry="4" fill="#ffb4ab" opacity="0.6"/>
+          <ellipse cx="40" cy="-12" rx="16" ry="4" fill="#ffb4ab" opacity="0.6"/>
+          <ellipse cx="80" cy="-12" rx="20" ry="4" fill="#ffb4ab" opacity="0.6"/>
         </g>
         <text x="215" y="145" fill="#ffb4ab" class="font-label-caps text-[10px] font-bold">NOSE DOWN (-75°..90°)</text>
       </svg>
@@ -1325,15 +1337,15 @@ function renderWizardSvgDiagram(svgType) {
         <!-- Left Bank Arrow -->
         <path d="M 230 140 Q 150 40 80 70" fill="none" stroke="#d0bcff" stroke-width="3" stroke-dasharray="4,4"/>
         <polygon points="75,64 78,76 87,70" fill="#d0bcff"/>
-        <!-- Banked Quadcopter (-80 deg roll) -->
+        <!-- Banked Hexacopter (-80 deg roll) -->
         <g transform="translate(150, 105) rotate(-80)">
           <rect x="-40" y="-12" width="80" height="24" rx="6" fill="#1e2230" stroke="#d0bcff" stroke-width="2"/>
           <circle cx="0" cy="0" r="8" fill="#d0bcff"/>
-          <line x1="-70" y1="0" x2="70" y2="0" stroke="#dfe2ef" stroke-width="4"/>
-          <text x="-55" y="-16" fill="#d0bcff" font-size="9" font-weight="bold">LEFT</text>
-          <text x="35" y="-16" fill="#dfe2ef" font-size="9" font-weight="bold">RIGHT</text>
-          <ellipse cx="-70" cy="-10" rx="20" ry="4" fill="#d0bcff" opacity="0.6"/>
-          <ellipse cx="70" cy="-10" rx="20" ry="4" fill="#d0bcff" opacity="0.6"/>
+          <line x1="-80" y1="0" x2="80" y2="0" stroke="#dfe2ef" stroke-width="3"/>
+          <text x="-65" y="-16" fill="#d0bcff" font-size="9" font-weight="bold">LEFT</text>
+          <text x="45" y="-16" fill="#dfe2ef" font-size="9" font-weight="bold">RIGHT</text>
+          <ellipse cx="-80" cy="-10" rx="18" ry="4" fill="#d0bcff" opacity="0.6"/>
+          <ellipse cx="80" cy="-10" rx="18" ry="4" fill="#d0bcff" opacity="0.6"/>
         </g>
       </svg>
     `;
@@ -1344,15 +1356,15 @@ function renderWizardSvgDiagram(svgType) {
         <!-- Right Bank Arrow -->
         <path d="M 70 140 Q 150 40 220 70" fill="none" stroke="#d0bcff" stroke-width="3" stroke-dasharray="4,4"/>
         <polygon points="225,64 222,76 213,70" fill="#d0bcff"/>
-        <!-- Banked Quadcopter (+80 deg roll) -->
+        <!-- Banked Hexacopter (+80 deg roll) -->
         <g transform="translate(150, 105) rotate(80)">
           <rect x="-40" y="-12" width="80" height="24" rx="6" fill="#1e2230" stroke="#d0bcff" stroke-width="2"/>
           <circle cx="0" cy="0" r="8" fill="#d0bcff"/>
-          <line x1="-70" y1="0" x2="70" y2="0" stroke="#dfe2ef" stroke-width="4"/>
-          <text x="-55" y="-16" fill="#dfe2ef" font-size="9" font-weight="bold">LEFT</text>
-          <text x="35" y="-16" fill="#d0bcff" font-size="9" font-weight="bold">RIGHT</text>
-          <ellipse cx="-70" cy="-10" rx="20" ry="4" fill="#d0bcff" opacity="0.6"/>
-          <ellipse cx="70" cy="-10" rx="20" ry="4" fill="#d0bcff" opacity="0.6"/>
+          <line x1="-80" y1="0" x2="80" y2="0" stroke="#dfe2ef" stroke-width="3"/>
+          <text x="-65" y="-16" fill="#dfe2ef" font-size="9" font-weight="bold">LEFT</text>
+          <text x="45" y="-16" fill="#d0bcff" font-size="9" font-weight="bold">RIGHT</text>
+          <ellipse cx="-80" cy="-10" rx="18" ry="4" fill="#d0bcff" opacity="0.6"/>
+          <ellipse cx="80" cy="-10" rx="18" ry="4" fill="#d0bcff" opacity="0.6"/>
         </g>
       </svg>
     `;
@@ -1363,16 +1375,16 @@ function renderWizardSvgDiagram(svgType) {
         <!-- 180 loop arrow -->
         <path d="M 90 60 C 50 140, 250 140, 210 60" fill="none" stroke="#facc15" stroke-width="3" stroke-dasharray="4,4"/>
         <polygon points="206,53 218,61 213,70" fill="#facc15"/>
-        <!-- Inverted Quadcopter (180 deg) -->
+        <!-- Inverted Hexacopter (180 deg) -->
         <g transform="translate(150, 105) rotate(180)">
           <rect x="-35" y="-12" width="70" height="24" rx="6" fill="#1e2230" stroke="#facc15" stroke-width="2"/>
           <circle cx="0" cy="0" r="8" fill="#facc15"/>
-          <line x1="-70" y1="0" x2="70" y2="0" stroke="#dfe2ef" stroke-width="4"/>
+          <line x1="-80" y1="0" x2="80" y2="0" stroke="#dfe2ef" stroke-width="3"/>
           <!-- Landing legs pointing skyward (downward before rotation) -->
           <line x1="-25" y1="12" x2="-25" y2="28" stroke="#facc15" stroke-width="3"/>
           <line x1="25" y1="12" x2="25" y2="28" stroke="#facc15" stroke-width="3"/>
-          <ellipse cx="-70" cy="-12" rx="24" ry="4" fill="#facc15" opacity="0.6"/>
-          <ellipse cx="70" cy="-12" rx="24" ry="4" fill="#facc15" opacity="0.6"/>
+          <ellipse cx="-80" cy="-12" rx="20" ry="4" fill="#facc15" opacity="0.6"/>
+          <ellipse cx="80" cy="-12" rx="20" ry="4" fill="#facc15" opacity="0.6"/>
         </g>
       </svg>
     `;

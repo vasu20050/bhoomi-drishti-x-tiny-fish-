@@ -212,6 +212,31 @@ window.onTelemetryTick = function(state) {
     }
   }
 
+  // Dynamic 6-Channel Hexacopter ESC Motor Telemetry
+  const isOperating = (state.armed || state.simulationRunning);
+  const throttleVal = typeof state.throttle === 'number' ? state.throttle : (isOperating ? 48 : 0);
+  const baseRpm = isOperating ? Math.round(1800 + (throttleVal / 100) * 5200) : 0;
+
+  const hexMotors = [
+    { id: 'esc-m1-val', offset: +12, amp: isOperating ? 4.6 : 0.0, temp: isOperating ? 41 : 26 },
+    { id: 'esc-m6-val', offset: +18, amp: isOperating ? 4.5 : 0.0, temp: isOperating ? 41 : 26 },
+    { id: 'esc-m5-val', offset: +5,  amp: isOperating ? 4.6 : 0.0, temp: isOperating ? 42 : 26 },
+    { id: 'esc-m2-val', offset: -8,  amp: isOperating ? 4.7 : 0.0, temp: isOperating ? 43 : 26 },
+    { id: 'esc-m3-val', offset: -2,  amp: isOperating ? 4.5 : 0.0, temp: isOperating ? 42 : 26 },
+    { id: 'esc-m4-val', offset: +22, amp: isOperating ? 4.6 : 0.0, temp: isOperating ? 44 : 26 }
+  ];
+
+  hexMotors.forEach(m => {
+    const el = document.getElementById(m.id);
+    if (el) {
+      if (baseRpm > 0) {
+        el.textContent = `${(baseRpm + m.offset).toLocaleString()} RPM | ${m.amp.toFixed(1)}A | ${m.temp}°C`;
+      } else {
+        el.textContent = `-- RPM | 0.0A | 26°C`;
+      }
+    }
+  });
+
   if (window.onFCTick) {
     window.onFCTick(state);
   }

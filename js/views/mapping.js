@@ -232,21 +232,27 @@ window.initCadastreMap = function() {
         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-30"></span>
         <!-- Compass Outer Reticle -->
         <div class="absolute inset-0 rounded-full border border-primary/40 pointer-events-none"></div>
-        <!-- High-Tech Drone Silhouette with Forward Arrow Tip -->
-        <svg class="w-9 h-9 text-secondary filter drop-shadow-[0_0_8px_rgba(78,222,163,0.9)]" viewBox="0 0 48 48" fill="none">
+        <!-- High-Tech Hexacopter Silhouette with Forward Arrow Tip -->
+        <svg class="w-10 h-10 text-secondary filter drop-shadow-[0_0_8px_rgba(78,222,163,0.9)]" viewBox="0 0 48 48" fill="none">
           <!-- Forward Direction Arrow Pointer -->
-          <polygon points="24,3 18,17 24,13 30,17" fill="#38bdf8"/>
-          <!-- Central Avionics Core -->
-          <circle cx="24" cy="24" r="6" fill="#1e2230" stroke="#4edea3" stroke-width="2.5"/>
+          <polygon points="24,2 19,14 24,11 29,14" fill="#38bdf8"/>
+          <!-- Central Avionics Hex Core -->
+          <polygon points="24,18 29.2,21 29.2,27 24,30 18.8,27 18.8,21" fill="#1e2230" stroke="#4edea3" stroke-width="2"/>
           <circle cx="24" cy="24" r="2.5" fill="#38bdf8"/>
-          <!-- Carbon Quad Arms -->
-          <line x1="12" y1="12" x2="36" y2="36" stroke="#dfe2ef" stroke-width="2.5"/>
-          <line x1="12" y1="36" x2="36" y2="12" stroke="#dfe2ef" stroke-width="2.5"/>
-          <!-- Rotors -->
-          <circle cx="12" cy="12" r="3.5" fill="#facc15"/>
-          <circle cx="36" cy="12" r="3.5" fill="#facc15"/>
-          <circle cx="12" cy="36" r="3.5" fill="#38bdf8"/>
-          <circle cx="36" cy="36" r="3.5" fill="#38bdf8"/>
+          <!-- 6 Carbon Hexa Arms (60 deg intervals) -->
+          <line x1="24" y1="24" x2="32" y2="10" stroke="#dfe2ef" stroke-width="2"/>
+          <line x1="24" y1="24" x2="40" y2="24" stroke="#dfe2ef" stroke-width="2"/>
+          <line x1="24" y1="24" x2="32" y2="38" stroke="#dfe2ef" stroke-width="2"/>
+          <line x1="24" y1="24" x2="16" y2="38" stroke="#dfe2ef" stroke-width="2"/>
+          <line x1="24" y1="24" x2="8" y2="24" stroke="#dfe2ef" stroke-width="2"/>
+          <line x1="24" y1="24" x2="16" y2="10" stroke="#dfe2ef" stroke-width="2"/>
+          <!-- 6 Rotors (CW/CCW Colored) -->
+          <circle cx="32" cy="10" r="3.2" fill="#22c55e"/>
+          <circle cx="40" cy="24" r="3.2" fill="#38bdf8"/>
+          <circle cx="32" cy="38" r="3.2" fill="#f59e0b"/>
+          <circle cx="16" cy="38" r="3.2" fill="#f59e0b"/>
+          <circle cx="8" cy="24" r="3.2" fill="#38bdf8"/>
+          <circle cx="16" cy="10" r="3.2" fill="#ef4444"/>
         </svg>
       </div>
     `,

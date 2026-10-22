@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html class="dark" lang="en">
 <head>
   <meta charset="utf-8">
@@ -533,47 +533,77 @@
                   <span class="font-headline-sm text-headline-sm text-on-surface">Vehicle Parameters &amp; Failsafes</span>
                 </div>
                 <div class="flex items-center gap-space-xs">
-                  <span class="font-label-caps text-label-caps px-space-xs py-0.5 rounded bg-surface-container text-on-surface">QUADCOPTER X-FRAME</span>
-                  <span class="font-label-caps text-label-caps px-space-xs py-0.5 rounded bg-surface-container text-primary font-bold">X4 ENTERPRISE</span>
+                  <span class="font-label-caps text-label-caps px-space-xs py-0.5 rounded bg-surface-container text-on-surface">HEXACOPTER X-FRAME</span>
+                  <span class="font-label-caps text-label-caps px-space-xs py-0.5 rounded bg-surface-container text-cyan-400 font-bold">X6 ENTERPRISE (6 ROTORS)</span>
                 </div>
               </div>
               <!-- Frame Vector Diagram with Hexagonal HUD boundary -->
               <div class="p-space-md rounded bg-surface-container-lowest flex flex-col items-center justify-center relative overflow-hidden">
                 <div class="w-full flex items-center justify-between mb-2">
-                  <span class="font-label-caps text-label-caps text-outline">FRAME MOTOR GEOMETRY (X4-CW/CCW)</span>
+                  <span class="font-label-caps text-label-caps text-outline">FRAME MOTOR GEOMETRY (HEXA-X 6-ROTOR CW/CCW)</span>
                   <span class="font-data-sm text-data-sm text-secondary font-bold">AIRFRAME: READY TO ARM</span>
                 </div>
                 <!-- Hexagonal Cadastral HUD Graphic -->
                 <div class="relative w-64 h-64 flex items-center justify-center my-2">
                   <svg class="w-full h-full" fill="none" viewBox="0 0 200 200">
+                    <!-- Outer Hexagon Boundary -->
                     <polygon class="text-primary/70" points="100,10 178,55 178,145 100,190 22,145 22,55" stroke="currentColor" stroke-dasharray="4 3" stroke-width="1.5"></polygon>
                     <polygon class="text-secondary/40" points="100,24 166,62 166,138 100,176 34,138 34,62" stroke="currentColor" stroke-width="1"></polygon>
                     <line class="text-outline-variant" stroke="currentColor" stroke-dasharray="2 4" stroke-width="0.75" x1="100" x2="100" y1="0" y2="200"></line>
                     <line class="text-outline-variant" stroke="currentColor" stroke-dasharray="2 4" stroke-width="0.75" x1="0" x2="200" y1="100" y2="100"></line>
-                    <line class="text-primary" stroke="currentColor" stroke-linecap="round" stroke-width="4" x1="50" x2="150" y1="50" y2="150"></line>
-                    <line class="text-primary" stroke="currentColor" stroke-linecap="round" stroke-width="4" x1="150" x2="50" y1="50" y2="150"></line>
-                    <polygon class="text-secondary" fill="currentColor" points="100,32 94,44 106,44"></polygon>
-                    <!-- Motors -->
-                    <circle class="text-secondary cursor-pointer hover:opacity-80" cx="150" cy="50" r="14" stroke="currentColor" stroke-dasharray="3 2" stroke-width="1.5"></circle>
-                    <circle class="text-secondary" cx="150" cy="50" fill="currentColor" r="8"></circle>
-                    <text class="font-label-caps text-[9px] fill-secondary font-bold" x="146" y="32">M1 (CCW)</text>
-                    <circle class="text-primary cursor-pointer hover:opacity-80" cx="50" cy="150" r="14" stroke="currentColor" stroke-dasharray="3 2" stroke-width="1.5"></circle>
-                    <circle class="text-primary" cx="50" cy="150" fill="currentColor" r="8"></circle>
-                    <text class="font-label-caps text-[9px] fill-primary font-bold" x="32" y="174">M2 (CCW)</text>
-                    <circle class="text-secondary cursor-pointer hover:opacity-80" cx="50" cy="50" r="14" stroke="currentColor" stroke-dasharray="3 2" stroke-width="1.5"></circle>
-                    <circle class="text-secondary" cx="50" cy="50" fill="currentColor" r="8"></circle>
-                    <text class="font-label-caps text-[9px] fill-secondary font-bold" x="32" y="32">M3 (CW)</text>
-                    <circle class="text-primary cursor-pointer hover:opacity-80" cx="150" cy="150" r="14" stroke="currentColor" stroke-dasharray="3 2" stroke-width="1.5"></circle>
-                    <circle class="text-primary" cx="150" cy="150" fill="currentColor" r="8"></circle>
-                    <text class="font-label-caps text-[9px] fill-primary font-bold" x="146" y="174">M4 (CW)</text>
-                    <circle class="text-primary" cx="100" cy="100" fill="#0A0E17" r="22" stroke="currentColor" stroke-width="2"></circle>
-                    <circle class="text-secondary" cx="100" cy="100" fill="currentColor" r="12"></circle>
-                    <circle cx="100" cy="100" fill="#0A0E17" r="4"></circle>
+                    
+                    <!-- 6 Hexacopter Arms -->
+                    <line class="text-primary" stroke="currentColor" stroke-linecap="round" stroke-width="3.5" x1="100" y1="100" x2="132" y2="44"></line>
+                    <line class="text-primary" stroke="currentColor" stroke-linecap="round" stroke-width="3.5" x1="100" y1="100" x2="165" y2="100"></line>
+                    <line class="text-primary" stroke="currentColor" stroke-linecap="round" stroke-width="3.5" x1="100" y1="100" x2="132" y2="156"></line>
+                    <line class="text-primary" stroke="currentColor" stroke-linecap="round" stroke-width="3.5" x1="100" y1="100" x2="68" y2="156"></line>
+                    <line class="text-primary" stroke="currentColor" stroke-linecap="round" stroke-width="3.5" x1="100" y1="100" x2="35" y2="100"></line>
+                    <line class="text-primary" stroke="currentColor" stroke-linecap="round" stroke-width="3.5" x1="100" y1="100" x2="68" y2="44"></line>
+
+                    <!-- Forward Direction Arrow Pointer -->
+                    <polygon class="text-secondary" fill="currentColor" points="100,22 94,34 106,34"></polygon>
+                    
+                    <!-- 6 Motors with Rotational Indicators (ArduPilot Hexa-X Standard) -->
+                    <!-- M1 Front-Right (30° CCW) -->
+                    <circle class="text-secondary cursor-pointer hover:opacity-80" cx="132" cy="44" r="13" stroke="currentColor" stroke-dasharray="3 2" stroke-width="1.5"></circle>
+                    <circle class="text-secondary" cx="132" cy="44" fill="currentColor" r="7"></circle>
+                    <text class="font-label-caps text-[8.5px] fill-secondary font-bold" x="122" y="27">M1 (CCW)</text>
+
+                    <!-- M5 Mid-Right (90° CW) -->
+                    <circle class="text-cyan-400 cursor-pointer hover:opacity-80" cx="165" cy="100" r="13" stroke="currentColor" stroke-dasharray="3 2" stroke-width="1.5"></circle>
+                    <circle class="text-cyan-400" cx="165" cy="100" fill="currentColor" r="7"></circle>
+                    <text class="font-label-caps text-[8.5px] fill-cyan-400 font-bold" x="145" y="122">M5 (CW)</text>
+
+                    <!-- M3 Rear-Right (150° CCW) -->
+                    <circle class="text-primary cursor-pointer hover:opacity-80" cx="132" cy="156" r="13" stroke="currentColor" stroke-dasharray="3 2" stroke-width="1.5"></circle>
+                    <circle class="text-primary" cx="132" cy="156" fill="currentColor" r="7"></circle>
+                    <text class="font-label-caps text-[8.5px] fill-primary font-bold" x="122" y="178">M3 (CCW)</text>
+
+                    <!-- M4 Rear-Left (210° CW) -->
+                    <circle class="text-primary cursor-pointer hover:opacity-80" cx="68" cy="156" r="13" stroke="currentColor" stroke-dasharray="3 2" stroke-width="1.5"></circle>
+                    <circle class="text-primary" cx="68" cy="156" fill="currentColor" r="7"></circle>
+                    <text class="font-label-caps text-[8.5px] fill-primary font-bold" x="42" y="178">M4 (CW)</text>
+
+                    <!-- M2 Mid-Left (270° CCW) -->
+                    <circle class="text-cyan-400 cursor-pointer hover:opacity-80" cx="35" cy="100" r="13" stroke="currentColor" stroke-dasharray="3 2" stroke-width="1.5"></circle>
+                    <circle class="text-cyan-400" cx="35" cy="100" fill="currentColor" r="7"></circle>
+                    <text class="font-label-caps text-[8.5px] fill-cyan-400 font-bold" x="15" y="122">M2 (CCW)</text>
+
+                    <!-- M6 Front-Left (330° CW) -->
+                    <circle class="text-rose-400 cursor-pointer hover:opacity-80" cx="68" cy="44" r="13" stroke="currentColor" stroke-dasharray="3 2" stroke-width="1.5"></circle>
+                    <circle class="text-rose-400" cx="68" cy="44" fill="currentColor" r="7"></circle>
+                    <text class="font-label-caps text-[8.5px] fill-rose-400 font-bold" x="42" y="27">M6 (CW)</text>
+
+                    <!-- Central Avionics Hex Core -->
+                    <polygon class="text-primary" points="100,82 116,91 116,109 100,118 84,109 84,91" fill="#0A0E17" stroke="currentColor" stroke-width="2"></polygon>
+                    <circle class="text-secondary" cx="100" cy="100" fill="currentColor" r="7"></circle>
+                    <circle cx="100" cy="100" fill="#0A0E17" r="3"></circle>
                   </svg>
                 </div>
-                <div class="flex items-center gap-space-lg font-label-caps text-label-caps text-outline">
-                  <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-secondary"></span> FRONT ROTORS (PROP PITCH 15.5")</span>
-                  <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-primary"></span> REAR ROTORS (T-MOTOR MN501S)</span>
+                <div class="flex items-center gap-space-md font-label-caps text-label-caps text-outline flex-wrap justify-center">
+                  <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-secondary"></span> FRONT (M1/M6)</span>
+                  <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-cyan-400"></span> MID (M2/M5)</span>
+                  <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-primary"></span> REAR (M3/M4)</span>
                 </div>
               </div>
               <!-- Geofence & DGCA Regulatory Compliance -->
@@ -1180,24 +1210,32 @@
                 </div>
               </div>
 
-              <!-- ESC Detailed Per-Motor Grid -->
-              <span class="font-label-caps text-label-caps text-outline uppercase mt-2">Per-Rotor ESC Bus</span>
-              <div class="space-y-1 font-mono text-xs">
-                <div class="flex items-center justify-between p-2 rounded bg-surface-container-lowest">
-                  <span class="text-secondary font-bold">M1 (Front-Right CCW)</span>
-                  <span class="text-primary">4,290 RPM | 4.6A | 41°C</span>
+              <!-- ESC Detailed Per-Motor Grid (Hexacopter 6-CH) -->
+              <span class="font-label-caps text-label-caps text-outline uppercase mt-2">Per-Rotor ESC Telemetry Bus (Hexacopter 6-CH)</span>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 font-mono text-xs">
+                <div class="flex items-center justify-between p-2 rounded bg-surface-container-lowest border-l-2 border-emerald-400">
+                  <span class="text-emerald-400 font-bold">M1 (Front-Right CCW)</span>
+                  <span id="esc-m1-val" class="text-primary">4,290 RPM | 4.6A | 41°C</span>
                 </div>
-                <div class="flex items-center justify-between p-2 rounded bg-surface-container-lowest">
-                  <span class="text-primary font-bold">M2 (Back-Left CCW)</span>
-                  <span class="text-primary">4,275 RPM | 4.7A | 43°C</span>
+                <div class="flex items-center justify-between p-2 rounded bg-surface-container-lowest border-l-2 border-rose-400">
+                  <span class="text-rose-400 font-bold">M6 (Front-Left CW)</span>
+                  <span id="esc-m6-val" class="text-primary">4,295 RPM | 4.5A | 41°C</span>
                 </div>
-                <div class="flex items-center justify-between p-2 rounded bg-surface-container-lowest">
-                  <span class="text-secondary font-bold">M3 (Front-Left CW)</span>
-                  <span class="text-primary">4,280 RPM | 4.5A | 42°C</span>
+                <div class="flex items-center justify-between p-2 rounded bg-surface-container-lowest border-l-2 border-cyan-400">
+                  <span class="text-cyan-400 font-bold">M5 (Mid-Right CW)</span>
+                  <span id="esc-m5-val" class="text-primary">4,285 RPM | 4.6A | 42°C</span>
                 </div>
-                <div class="flex items-center justify-between p-2 rounded bg-surface-container-lowest">
-                  <span class="text-primary font-bold">M4 (Back-Right CW)</span>
-                  <span class="text-primary">4,300 RPM | 4.6A | 44°C</span>
+                <div class="flex items-center justify-between p-2 rounded bg-surface-container-lowest border-l-2 border-cyan-400">
+                  <span class="text-cyan-400 font-bold">M2 (Mid-Left CCW)</span>
+                  <span id="esc-m2-val" class="text-primary">4,275 RPM | 4.7A | 43°C</span>
+                </div>
+                <div class="flex items-center justify-between p-2 rounded bg-surface-container-lowest border-l-2 border-amber-400">
+                  <span class="text-amber-400 font-bold">M3 (Rear-Right CCW)</span>
+                  <span id="esc-m3-val" class="text-primary">4,280 RPM | 4.5A | 42°C</span>
+                </div>
+                <div class="flex items-center justify-between p-2 rounded bg-surface-container-lowest border-l-2 border-amber-400">
+                  <span class="text-amber-400 font-bold">M4 (Rear-Left CW)</span>
+                  <span id="esc-m4-val" class="text-primary">4,300 RPM | 4.6A | 44°C</span>
                 </div>
               </div>
             </div>
@@ -1316,7 +1354,7 @@
         <div class="w-full bg-surface-container-low px-gutter-desktop py-space-md flex flex-wrap items-center justify-between gap-space-md border-b border-surface-container-high/40">
           <div>
             <span class="font-label-caps text-label-caps text-outline uppercase tracking-wider">ATTITUDE &amp; HEADING REFERENCE SYSTEM (AHRS)</span>
-            <h1 class="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tight mt-0.5">Real-Time 3D Quadcopter Orientation</h1>
+            <h1 class="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tight mt-0.5">Real-Time 3D Hexacopter Orientation (6-Rotor AHRS)</h1>
           </div>
           <!-- 3-DOF Numbers -->
           <div class="flex items-center gap-space-sm font-data-sm text-sm">
@@ -1333,7 +1371,7 @@
         </div>
 
         <div class="p-gutter-desktop grid grid-cols-1 lg:grid-cols-12 gap-gutter-desktop">
-          <!-- 3D Three.js Quadcopter Viewport (8 cols) -->
+          <!-- 3D Three.js Hexacopter Viewport (8 cols) -->
           <div class="lg:col-span-8 flex flex-col gap-gutter-desktop">
             <div class="rounded-lg bg-surface-container-low p-space-md flex flex-col gap-2 border border-surface-container-high/30">
               <div class="flex items-center justify-between flex-wrap gap-2">

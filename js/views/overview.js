@@ -312,17 +312,17 @@ function initOverview3DScene() {
   // Procedural Enterprise Drone Model
   ovThreeDrone = new THREE.Group();
 
-  // Central Hub
+  // Central Hub - Hexagonal Chassis
   const hubMat = new THREE.MeshStandardMaterial({ color: 0x18181b, roughness: 0.3, metalness: 0.8 });
-  const hubGeo = new THREE.CylinderGeometry(0.85, 0.95, 0.35, 8);
+  const hubGeo = new THREE.CylinderGeometry(0.85, 0.95, 0.32, 6);
   const hub = new THREE.Mesh(hubGeo, hubMat);
   ovThreeDrone.add(hub);
 
-  // Drone Canopy (Cyan Accent)
+  // Drone Canopy (Cyan Accent) - Hexagonal Aerodynamic Deck
   const topCoverMat = new THREE.MeshStandardMaterial({ color: 0x0284c7, roughness: 0.2, metalness: 0.6 });
-  const topCoverGeo = new THREE.CylinderGeometry(0.55, 0.8, 0.25, 8);
+  const topCoverGeo = new THREE.CylinderGeometry(0.55, 0.8, 0.22, 6);
   const topCover = new THREE.Mesh(topCoverGeo, topCoverMat);
-  topCover.position.y = 0.28;
+  topCover.position.y = 0.26;
   ovThreeDrone.add(topCover);
 
   // GNSS RTK Mast
@@ -335,35 +335,42 @@ function initOverview3DScene() {
   rtkPuck.position.set(0, 1.0, -0.3);
   ovThreeDrone.add(rtkPuck);
 
-  // 4 Carbon Arms + Motors + Props
+  // 6 Carbon Arms + Motors + Props for Hexacopter X-Frame (30°, 90°, 150°, 210°, 270°, 330°)
   const armMat = new THREE.MeshStandardMaterial({ color: 0x09090b, roughness: 0.5 });
   const motorMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, metalness: 0.8, roughness: 0.2 });
-  const propMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, transparent: true, opacity: 0.65 });
+  const propMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, transparent: true, opacity: 0.75 });
 
   ovProps = [];
-  const armDist = 1.8;
-  const angles = [Math.PI / 4, 3 * Math.PI / 4, 5 * Math.PI / 4, 7 * Math.PI / 4];
+  const armDist = 1.9;
+  const angles = [
+    Math.PI / 6,
+    Math.PI / 2,
+    Math.PI * 5 / 6,
+    Math.PI * 7 / 6,
+    Math.PI * 3 / 2,
+    Math.PI * 11 / 6
+  ];
 
   angles.forEach((ang) => {
-    const x = Math.cos(ang) * armDist;
-    const z = Math.sin(ang) * armDist;
+    const x = Math.sin(ang) * armDist;
+    const z = -Math.cos(ang) * armDist;
 
     // Arm tube
-    const armGeo = new THREE.CylinderGeometry(0.06, 0.06, armDist, 8);
+    const armGeo = new THREE.CylinderGeometry(0.055, 0.055, armDist - 0.45, 8);
     const arm = new THREE.Mesh(armGeo, armMat);
     arm.position.set(x / 2, 0, z / 2);
     arm.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), new THREE.Vector3(x, 0, z).normalize());
     ovThreeDrone.add(arm);
 
     // Motor pod
-    const motor = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 0.25, 12), motorMat);
-    motor.position.set(x, 0.12, z);
+    const motor = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 0.22, 12), motorMat);
+    motor.position.set(x, 0.11, z);
     ovThreeDrone.add(motor);
 
     // 2-blade Propeller
-    const propGeo = new THREE.BoxGeometry(1.2, 0.02, 0.12);
+    const propGeo = new THREE.BoxGeometry(1.25, 0.02, 0.12);
     const prop = new THREE.Mesh(propGeo, propMat);
-    prop.position.set(x, 0.28, z);
+    prop.position.set(x, 0.26, z);
     ovThreeDrone.add(prop);
     ovProps.push(prop);
   });
